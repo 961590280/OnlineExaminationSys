@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="   
+    http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd   
+    http://www.springframework.org/schema/jee   
+    http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    http://www.springframework.org/schema/mvc   
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+	<!-- 配置注解驱动的Spring MVC Controller 的编程模型.注:次标签只在 Servlet MVC工作! -->
+	<mvc:annotation-driven />
+
+	<!-- 配置Interceptors -->
+	<!-- 后台登录拦截器  -->
+<!-- 	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/topic/**" />
+			<bean class="com.weimingfj.system.filter.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+	
+	<!--datasource  开发--> 
+    <bean id="dataSource" 
+		class="org.apache.commons.dbcp.BasicDataSource" 
+		destroy-method="close"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" 
+			value="jdbc:mysql://localhost:3306/oes?useUnicode=true&amp;characterEncoding=utf-8&amp;useOldAliasMetadataBehavior=true">
+		</property>
+		<property name="username" value="root"></property> 
+		<property name="password" value="root"></property>
+		<property name="validationQuery" value="select 1" />
+		<property name="maxIdle" value="5" />
+		<property name="maxWait" value="100" />
+		<property name="maxActive" value="20" />
+	</bean>
+	 
+	<!--datasource 测试-->	
+	 <!-- <bean id="dataSource" 
+		class="org.apache.commons.dbcp.BasicDataSource" 
+		destroy-method="close"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" 
+			value="jdbc:mysql://192.168.1.248:3306/tcps?useUnicode=true&amp;characterEncoding=utf-8&amp;useOldAliasMetadataBehavior=true">
+		</property>
+		<property name="username" value="wlgj"></property> 
+		<property name="password" value="APGt8Bc8"></property>
+		<property name="validationQuery" value="select 1" />
+		<property name="maxIdle" value="5" />
+		<property name="maxWait" value="100" />
+		<property name="maxActive" value="20" />
+	</bean> --> 
+	
+	<!--声明事务 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+	<!--事务注释 -->
+	<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+	
+	<!--JDBC Template -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 添加url表的过滤条件[sys_code]-->
+	<bean id="sysCode" class="java.lang.String">
+		<constructor-arg index="0" value="oes" />
+	</bean>	
+	
+</beans>

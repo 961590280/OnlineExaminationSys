@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"  
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd  
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-3.2.xsd  
+            http://www.springframework.org/schema/jdbc
+            http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+            http://www.springframework.org/schema/mvc   
+    		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+	<!-- handler 实现类 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
+	<!-- adapter 实现类 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" >
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<!-- 自动扫描指定包  -->
+	<!-- 扫描controller类 -->
+	<context:component-scan base-package="com.cw.*.controller"></context:component-scan>
+	<!-- 配置缓存的包 -->
+	<context:component-scan base-package="com.cw.*.cache" ></context:component-scan>
+	<!-- 配置dao默认包 -->
+	<context:component-scan base-package="com.cw.*.dao" ></context:component-scan>
+	<!-- 配置service默认包 -->
+	<context:component-scan base-package="com.cw.*.service" ></context:component-scan>
+	
+	<!-- 初始化 -->
+	<bean id="initPathExposer" class="com.cw.oes.exposer.InitPathExposer" init-method="init" />
+	
+	
+	<bean class="com.cw.oes.exposer.CacheBeanPostProcessor"/> 
+	<bean class="com.cw.oes.listener.SpringContextUtil"/> 
+	
+	
+	
+	<!-- Default ViewResolver -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<!-- 访问页面的前缀路径 -->
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<!-- 访问页面的后缀路径 -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	<!-- 设置对静态资源的访问 
+		url格式：res/img.jpg
+		访问的文件：/WEB-INF/res/img.jpg
+	-->
+	<mvc:resources mapping="res/**" location="/WEB-INF/res/" cache-period="31536000" />
+	
+	
+	</beans>

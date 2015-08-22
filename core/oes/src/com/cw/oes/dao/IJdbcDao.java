@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author lansb ��ݿ����dao�ӿ�
+ * @author 
  */
 public interface IJdbcDao {
 

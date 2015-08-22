@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置好命名空间 -->
+<mapper namespace="com.cw.oes.dao.mapping.SysUrlMapMapper">
+
+	<resultMap type="UrlMap" id="urlMap">
+	  <id property="id" column="id" />
+	  <result property="unid" column="unid" />
+	  <result property="urlFlag" column="url_flag" />
+	  <result property="fullUrl" column="full_url" />
+	  <result property="privId" column="priv_id" />
+	  <result property="title" column="title" />
+	  <result property="serviceCommand" column="service_command" />
+	  <result property="page" column="page" />
+	  <result property="createTime" column="create_time" />
+	  <result property="sqlId" column="sql_id" />
+	  <result property="validationId" column="validation_id" />
+	 </resultMap>
+	
+	<!-- sql语句是针对表的操作，而resultMap说明了表和pojo的映射关系 -->
+ 	<select id="getAllUrlMap" resultMap="urlMap">
+	  select
+	  * from
+	  sys_url_map_tab;
+ 	</select>
+	
+
+</mapper>

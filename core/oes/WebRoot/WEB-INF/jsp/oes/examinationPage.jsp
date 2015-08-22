@@ -18,12 +18,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
+	<link rel="stylesheet" type="text/css" href="res/css/main.css">
   </head>
-  
+  	<div id="" >
+  	</div>
   <body>
-	<table>
-	<tr><td></td><td></td><td></td><td></td><td></tr>
 	
-	</table>
   </body>
 </html>

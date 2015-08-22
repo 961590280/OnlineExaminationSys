@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 引入外部属性文件 -->
+	<properties resource="jdbcInfo.properties" />
+	<!-- 配置java类全路径的别名,避免写重复的累赘的包名 -->
+    <typeAliases>
+      <typeAlias alias="urlMap" type="com.cw.oes.pojo.UrlMap" />
+    </typeAliases>
+
+    <!-- 配置数据库连接信息 -->
+    <environments default="development">
+	  <environment id="development">
+	   <transactionManager type="JDBC" />
+	   <dataSource type="POOLED">
+	    <property name="driver" value="${jdbc.driverClassName}" />
+	    <property name="url" value="${jdbc.url}" />
+	    <property name="username" value="${jdbc.username}" />
+	    <property name="password" value="${jdbc.password}" />
+	   </dataSource>
+	  </environment>
+	</environments>
+
+    
+    
+    
+    
+    
+    
+	<!-- 映射文件 -->
+	<mappers>
+	  <!-- 类似文件路径的格式 -->
+	  <mapper resource="com/cw/oes/dao/mapping/SysUrlMapMapper.xml" />
+	</mappers>
+
+</configuration>

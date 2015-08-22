@@ -11,6 +11,7 @@ import com.cw.oes.cache.GlobalCache;
 import com.cw.oes.cache.impl.UrlMappingCache;
 import com.cw.oes.exception.CustomException;
 import com.cw.oes.form.RequestDataForm;
+import com.cw.oes.pojo.UrlMap;
 
 /**
  * 
@@ -35,25 +36,25 @@ public abstract class BaseController {
 		logger.debug("enter topic");
 		logger.debug("***************************");
 		// 权限
-		// 查找对应的URL处理参数
-//		Map<String, Object> urlSqlMap = jdbcDao.queryForMap(
-//				"select * from sys_url_tab t where t.url_id=?",
-//				new Object[] { id });
-		Map<String, Object> urlSqlMap = null;
+		
+		UrlMap urlMap = null;
 		//根据UrlMappingCache类从全局缓存中去出对应的UrlMappingCache缓存（缓存为Map类型）
 		Map<String, Object> urlCache = GlobalCache.getCache(UrlMappingCache.class, Map.class);
+		
+		
 		//若url标识不存缓存中在则抛出异常
 		if (!urlCache.containsKey(urlFlag)) {
 			throw new CustomException(
 					"error! url["+urlFlag+"] undefined");
 		}else{
 			//
-			urlSqlMap=(Map<String, Object>) urlCache.get(urlFlag);
+			urlMap=(UrlMap) urlCache.get(urlFlag);
 		}
+		
 		
 		RequestDataForm requestDataForm = RequestDataForm.create(request,response);
 		requestDataForm.setUriId(urlFlag);
-		requestDataForm.setUrlSqlMap(urlSqlMap);  
+		requestDataForm.setUrlMap(urlMap);
 		requestDataForm.setResponse(response);
 		requestDataForm.setRequest(request);
 		return requestDataForm;

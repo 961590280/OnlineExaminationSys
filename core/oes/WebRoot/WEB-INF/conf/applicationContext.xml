@@ -41,21 +41,7 @@
 		<property name="maxActive" value="20" />
 	</bean>
 	 
-	<!--datasource 测试-->	
-	 <!-- <bean id="dataSource" 
-		class="org.apache.commons.dbcp.BasicDataSource" 
-		destroy-method="close"> 
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" 
-			value="jdbc:mysql://192.168.1.248:3306/tcps?useUnicode=true&amp;characterEncoding=utf-8&amp;useOldAliasMetadataBehavior=true">
-		</property>
-		<property name="username" value="wlgj"></property> 
-		<property name="password" value="APGt8Bc8"></property>
-		<property name="validationQuery" value="select 1" />
-		<property name="maxIdle" value="5" />
-		<property name="maxWait" value="100" />
-		<property name="maxActive" value="20" />
-	</bean> --> 
+
 	
 	<!--声明事务 -->
 	<bean id="transactionManager"

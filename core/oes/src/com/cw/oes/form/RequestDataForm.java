@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
 
+import com.cw.oes.pojo.UrlMap;
 import com.cw.oes.utils.Environment;
 import com.cw.oes.utils.UserSessionBean;
 import com.cw.oes.web.httpobjects.HttpRequestObject;
@@ -34,7 +35,7 @@ public class RequestDataForm {
 	/**
 	 * 域 <code>urlSqlMap</code>
 	 */
-	private Map<String, Object> urlSqlMap;
+	private UrlMap urlMap;
 	//用户session Bean
 	private UserSessionBean userSession;
 	private HttpServletRequest request;
@@ -70,17 +71,28 @@ public class RequestDataForm {
 	public void setUriId(String uriId) {
 		this.uriId = uriId;
 	}
+//	
+//	public Map<String, Object> getUrlMap() {
+//		return urlMap;
+//	}
+//	
+//	public void setUrlMap(Map<String, Object> urlMap) {
+//		this.urlMap = urlMap;
+//	}
 	
-	public Map<String, Object> getUrlSqlMap() {
-		return urlSqlMap;
-	}
 	
-	public void setUrlSqlMap(Map<String, Object> urlSqlMap) {
-		this.urlSqlMap = urlSqlMap;
-	}
 	public boolean isAjaxRequest() {
 		return ajaxRequest;
 	}
+
+	public UrlMap getUrlMap() {
+		return urlMap;
+	}
+
+	public void setUrlMap(UrlMap urlMap) {
+		this.urlMap = urlMap;
+	}
+
 	public void setAjaxRequest(boolean ajaxRequest) {
 		this.ajaxRequest = ajaxRequest;
 	}

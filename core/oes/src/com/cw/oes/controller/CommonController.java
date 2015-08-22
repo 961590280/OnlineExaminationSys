@@ -18,6 +18,7 @@ import com.cw.oes.form.RequestDataForm;
 import com.cw.oes.form.ResponseData;
 import com.cw.oes.form.ResponseDataForm;
 import com.cw.oes.listener.SpringContextUtil;
+import com.cw.oes.pojo.UrlMap;
 import com.cw.oes.service.IService;
 import com.cw.oes.service.impl.CommonService;
 import com.cw.oes.utils.MapUtils;
@@ -51,9 +52,9 @@ public class CommonController extends BaseController{
 		
 		
 		RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
-		Map<String,Object> urlMap = requestDataForm.getUrlSqlMap();//获取url映射
-		String serviceCommand = MapUtils.getString(urlMap, "SERVICE_COMMAND");//获取服务名称（CommonService的方法名）
-		String page = (String) urlMap.get("PAGE");//获取要跳转的页面
+		UrlMap urlMap = requestDataForm.getUrlMap();//获取url映射
+		String serviceCommand = urlMap.getServiceCommand();
+		String page = urlMap.getPage();
 		Class<? extends CommonService> clazz = commonService.getClass();//获取commonService类
 		
 		
@@ -66,7 +67,7 @@ public class CommonController extends BaseController{
 			
 			page = responseDataForm.getPage();
 			if (StringUtils.isEmpty(page))
-				page = (String) urlMap.get("PAGE");
+				page = urlMap.getPage();
 		}
 		
 		
@@ -81,37 +82,22 @@ public class CommonController extends BaseController{
 	 * @return
 	 * @throws Exception
 	 */
-	 @RequestMapping({"/ajax/{id}"})
+	 @RequestMapping({"/ajax/{urlFlag}"})
 	 @ResponseBody
-	 public Object ajaxCall(@PathVariable String id, HttpServletRequest request, HttpServletResponse response)
+	 public Object ajaxCall(@PathVariable String urlFlag, HttpServletRequest request, HttpServletResponse response)
 	    throws Exception
 	  {
-	    ResponseDataForm responseDataForm;
-	    RequestDataForm requestDataForm = getRequestDataForm(id, request, response);
-	    Map urlSqlMap = requestDataForm.getUrlSqlMap();
-	    String service = MapUtils.getString(urlSqlMap, "SERVICE_NAME");
-	    requestDataForm.setUrlSqlMap(urlSqlMap);
 
-	    String param = MapUtils.getString(urlSqlMap, "PARAMETERS");
-	    if (StringUtils.isNotEmpty(param)) {
-	      Map paramsMap = Util.getUrlParam(param);
-	      for (Iterator localIterator = paramsMap.entrySet().iterator(); localIterator.hasNext(); ) { Map.Entry entry = (Map.Entry)localIterator.next();
-	        requestDataForm.put((String)entry.getKey(), (String)entry.getValue());
-	      }
-
-	    }
-
-	    if ((service == null) || ("".equals(service)))
-	      service = "ajaxService";
-	    try
-	    {
-	      return ((IService)SpringContextUtil.getBean(service, IService.class)).service(requestDataForm);
-	    } catch (Exception e) {
-	      e.printStackTrace();
-	      responseDataForm = new ResponseDataForm();
-	      responseDataForm.setResult("2");
-	      responseDataForm.setResultInfo(e.getMessage()); }
-	    return responseDataForm;
+		RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
+		UrlMap urlMap = requestDataForm.getUrlMap();
+		String serviceCommand = urlMap.getServiceCommand();
+		Class<? extends CommonService> clazz = commonService.getClass();//获取commonService类
+		Method method = clazz.getMethod(serviceCommand, requestDataForm.getClass());//获取CommonService类中的方法
+		logger.debug("cdbsmCommand=>" + serviceCommand);
+		return (ResponseDataForm) method.invoke(commonService, requestDataForm);//调用服务
+		
+				
+			
 	  }
 	
 }

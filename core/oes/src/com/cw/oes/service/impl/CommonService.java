@@ -1,5 +1,7 @@
 package com.cw.oes.service.impl;
 
+import java.util.HashMap;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class CommonService implements IService{
 
 		ResponseDataForm rdf = new ResponseDataForm();
 		
-		
+		//用getString方法直接有参数名获取参数的值
 		String userName = requestDataForm.getString("userCode");// 密码
 		String userPwd = requestDataForm.getString("userPwd");// 密码
 		if(StringUtils.equals(userName, "cw")&&StringUtils.equals(userPwd, "123")){
@@ -48,11 +50,40 @@ public class CommonService implements IService{
 		}
 		return rdf;
 	}
+	/**
+	 * 刷新缓存
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	public ResponseDataForm refreshCache(RequestDataForm requestDataForm)
+			throws Exception {
+
+		ResponseDataForm rdf = new ResponseDataForm();
+		HashMap<String, String> map=new HashMap<String, String>();
+		String cacheName=requestDataForm.getString("cacheName");	
+		try{
+			Class<?> clazz=Class.forName(cacheName);
+			GlobalCache.refreshCache(clazz);
+			rdf.setResult(ResponseDataForm.SESSFUL);
+			map.put("result", String.valueOf(ResponseDataForm.SESSFUL));
+		}catch(Exception e){
+			e.printStackTrace();
+			rdf.setResult(ResponseDataForm.FAULAIE);
+			rdf.setResultInfo("刷新缓存失败："+e.getMessage());
+		}
+		return rdf;
+	}
+	
+
 	@Override
 	public ResponseDataForm service(RequestDataForm requestDataForm)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 	
 }

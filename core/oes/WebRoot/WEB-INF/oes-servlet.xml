@@ -60,7 +60,8 @@
 		<!-- 访问页面的后缀路径 -->
 		<property name="suffix" value=".jsp"></property>
 	</bean>
-	<!-- 设置对静态资源的访问 
+	<!--
+		设置对静态资源的访问 
 		url格式：res/img.jpg
 		访问的文件：/WEB-INF/res/img.jpg
 	-->

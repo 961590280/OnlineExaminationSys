@@ -2,11 +2,17 @@ package com.cw.oes.pojo;
 
 import java.io.Serializable;
 
-public class UrlMap implements Serializable{
+import com.cw.oes.utils.Environment;
+
+public class UrlMap extends Pojo implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String MAPPER_METHOD_GET_ALL = Environment.MAPPER_PAKAGE+"SysUrlMapMapper.getAllUrlMap";
+	private static final String MAPPER_METHOD_GET_ONE = Environment.MAPPER_PAKAGE+"SysUrlMapMapper.getOneUrlMap";
+	
+	
 	private String unid;
 	private	String urlFlag;
 	private String fullUrl;
@@ -81,6 +87,17 @@ public class UrlMap implements Serializable{
 	public void setValidationId(String validationId) {
 		this.validationId = validationId;
 	}
+	@Override
+	public String getMapperAllMothod() {
+		// TODO Auto-generated method stub
+		return MAPPER_METHOD_GET_ALL;
+	}
+	@Override
+	public String getMapperOneMothod() {
+		// TODO Auto-generated method stub
+		return MAPPER_METHOD_GET_ONE;
+	}
+
 	
 	
 

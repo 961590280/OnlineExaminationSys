@@ -5,6 +5,8 @@ package com.cw.oes.utils;
  */
 public class Environment {
 	
+	public static final String MAPPER_PAKAGE = "com.cw.oes.dao.mapping.";//mybatis映射文件所在包
+	
 	public static final String ADMIN_USER_CODE = "admin";//开发专用账号
 	public static final String LOGIN_NO_PRIV = "-100";//登录后可访问
 	public static final String ADMIN_PRIV = "-200";//admin专属权限，开发组专用

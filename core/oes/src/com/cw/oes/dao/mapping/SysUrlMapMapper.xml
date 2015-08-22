@@ -5,8 +5,7 @@
 <mapper namespace="com.cw.oes.dao.mapping.SysUrlMapMapper">
 
 	<resultMap type="UrlMap" id="urlMap">
-	  <id property="id" column="id" />
-	  <result property="unid" column="unid" />
+	  <id property="unid" column="unid" />
 	  <result property="urlFlag" column="url_flag" />
 	  <result property="fullUrl" column="full_url" />
 	  <result property="privId" column="priv_id" />
@@ -24,6 +23,73 @@
 	  * from
 	  sys_url_map_tab;
  	</select>
-	
-
+  	<select id="getOneUrlMap" parameterType="String" resultMap="urlMap">
+	  select
+	  * from
+	  sys_url_map_tab
+	  where unid = #{unid}
+	  ;
+ 	</select>	
+ 	
+	<select id="getUrlMapByWhere" parameterType="java.util.Map" resultMap="urlMap">
+	  select
+	  * from
+	  sys_url_map_tab
+	  where user_name like "%"+#{userName}+"%" or user_is_del = #{userIsDel} or user_reg_time like "%"+#{userRegTime}+"%";
+ 	</select>
+ 	<insert id="addUrlMap"  parameterType="java.util.Map">
+ 		insert into sys_url_map_tab 
+ 		(unid,url_flag,full_url,priv_id,title,service_command,
+ 		page,creater_pid,create_time,sql_id,validation_id,sql_type) 
+ 		values(
+ 		'${unid}',
+ 		#{urlFlag},
+ 		#{fullUrl},
+ 		#{privId},
+ 		#{title},
+ 		#{seviceCommand},
+ 		#{page},
+ 		#{createPid},
+ 		now(),
+ 		#{sqlId},
+ 		#{validationId},
+ 		#{sqlType});
+ 	</insert>
+ 	<update id="updateUrlMap" parameterType="java.util.Map" >
+ 		update sys_url_map_tab set 
+ 		<if test="urlFlag!=null">  
+            url_flag =  #{urlFlag},
+        </if>
+        <if test="fullUrl != null">  
+            full_url =  #{fullUrl},
+        </if> 
+        <if test="privId != null">  
+            priv_id =  #{privId},
+        </if> 
+        <if test="title != null">  
+            title =  #{title},
+        </if> 
+        <if test="seviceCommand != null">  
+            service_command =  #{seviceCommand},
+        </if> 
+        <if test="page != null">  
+            page =  #{page},
+        </if> 
+         <if test="sqlId != null">  
+            sql_id =  #{sqlId},
+        </if> 
+		 <if test="validationId != null">  
+            validation_id =  #{validationId},
+        </if>
+         <if test="sqlType != null">  
+            sql_type =  #{sqlType},
+        </if>
+ 		unid = '${unid}'<!-- 避免出现  where 前出现 , 导致sql语句出错的情况 -->
+ 		where unid = '${unid}';
+ 		
+ 		
+ 	</update>
+	<delete id="deleteUrlMap" parameterType="java.util.Map">
+		delete from sys_url_map_tab where unid = '${unid}'
+	</delete>
 </mapper>

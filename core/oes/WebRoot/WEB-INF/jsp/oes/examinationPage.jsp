@@ -5,7 +5,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html style="height:100%;">
   <head>
     <base href="<%=basePath%>">
     
@@ -19,10 +19,143 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
 	<link rel="stylesheet" type="text/css" href="res/css/main.css">
-  </head>
-  	<div id="" >
-  	</div>
-  <body>
+	<script type="text/javascript" src="res/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+	var time; //考试时间
+
 	
+	$(document).ready(function(){
+		if(confirm("一旦开始考试计时就不会停止，不能中途暂停！确定现在开始考试吗")){
+			$.ajax({
+			url:"${ctxPath}/common/ajax/beginTest",
+			data:{
+					testPaperPid:"1"
+					},
+			type:"post",
+			success:function(data){
+				data = eval("("+data+")");
+				time = data["resultObj"].time;
+				
+				if(time<0){
+					alert("考试时间已结束！");
+					location.href="${ctxPath}/common/toPersonPage";
+				}else{
+					beginTime();
+				}
+			}
+		});
+			
+		}else{
+		
+			location.href="${ctxPath}/common/toPersonPage";
+		}
+		
+	});
+	function beginTime(){
+
+		 
+		 var s = parseInt(time/1000);
+		 var m = parseInt(s/60);
+		 var h = parseInt(m/60);
+		 s = s%60;
+		 m = m%60;
+		 var t = h>=10? h+"":"0"+h;
+		 t +=":";
+		 t += m>=10? m+"":"0"+m;
+		 t+=":";
+		 t += s>=10 ? s+"":"0"+s;
+		 $("#time").text(t);
+		 time-=50;
+		 //当剩余时间小于5分钟
+		 if(time<1000*60*5){
+		 	
+		 	$("#timeDiv").css("background-color", time%500==0?"#FF5511":"#DDDDDD");
+		 	$("#warm").text("考试时间不足5分钟！！");
+		 }
+		 
+		 if(time<=0){
+		 	location.href="${ctxPath}/common/toPersonPage";
+		 }
+		/*  console.log(t); */
+		setTimeout("beginTime()",50);
+	}
+	
+	function getQuestion(){
+		
+	}
+	
+	function nextQ(){
+		$.ajax({
+		url:"",
+		data:"",
+		type:"",
+		success:function(data){
+		
+		}
+		
+		});
+	
+	}
+	</script>
+	<style type="text/css">
+	.red
+	{
+	width:150px;
+	height:70px; 
+	background-color:red; 
+	position:fixed; 
+	margin-top: 10px;
+	margin-left:10px;
+	padding:10px;
+	
+	}
+	
+	.grave
+	{
+	width:150px;
+	height:70px; 
+	background-color:#DDDDDD; 
+	position:fixed; 
+	margin-top: 10px;
+	margin-left:10px;
+	padding:10px;
+	
+	}
+</style>
+  </head>
+  		
+  <body style="padding: 0;margin: 0;height:100%;">
+  <div style="float:left;text-align: center;background-color: gray;width: 100%;height: 100%;position: relative;">
+	<div class="pageTitle" style="height:100%;width: 800px;background-color:white;position: absolute;margin-left: 50%;left: -400px; ">
+		<h1>xxx测试</h1>
+		<p>类型：难度：总分：考试时间：</p>
+		<div class="questionContext" >
+		<p class="topic" style="text-align: left;margin-left:10px;">第一大题 选择题：</p>
+			
+			<div style="margin-left:20px;">
+				<p class="question" style="text-align: left;margin-left:10px;">
+					1.你是男的还是女的？
+				</p>
+				<div class="answer" style="text-align: left;margin-left:30px;">
+				
+					A.男<input name="a" type="radio" value=""><br/>
+					B.女<input name="a" type="radio" value=""><br/>
+				</div>
+				<input type="button" value="上一题" onclick="preQ()">
+				<input type="button" value="下一题" onclick="nextQ()">
+			</div> 
+			
+		</div>
+		
+		
+	</div>
+	
+ </div>
+ 
+ <div id="timeDiv" style="width:150px;height:70px; background-color:#DDDDDD; position:fixed; margin-top: 10px;margin-left:10px;padding:10px;">
+ 	剩余考试时间：
+ 	<p id="time" ></p>
+ 	<p id="warm" style="color:red;"></p>
+ 	</div>
   </body>
 </html>

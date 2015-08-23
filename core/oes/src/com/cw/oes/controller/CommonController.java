@@ -50,7 +50,7 @@ public class CommonController extends BaseController{
 	public Object common(@PathVariable String urlFlag, HttpServletRequest request,
 			HttpServletResponse response) throws Exception{
 		
-		
+		logger.debug("urlFlag=>" + urlFlag);
 		RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
 		UrlMap urlMap = requestDataForm.getUrlMap();//获取url映射
 		String serviceCommand = urlMap.getServiceCommand();

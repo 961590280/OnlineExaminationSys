@@ -54,7 +54,7 @@ public class MybatisDaoImpl implements IDao {
 				
 				throw new SqlTypeIllegalException();//未实现
 			}else if(StringUtils.endsWithIgnoreCase(type, SQL_TYPE_SELECT_MAP)){
-				throw new SqlTypeIllegalException();//未实现
+				//result =  session.select(Environment.MAPPER_PAKAGE+sqlId,params);
 				
 			}else if(StringUtils.endsWithIgnoreCase(type, SQL_TYPE_SELECT_ONE)){//查询单个记录
 				result =  session.selectOne(Environment.MAPPER_PAKAGE+sqlId,params);

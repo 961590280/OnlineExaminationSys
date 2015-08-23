@@ -20,7 +20,7 @@
 	  member_tab;
  	</select>
  	
- 	 <select id="login" resultMap="member">
+ 	<select id="login" resultMap="member">
 	  select
 	  * from
 	  member_tab 

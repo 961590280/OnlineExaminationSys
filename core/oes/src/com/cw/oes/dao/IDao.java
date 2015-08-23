@@ -13,26 +13,6 @@ import com.cw.oes.pojo.UrlMap;
  *
  */
 public interface IDao {
-	/**
-	 * 查询所有记录
-	 * @return
-	 */
-	public List<?> getAllBeanList();
-	/**
-	 * 根据条件查询记录
-	 * @param params
-	 * @return
-	 */
-	public List<?> getBeanByWhere(Map<String,Object> params);
-	/**
-	 * 根据id查询
-	 * @param <T>
-	 * @param id
-	 * @return
-	 */
-	public <T> T getBeanById(String unid); 
-	
-	public void exec();
 	
 	/**
 	 * 根据sqlId判断要执行的sql语句

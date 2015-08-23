@@ -32,6 +32,7 @@ public class RequestDataForm {
 	 * map,请参看HttpRequestObject类定义
 	 */
 	private CaseInsensitiveMap<String, List<HttpRequestObject>> multipleRequestMap;
+	private Map<String,String> params ;
 	/**
 	 * 域 <code>urlSqlMap</code>
 	 */
@@ -83,6 +84,16 @@ public class RequestDataForm {
 	
 	public boolean isAjaxRequest() {
 		return ajaxRequest;
+	}
+
+
+
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
 	}
 
 	public UrlMap getUrlMap() {

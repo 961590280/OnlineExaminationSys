@@ -1,10 +1,14 @@
 package com.cw.oes.cache.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
+
+
+
 
 
 
@@ -31,6 +35,8 @@ public class UrlMappingCache implements ICacheService {
 	@Autowired(required=false)
 	@Qualifier("sysCode")
 	private String sysCode;
+	@Autowired
+	private MybatisDaoImpl myDao;
 	
 	@Override
 	public Map<String, Object> getCacheContext() {
@@ -38,12 +44,19 @@ public class UrlMappingCache implements ICacheService {
 //		MybatisDaoImpl<UrlMap> mydao = new MybatisDaoImpl<UrlMap>(new UrlMap());
 		ConcurrentHashMap<String,Object> resultMap=new ConcurrentHashMap<String, Object>();
 		
-		List<UrlMap> list = MybatisDaoImpl.UrlMap_DAO.getAllBeanList();
-		for(UrlMap map : list){
-			String flag = String.valueOf(map.getUrlFlag());
-			resultMap.put(flag, map);
-			
+		List<UrlMap> list;
+		try {
+			list = (List<UrlMap>) myDao.queryBySqlId("SysUrlMapMapper.getAllUrlMap", "SL", null);
+			for(UrlMap map : list){
+				String flag = String.valueOf(map.getUrlFlag());
+				resultMap.put(flag, map);
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		
 		return resultMap;
 	}

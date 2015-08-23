@@ -23,8 +23,15 @@ public class UrlMap extends Pojo implements Serializable{
 	private String createTime;
 	private String sqlId;
 	private String validationId;
+	private String sqlType;
 	
 	
+	public String getSqlType() {
+		return sqlType;
+	}
+	public void setSqlType(String sqlType) {
+		this.sqlType = sqlType;
+	}
 	public String getUnid() {
 		return unid;
 	}

@@ -43,26 +43,46 @@ public class DaoTest {
 //		int r = (Integer) MybatisDaoImpl.UrlMap_DAO.queryBySqlId("SysUrlMapMapper.addUrlMap", "I", params);
 //		System.out.println(r);
 		
-		Member member = MybatisDaoImpl.Member_DAO.getBeanById("1");
-		System.out.println(member.getUserName());
-		Map<String,Object> params =new HashMap<String, Object>();
-		params.put("unid", "7e4c99dc-4a94-4e64-8a32-cd493b9b6ed");
-		params.put("urlFlag", "test11");
-		params.put("fullUrl", "test");
-		params.put("privId", "test1");
-		params.put("title", "test1");
-		params.put("serviceCommand", "test1");
-		params.put("page", "test");
-		params.put("createrId", "test");
-		params.put("sqlId", "test");
-		params.put("validation", "test");
-		params.put("sqlType", "test");
-		
-		int r = (Integer) MybatisDaoImpl.UrlMap_DAO.queryBySqlId("SysUrlMapMapper.updateUrlMap", "U", params);
-		System.out.println(r);
+//		Member member = MybatisDaoImpl.Member_DAO.getBeanById("1");
+//		System.out.println(member.getUserName());
+//		Map<String,Object> params =new HashMap<String, Object>();
+//		params.put("unid", "7e4c99dc-4a94-4e64-8a32-cd493b9b6ed");
+//		params.put("urlFlag", "test11");
+//		params.put("fullUrl", "test");
+//		params.put("privId", "test1");
+//		params.put("title", "test1");
+//		params.put("serviceCommand", "test1");
+//		params.put("page", "test");
+//		params.put("createrId", "test");
+//		params.put("sqlId", "test");
+//		params.put("validation", "test");
+//		params.put("sqlType", "test");
+//		
+//		int r = (Integer) MybatisDaoImpl.UrlMap_DAO.queryBySqlId("SysUrlMapMapper.updateUrlMap", "U", params);
+//		System.out.println(r);
 //		Map<String,Object> params =new HashMap<String, Object>();
 //		params.put("unid", "6");
 //		int r = (Integer) MybatisDaoImpl.UrlMap_DAO.queryBySqlId("SysUrlMapMapper.deleteUrlMap", "D", params);
 //		System.out.println(r);
+		String r ="1111+222";
+		char[] arr = r.toCharArray();
+		StringBuffer[] strArr = new StringBuffer[r.length()];
+		int i = 0;
+		strArr[i] = new StringBuffer();
+		for(char temp : arr ){
+		
+			if(temp != '+'){
+				strArr[i].append(temp);
+			}else{
+				
+				strArr[++i] = new StringBuffer();
+				
+			}
+			
+		}
+		for(StringBuffer sb : strArr){
+			System.out.println(sb==null?"":sb);
+			
+		}
 	}
 }

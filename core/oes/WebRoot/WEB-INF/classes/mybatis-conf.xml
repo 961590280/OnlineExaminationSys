@@ -32,8 +32,8 @@
 	<!-- 映射文件 -->
 	<mappers>
 	  <!-- 类似文件路径的格式 -->
-	  <mapper resource="com/cw/oes/dao/mapping/SysUrlMapMapper.xml" />
-	   <mapper resource="com/cw/oes/dao/mapping/MemberMapper.xml" />
+	  <mapper resource="com/cw/oes/pojo/mapping/SysUrlMapMapper.xml" />
+	   <mapper resource="com/cw/oes/pojo/mapping/MemberMapper.xml" />
 	</mappers>
 
 </configuration>

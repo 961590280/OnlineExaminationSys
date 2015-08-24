@@ -18,6 +18,7 @@ import com.cw.oes.form.ResponseData;
 import com.cw.oes.form.ResponseDataForm;
 import com.cw.oes.pojo.Member;
 import com.cw.oes.pojo.Result;
+import com.cw.oes.pojo.TestPaper;
 import com.cw.oes.pojo.UrlMap;
 import com.cw.oes.service.IService;
 import com.cw.oes.utils.DateUtil;
@@ -99,7 +100,7 @@ public class CommonService implements IService{
 		return rdf;
 	}
 	/**
-	 * 
+	 * 获取考卷
 	 * @param requestDataForm
 	 * @return
 	 * @throws Exception
@@ -107,19 +108,40 @@ public class CommonService implements IService{
 	public ResponseDataForm getTestPaper(RequestDataForm requestDataForm)
 			throws Exception {
 		ResponseDataForm rdf = new ResponseDataForm();
-		UrlMap urlMap = requestDataForm.getUrlMap();
-		String testPaperPid = requestDataForm.getString("testPaperPid");
-		String sort = requestDataForm.getString("sort");
+		//判断考试是否结束
+		UserSessionBean session = requestDataForm.getUserSession();
+		String testPaperPid = session.getUserInfo().get("testPaperPid").toString();
+		String userPid = session.getUserInfo().get("userPid").toString();
+		Calendar beginTime = DateUtil.getDate(session.getUserInfo().get("beginTime").toString());
+		int time = (Integer) session.getUserInfo().get("time");
+		Date nowTime =  new Date();
+		int finishTime = (int) (time - (nowTime.getTime()-beginTime.getTimeInMillis()));
+		if(finishTime<0){
+			rdf.setResult(ResponseDataForm.FAULAIE);
+			rdf.setResultInfo("考试已经结束");
+			return rdf;
+		}
+		
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("testPaperPid", testPaperPid);
-		params.put("sort", sort);
+		params.put("userPid", userPid);
+		
+		TestPaper testPaper = (TestPaper) myDao.queryBySqlId("TestPaperMapper.getMembersPaper", "SO", params);
+		
+		rdf.setResult(ResponseData.SESSFUL);
+		Map<String, Object> testPaperInfo = new HashMap<String, Object>();
+		testPaperInfo.put("paperTitle", testPaper.getPaperTitle());
+		testPaperInfo.put("paperDifficult", testPaper.getPaperDifficulty());
+		testPaperInfo.put("paperFinishedTime", testPaper.getPaperFinishedTime());
+		testPaperInfo.put("paperQuestionNum", testPaper.getPaperQuestionNum());
+		testPaperInfo.put("paperTotalPoint", testPaper.getPaperTotalPoint());
+		testPaperInfo.put("paperType", testPaper.getPaperType());
+		
+		rdf.setResultObj(testPaper);
 		
 		
-		
-		
-		
-		
-		return null;
+		return rdf;
 	}
 	
 	public ResponseDataForm beginTest(RequestDataForm requestDataForm)
@@ -150,6 +172,7 @@ public class CommonService implements IService{
 		
 		int time = (int) (r.getFinishTime()-(new Date().getTime() - beginTime.getTimeInMillis()));
 		userInfo.put("beginTime", r.getBeginTime());
+		userInfo.put("userPid", userPid);
 		userInfo.put("testPaperPid", r.getTestPaperPid());
 		userInfo.put("time",time);
 		requestDataForm.getUserSession().setUserInfo(userInfo);
@@ -159,6 +182,7 @@ public class CommonService implements IService{
 		
 	}
 	
+
 
 	@Override
 	public ResponseDataForm service(RequestDataForm requestDataForm)

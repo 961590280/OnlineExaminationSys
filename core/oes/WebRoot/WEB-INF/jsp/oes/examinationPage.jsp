@@ -2,6 +2,9 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+//String currentTestPaperPid = request.getSession().getAttribute("currentTestPaperPid").toString();
+String testPaperPid = request.getParameter("testPaperPid");
+
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -22,14 +25,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="res/js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript">
 	var time; //考试时间
-
+	var testPaperPid = <%=testPaperPid%>;
 	
 	$(document).ready(function(){
 		if(confirm("一旦开始考试计时就不会停止，不能中途暂停！确定现在开始考试吗")){
 			$.ajax({
 			url:"${ctxPath}/common/ajax/beginTest",
 			data:{
-					testPaperPid:"1"
+					testPaperPid:testPaperPid
 					},
 			type:"post",
 			success:function(data){
@@ -41,6 +44,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					location.href="${ctxPath}/common/toPersonPage";
 				}else{
 					beginTime();
+					getTestPaper();
 				}
 			}
 		});
@@ -96,6 +100,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		});
 	
 	}
+	function getTestPaper(){
+		$.ajax({
+			url:"${ctxPath}/common/ajax/getTestPaper",
+			type:"post",
+			success:function(data){
+			
+				
+				data = eval("("+data+")");
+				if(data["result"] == '2'){
+					alert("考试已经结束");
+					location.href="${ctxPath}/common/toPersonPage";
+				}
+				
+				
+				//alert(data);
+				console.log(data);
+				$("#paperType").text(data["resultObj"].paperType);
+				$("#paperDifficulty").text(data["resultObj"].paperDifficulty);
+				$("#paperTitle").text(data["resultObj"].paperTitle);
+				$("#paperTotalPoint").text(data["resultObj"].paperTotalPoint);
+				$("#paperTime").text(parseInt(data["resultObj"].paperFinishedTime/(1000*60))+"分钟");
+			
+			}
+		});
+	
+	}
 	</script>
 	<style type="text/css">
 	.red
@@ -127,8 +157,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body style="padding: 0;margin: 0;height:100%;">
   <div style="float:left;text-align: center;background-color: gray;width: 100%;height: 100%;position: relative;">
 	<div class="pageTitle" style="height:100%;width: 800px;background-color:white;position: absolute;margin-left: 50%;left: -400px; ">
-		<h1>xxx测试</h1>
-		<p>类型：难度：总分：考试时间：</p>
+		<h1 id="paperTitle">xxx测试</h1>
+		<p >
+		<table width="500px" style="margin-left:25%;"><tr>
+		<td>类型：</td><td id="paperType" style="float:left;"></td>
+		<td>难度：</td><td id="paperDifficulty" style="float:left;"></td>
+		<td>总分：</td><td id="paperTotalPoint" style="float:left;"></td>
+		<td>考试时间：</td><td id="paperTime" style="float:left;"></td>
+		</tr></table>
+		</p>
 		<div class="questionContext" >
 		<p class="topic" style="text-align: left;margin-left:10px;">第一大题 选择题：</p>
 			

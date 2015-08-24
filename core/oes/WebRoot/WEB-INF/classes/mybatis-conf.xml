@@ -9,6 +9,7 @@
       <typeAlias alias="urlMap" type="com.cw.oes.pojo.UrlMap" />
        <typeAlias alias="member" type="com.cw.oes.pojo.Member" />
        <typeAlias alias="result" type="com.cw.oes.pojo.Result" />
+       <typeAlias alias="testPaper" type="com.cw.oes.pojo.TestPaper" />
     </typeAliases>
 
     <!-- 配置数据库连接信息 -->
@@ -36,6 +37,8 @@
 	  <mapper resource="com/cw/oes/pojo/mapping/SysUrlMapMapper.xml" />
 	  <mapper resource="com/cw/oes/pojo/mapping/MemberMapper.xml" />
 	  <mapper resource="com/cw/oes/pojo/mapping/ResultMapper.xml" />
+	  <mapper resource="com/cw/oes/pojo/mapping/TestPaperMapper.xml" />
+	  
 	</mappers>
 
 </configuration>

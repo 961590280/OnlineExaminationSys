@@ -2,47 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 设置好命名空间 -->
-<mapper namespace="com.cw.oes.pojo.mapping.ResultMapper">
+<mapper namespace="com.cw.oes.pojo.mapping.TestPaperMapper">
 
-	<resultMap type="Result" id="result">
+	<resultMap type="TestPaper" id="testPaper">
 
 	  <id property="unid" column="unid" />
-	  <result property="resultNum" column="result_num" />
-	  <result property="userPid" column="user_pid" />
-	  <result property="testPaperPid" column="test_paper_pid" />
-	  <result property="resultScore" column="result_score" />
-	  <result property="isPass" column="isPass" />
-	  <result property="judgingPaperTime" column="judgingPaper_time" />
-	  <result property="beginTime" column="begin_time" />
-	  <result property="finishTime" column="finish_time" />
+	  <result property="paperTitle" column="paper_title" />
+	  <result property="paperType" column="paper_type" />
+	  <result property="paperSerialNum" column="paper_serial_num" />
+	  <result property="paperQuestionNum" column="paper_question_num" />
+	  <result property="paperTotalPoint" column="paper_total_point" />
+	  <result property="paperDifficulty" column="paper_difficulty" />
+	  <result property="paperFinishedTime" column="paper_finished_time" />
+	  <result property="paperEditTime" column="paperEdit_time" />
+	   <result property="paperCreateTime" column="paperCreate_time" />
 	  
 	 </resultMap>
 	
 	<!-- sql语句是针对表的操作，而resultMap说明了表和pojo的映射关系 --> 	
- 	<select id="getAllResult" resultMap="result">
+ 	<select id="getAllTestPaper" resultMap="testPaper">
 	  select
 	  * from
-	  result_tab;
+	  test_paper_tab;
  	</select>
  	
  	
  	
- 	<select id="getOneResult" parameterType="String" resultMap="result">
+ 	<select id="getOneTestPaper" parameterType="String" resultMap="testPaper">
 	  select
 	  * from
 	  member_tab
 	  where unid = #{unid} ;
  	</select>
  	
- 	<select id="getMembersResult" parameterType="String" resultMap="result">
+ 	<select id="getMembersPaper" parameterType="java.util.Map" resultMap="testPaper">
 	  select
-	  * from
-	  result_tab
-	  where user_pid = '1'
-	  <if test="testPaperPid != null">
-	  	and test_paper_pid =  '1'
-	  </if>
-	  ;
+	  * from 
+	  test_paper_tab 
+	  left join result_tab RT on RT.user_pid = #{userPid} and RT.test_paper_pid = #{testPaperPid} 
+	  where unid = RT.test_paper_pid  ;
  	</select>
  	
  	<insert id="addResult" parameterType="java.util.Map">

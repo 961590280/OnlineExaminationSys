@@ -34,7 +34,7 @@
 	  where unid = #{unid} ;
  	</select>
  	
- 	<select id="getMembersResult" parameterType="String" resultMap="result">
+ 	<select id="getMembersResult" parameterType="java.util.Map" resultMap="result">
 	  select * from result_tab where user_pid = '${userPid}'
 	  <if test="testPaperPid != null">
 	  	and test_paper_pid =  '${testPaperPid}'

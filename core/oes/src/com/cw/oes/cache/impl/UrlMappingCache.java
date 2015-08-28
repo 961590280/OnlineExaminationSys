@@ -15,6 +15,10 @@ import javax.annotation.Resource;
 
 
 
+
+
+
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -22,7 +26,10 @@ import org.springframework.stereotype.Service;
 import com.cw.oes.cache.ICacheService;
 import com.cw.oes.dao.IJdbcDao;
 import com.cw.oes.dao.IUrlMapDao;
+import com.cw.oes.dao.impl.DaoHelper;
 import com.cw.oes.dao.impl.MybatisDaoImpl;
+import com.cw.oes.mybatis.dao.SysUrlServiceMapMapper;
+import com.cw.oes.mybatis.model.SysUrlServiceMap;
 import com.cw.oes.pojo.Pojo;
 import com.cw.oes.pojo.UrlMap;
 
@@ -40,21 +47,20 @@ public class UrlMappingCache implements ICacheService {
 	
 	@Override
 	public Map<String, Object> getCacheContext() {
-		//使用通用的dao类
-//		MybatisDaoImpl<UrlMap> mydao = new MybatisDaoImpl<UrlMap>(new UrlMap());
 		ConcurrentHashMap<String,Object> resultMap=new ConcurrentHashMap<String, Object>();
-		
-		List<UrlMap> list;
+		SqlSession session = DaoHelper.getSession();
+		List<SysUrlServiceMap> list;
 		try {
-			list = (List<UrlMap>) myDao.queryBySqlId("SysUrlMapMapper.getAllUrlMap", "SL", null);
-			for(UrlMap map : list){
+			SysUrlServiceMapMapper mapper = session.getMapper(SysUrlServiceMapMapper.class);
+			list = mapper.selectAll();
+			for(SysUrlServiceMap map : list){
 				String flag = String.valueOf(map.getUrlFlag());
 				resultMap.put(flag, map);
-				
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			session.close();
 		}
 		
 		

@@ -50,7 +50,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
 Welecome your personPage
 
-<a href="${ctxPath}/common/toExaminationPage?testPaperPid=1">XXX考试</a><br/>
+<a href="${ctxPath}/common/toExamPage?examPid=1">XXX考试</a><br/>
 <input type="button" style="float: right;" value="刷新url缓存" onclick="refreshUrlCahce();">
   </body>
 </html>

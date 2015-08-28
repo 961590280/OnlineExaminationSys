@@ -47,7 +47,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
   </head>
   
   <body>
- <form id="formLogin" action="${ctxPath }/common/login" method="post">
+ <form id="formLogin" action="${ctxPath }/common/memberLogin" method="post">
  
 	 username:<input type="text" id="userCode" name="userCode"/><br/>
 	 userpwd:<input type="text" id="userPwd" name="userPwd"/><br/>

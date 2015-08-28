@@ -1,10 +1,35 @@
 package com.cw.oes.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.cw.oes.mybatis.model.Examination;
+import com.cw.oes.mybatis.model.Member;
+import com.cw.oes.mybatis.model.Paper;
+import com.cw.oes.mybatis.model.Topic;
+
 public class UserSessionBean {
 	
+	/**
+	 * 会员
+	 */
+	private Member member;
+	/**
+	 * 考卷
+	 */
+	private Paper paper;
+	/**
+	 * 试题
+	 */
+	private List<Topic> topics;
+	
+	private List<String> answer ;
+	
+	 /**
+	  * 测验
+	  */
+	private Examination exam;
 	/**
 	 * 多租户登录名称
 	 */
@@ -24,6 +49,32 @@ public class UserSessionBean {
 	
 	private List<String> userPrivIds;
 	
+	
+	
+	public List<String> getAnswer() {
+		return answer;
+	}
+	public void setAnswer(List<String> answer) {
+		this.answer = answer;
+	}
+	public Examination getExam() {
+		return exam;
+	}
+	public void setExam(Examination exam) {
+		this.exam = exam;
+	}
+	public List<Topic> getTopics() {
+		return topics;
+	}
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
+	}
+	public Member getMember() {
+		return member;
+	}
+	public void setMember(Member member) {
+		this.member = member;
+	}
 	public String getUserCode() {
 		return userCode;
 	}
@@ -53,5 +104,11 @@ public class UserSessionBean {
 	}
 	public void setUserPrivIds(List<String> userPrivIds) {
 		this.userPrivIds = userPrivIds;
+	}
+	public Paper getPaper() {
+		return paper;
+	}
+	public void setPaper(Paper paper) {
+		this.paper = paper;
 	}
 }

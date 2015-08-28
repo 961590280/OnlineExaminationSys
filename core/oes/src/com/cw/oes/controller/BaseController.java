@@ -11,6 +11,7 @@ import com.cw.oes.cache.GlobalCache;
 import com.cw.oes.cache.impl.UrlMappingCache;
 import com.cw.oes.exception.CustomException;
 import com.cw.oes.form.RequestDataForm;
+import com.cw.oes.mybatis.model.SysUrlServiceMap;
 import com.cw.oes.pojo.UrlMap;
 
 /**
@@ -37,7 +38,7 @@ public abstract class BaseController {
 		logger.debug("***************************");
 		// 权限
 		
-		UrlMap urlMap = null;
+		SysUrlServiceMap urlMap = null;
 		//根据UrlMappingCache类从全局缓存中去出对应的UrlMappingCache缓存（缓存为Map类型）
 		Map<String, Object> urlCache = GlobalCache.getCache(UrlMappingCache.class, Map.class);
 		
@@ -47,8 +48,7 @@ public abstract class BaseController {
 			throw new CustomException(
 					"error! url["+urlFlag+"] undefined");
 		}else{
-			//
-			urlMap=(UrlMap) urlCache.get(urlFlag);
+			urlMap=(SysUrlServiceMap) urlCache.get(urlFlag);
 		}
 		
 		

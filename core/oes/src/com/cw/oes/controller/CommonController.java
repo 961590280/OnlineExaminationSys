@@ -18,6 +18,7 @@ import com.cw.oes.form.RequestDataForm;
 import com.cw.oes.form.ResponseData;
 import com.cw.oes.form.ResponseDataForm;
 import com.cw.oes.listener.SpringContextUtil;
+import com.cw.oes.mybatis.model.SysUrlServiceMap;
 import com.cw.oes.pojo.UrlMap;
 import com.cw.oes.service.IService;
 import com.cw.oes.service.impl.CommonService;
@@ -48,30 +49,34 @@ public class CommonController extends BaseController{
 	 */
 	@RequestMapping("{urlFlag}")
 	public Object common(@PathVariable String urlFlag, HttpServletRequest request,
-			HttpServletResponse response) throws Exception{
+			HttpServletResponse response) {
 		
 		logger.debug("urlFlag=>" + urlFlag);
-		RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
-		UrlMap urlMap = requestDataForm.getUrlMap();//获取url映射
-		String serviceCommand = urlMap.getServiceCommand();
-		String page = urlMap.getPage();
-		Class<? extends CommonService> clazz = commonService.getClass();//获取commonService类
-		
-		
-		if(StringUtils.isNotEmpty(serviceCommand)){//判断是否需要服务
+		RequestDataForm requestDataForm;
+		try {
+			requestDataForm = getRequestDataForm(urlFlag, request, response);
 			
-			Method method = clazz.getMethod(serviceCommand, requestDataForm.getClass());//获取CommonService类中的方法
-			logger.debug("cdbsmCommand=>" + serviceCommand);
-			ResponseDataForm responseDataForm = (ResponseDataForm) method.invoke(commonService, requestDataForm);//调用服务
-			request.setAttribute("responseDataForm", responseDataForm);
+			SysUrlServiceMap urlMap = requestDataForm.getUrlMap();//获取url映射
+			String serviceCommand = urlMap.getServiceCommand();
+			String page = urlMap.getPage();
 			
-			page = responseDataForm.getPage();
-			if (StringUtils.isEmpty(page))
-				page = urlMap.getPage();
+			
+			if(StringUtils.isNotEmpty(serviceCommand)){//判断是否需要服务方法
+				Class<? extends CommonService> clazz = commonService.getClass();
+				Method method = clazz.getMethod(serviceCommand, requestDataForm.getClass());
+				logger.debug("cdbsmCommand=>" + serviceCommand);
+				ResponseDataForm responseDataForm = (ResponseDataForm) method.invoke(commonService, requestDataForm);//调用服务
+				request.setAttribute("responseDataForm", responseDataForm);
+				page = responseDataForm.getPage();
+				if (StringUtils.isEmpty(page))
+					page = urlMap.getPage();
+			}
+			return page;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "<script>parent.alert('Hello Js');</script>";
 		}
-		
-		
-		return page;
 	} 
 	
 	/**
@@ -89,15 +94,13 @@ public class CommonController extends BaseController{
 	  {
 
 		RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
-		UrlMap urlMap = requestDataForm.getUrlMap();
+		SysUrlServiceMap urlMap = requestDataForm.getUrlMap();
 		String serviceCommand = urlMap.getServiceCommand();
 		Class<? extends CommonService> clazz = commonService.getClass();//获取commonService类
 		Method method = clazz.getMethod(serviceCommand, requestDataForm.getClass());//获取CommonService类中的方法
 		logger.debug("cdbsmCommand=>" + serviceCommand);
 		return (ResponseDataForm) method.invoke(commonService, requestDataForm);//调用服务
-		
-				
-			
+	
 	  }
 	
 }

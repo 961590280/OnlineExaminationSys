@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
 
-import com.cw.oes.pojo.UrlMap;
+import com.cw.oes.mybatis.model.SysUrlServiceMap;
 import com.cw.oes.utils.Environment;
 import com.cw.oes.utils.UserSessionBean;
 import com.cw.oes.web.httpobjects.HttpRequestObject;
@@ -36,7 +36,7 @@ public class RequestDataForm {
 	/**
 	 * 域 <code>urlSqlMap</code>
 	 */
-	private UrlMap urlMap;
+	private SysUrlServiceMap urlMap;
 	//用户session Bean
 	private UserSessionBean userSession;
 	private HttpServletRequest request;
@@ -96,11 +96,13 @@ public class RequestDataForm {
 		this.params = params;
 	}
 
-	public UrlMap getUrlMap() {
+	
+
+	public SysUrlServiceMap getUrlMap() {
 		return urlMap;
 	}
 
-	public void setUrlMap(UrlMap urlMap) {
+	public void setUrlMap(SysUrlServiceMap urlMap) {
 		this.urlMap = urlMap;
 	}
 

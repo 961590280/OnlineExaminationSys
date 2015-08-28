@@ -6,10 +6,24 @@
 	<properties resource="jdbcInfo.properties" />
 	<!-- 配置java类全路径的别名,避免写重复的累赘的包名 -->
     <typeAliases>
+    <!-- 
       <typeAlias alias="urlMap" type="com.cw.oes.pojo.UrlMap" />
        <typeAlias alias="member" type="com.cw.oes.pojo.Member" />
        <typeAlias alias="result" type="com.cw.oes.pojo.Result" />
        <typeAlias alias="testPaper" type="com.cw.oes.pojo.TestPaper" />
+       <typeAlias alias="memberExamLinkKey" type="com.cw.oes.mybatis.model.MemberExamLinkKey" />
+       <typeAlias alias="member" type="com.cw.oes.mybatis.model.Member" />
+       <typeAlias alias="paper" type="com.cw.oes.mybatis.model.Paper" />
+       <typeAlias alias="paperTopicLinkKey" type="com.cw.oes.mybatis.model.PaperTopicLinkKey" />
+       <typeAlias alias="sysUrlServiceMap" type="com.cw.oes.mybatis.model.SysUrlServiceMap" />
+       <typeAlias alias="topic" type="com.cw.oes.mybatis.model.Topic" />
+        -->
+        
+       <typeAlias alias="sysUrlService" type="com.cw.oes.mybatis.model.SysUrlServiceMap" />
+       <typeAlias alias="member" type="com.cw.oes.mybatis.model.Member" />
+       <typeAlias alias="paper" type="com.cw.oes.mybatis.model.Paper" />
+       <typeAlias alias="examination" type="com.cw.oes.mybatis.model.Examination" />
+       <typeAlias alias="topic" type="com.cw.oes.mybatis.model.Topic" />
     </typeAliases>
 
     <!-- 配置数据库连接信息 -->
@@ -34,10 +48,22 @@
 	<!-- 映射文件 -->
 	<mappers>
 	  <!-- 类似文件路径的格式 -->
-	  <mapper resource="com/cw/oes/pojo/mapping/SysUrlMapMapper.xml" />
-	  <mapper resource="com/cw/oes/pojo/mapping/MemberMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/SysUrlServiceMapMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/MemberMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/ExaminationMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/MemberExamLinkMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/PaperMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/TopicMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/PaperTopicLinkMapper.xml" />
+	<!--   <mapper resource="com/cw/oes/mybatis/mapping/MemberExamLinkMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/PageMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/PageTopicLinkMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/TopicMapper.xml" /> -->
+	  
+	  
+	  <!-- <mapper resource="com/cw/oes/pojo/mapping/MemberMapper.xml" />
 	  <mapper resource="com/cw/oes/pojo/mapping/ResultMapper.xml" />
-	  <mapper resource="com/cw/oes/pojo/mapping/TestPaperMapper.xml" />
+	  <mapper resource="com/cw/oes/pojo/mapping/TestPaperMapper.xml" /> -->
 	  
 	</mappers>
 

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cw.oes.mybatis.dao.TopicMapper" >
+  <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.Topic" >
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="CHAR" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="opn_1" property="opn1" jdbcType="VARCHAR" />
+    <result column="opn_2" property="opn2" jdbcType="VARCHAR" />
+    <result column="opn_3" property="opn3" jdbcType="VARCHAR" />
+    <result column="opn_4" property="opn4" jdbcType="VARCHAR" />
+    <result column="opn_5" property="opn5" jdbcType="VARCHAR" />
+    <result column="opn_6" property="opn6" jdbcType="VARCHAR" />
+    <result column="opn_7" property="opn7" jdbcType="VARCHAR" />
+    <result column="is_correct" property="isCorrect" jdbcType="VARCHAR" />
+    <result column="difficulty" property="difficulty" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="edit_time" property="editTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.cw.oes.mybatis.model.Topic" >
+    insert into topic (uuid, content, type, 
+      answer, opn_1, opn_2, 
+      opn_3, opn_4, opn_5, opn_6, 
+      opn_7, is_correct, difficulty, 
+      create_time, edit_time)
+    values (#{uuid,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, 
+      #{answer,jdbcType=VARCHAR}, #{opn1,jdbcType=VARCHAR}, #{opn2,jdbcType=VARCHAR}, 
+      #{opn3,jdbcType=VARCHAR}, #{opn4,jdbcType=VARCHAR}, #{opn5,jdbcType=VARCHAR}, #{opn6,jdbcType=VARCHAR}, 
+      #{opn7,jdbcType=VARCHAR}, #{isCorrect,jdbcType=VARCHAR}, #{difficulty,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR}, #{editTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.Topic" >
+    insert into topic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="opn1 != null" >
+        opn_1,
+      </if>
+      <if test="opn2 != null" >
+        opn_2,
+      </if>
+      <if test="opn3 != null" >
+        opn_3,
+      </if>
+      <if test="opn4 != null" >
+        opn_4,
+      </if>
+      <if test="opn5 != null" >
+        opn_5,
+      </if>
+      <if test="opn6 != null" >
+        opn_6,
+      </if>
+      <if test="opn7 != null" >
+        opn_7,
+      </if>
+      <if test="isCorrect != null" >
+        is_correct,
+      </if>
+      <if test="difficulty != null" >
+        difficulty,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="editTime != null" >
+        edit_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="opn1 != null" >
+        #{opn1,jdbcType=VARCHAR},
+      </if>
+      <if test="opn2 != null" >
+        #{opn2,jdbcType=VARCHAR},
+      </if>
+      <if test="opn3 != null" >
+        #{opn3,jdbcType=VARCHAR},
+      </if>
+      <if test="opn4 != null" >
+        #{opn4,jdbcType=VARCHAR},
+      </if>
+      <if test="opn5 != null" >
+        #{opn5,jdbcType=VARCHAR},
+      </if>
+      <if test="opn6 != null" >
+        #{opn6,jdbcType=VARCHAR},
+      </if>
+      <if test="opn7 != null" >
+        #{opn7,jdbcType=VARCHAR},
+      </if>
+      <if test="isCorrect != null" >
+        #{isCorrect,jdbcType=VARCHAR},
+      </if>
+      <if test="difficulty != null" >
+        #{difficulty,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="editTime != null" >
+        #{editTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

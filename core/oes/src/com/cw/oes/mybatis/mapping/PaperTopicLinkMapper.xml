@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cw.oes.mybatis.dao.PaperTopicLinkMapper" >
+  <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.PaperTopicLinkKey" >
+    <id column="paper_pid" property="paperPid" jdbcType="VARCHAR" />
+    <id column="topic_pid" property="topicPid" jdbcType="VARCHAR" />
+    <id column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    paper_pid, topic_pid, sort 
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="com.cw.oes.mybatis.model.PaperTopicLinkKey" >
+    delete from paper_topic_link
+    where paper_pid = #{paperPid,jdbcType=VARCHAR}
+      and topic_pid = #{topicPid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cw.oes.mybatis.model.PaperTopicLinkKey" >
+    insert into paper_topic_link (paper_pid, topic_pid,sort)
+    values (#{paperPid,jdbcType=VARCHAR}, #{topicPid,jdbcType=VARCHAR}),#{sort,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.PaperTopicLinkKey" >
+    insert into paper_topic_link
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paperPid != null" >
+        paper_pid,
+      </if>
+      <if test="topicPid != null" >
+        topic_pid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paperPid != null" >
+        #{paperPid,jdbcType=VARCHAR},
+      </if>
+      <if test="topicPid != null" >
+        #{topicPid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectPaperTopic" resultMap="com.cw.oes.mybatis.dao.TopicMapper.BaseResultMap" parameterType="java.lang.String">
+  select  B.uuid,
+  B.content,
+  B.type,
+  B.answer,
+  B.opn_1,B.opn_2,B.opn_3,B.opn_4,B.opn_5,B.opn_6,B.opn_7,
+  B.is_correct,
+  B.difficulty,
+  B.create_time,
+  B.edit_time 
+  from paper_topic_link A 
+  left join topic B on B.uuid = A.topic_pid
+  where  A.paper_pid = #{paperPid,jdbcType=VARCHAR} 
+  order by A.sort
+  </select>
+</mapper>

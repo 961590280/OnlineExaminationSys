@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cw.oes.mybatis.dao.MemberExamLinkMapper" >
+  <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.MemberExamLinkKey" >
+    <id column="member_pid" property="memberPid" jdbcType="VARCHAR" />
+    <id column="exam_pid" property="examPid" jdbcType="VARCHAR" />
+    <id column="answer" property="answer" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+   member_pid,exam_pid,answer
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey" >
+    delete from member_exam_link
+    where member_pid = #{memberPid,jdbcType=VARCHAR}
+      and exam_pid = #{examPid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey" >
+    insert into member_exam_link (member_pid, exam_pid)
+    values (#{memberPid,jdbcType=VARCHAR}, #{examPid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey" >
+    insert into member_exam_link
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="memberPid != null" >
+        member_pid,
+      </if>
+      <if test="examPid != null" >
+        exam_pid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="memberPid != null" >
+        #{memberPid,jdbcType=VARCHAR},
+      </if>
+      <if test="examPid != null" >
+        #{examPid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="commitAnswer" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey">
+  	update member_exam_link set answer = #{answer,jdbcType=VARCHAR} 
+  	where member_pid = #{memberPid,jdbcType=VARCHAR}
+      and exam_pid = #{examPid,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询会员报名的所有考试 -->
+   <select id="selectByMemberId" resultMap="com.cw.oes.mybatis.dao.ExaminationMapper.BaseResultMap" parameterType="java.lang.String" >
+    select A.uuid,
+    	   A.exam_type,
+    	   A.exam_paper_pid,
+    	   A.exam_begin_time,
+    	   A.exam_end_time 
+    from member_exam_link   
+    left join examination A on A.uuid = exam_pid  
+    where exam_pid = #{examPid,jdbcType=VARCHAR}
+  </select>
+    <!-- 查询报名该考试的会员 -->
+   <select id="selectByExamId" resultMap="com.cw.oes.mybatis.dao.MemberMapper.BaseResultMap" parameterType="java.lang.String" >
+    select A.uuid,
+    	   A.user_name,
+    	   A.user_pwd,
+    	   A.user_reg_time,
+    	   A.user_is_del 
+   	from member_exam_link 
+    left join member A on A.uuid = member_pid 
+    where member_pid = #{memberPid,jdbcType=VARCHAR}
+    
+  </select>
+  <select id="selectByMemberIdExamId" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey"  >
+      select 
+   	<include refid="Base_Column_List" />
+    from member_exam_link
+    where exam_pid = #{examPid,jdbcType=VARCHAR} and member_pid = #{memberPid,jdbcType=VARCHAR};
+  </select>
+</mapper>

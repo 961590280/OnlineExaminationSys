@@ -7,7 +7,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html style="height:100%;">
   <head>
     <base href="<%=basePath%>">
     
@@ -46,12 +46,21 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	</script>
   </head>
   
-  <body>
- <form id="formLogin" action="${ctxPath }/common/memberLogin" method="post">
- 
-	 username:<input type="text" id="userCode" name="userCode"/><br/>
-	 userpwd:<input type="text" id="userPwd" name="userPwd"/><br/>
- <input type="button" value="登录" onclick="submitForm()"/>
- </form>
+  <body style="padding: 0;margin: 0;height:100%;">
+  	<div style="margin: 0;height:100%;text-align: center;">
+  	<div style="margin: 0 ;height:30%;text-align: center;">
+  	<br/>
+  	<br/>
+  	<h1 style="margin: 0;">在线考试系统</h1>
+  	</div>
+  	<div >
+	 <form id="formLogin" action="${ctxPath }/common/memberLogin" method="post">
+	 
+		 用户名:<input type="text" id="userCode" name="userCode"/><br/>
+		 &nbsp;密&nbsp;码&nbsp;:<input type="text" id="userPwd" name="userPwd"/><br/>
+	 	<input type="button" value="登录" onclick="submitForm()"/>
+	 </form>
+	 </div>
+	 </div>
   </body>
 </html>

@@ -88,7 +88,7 @@ String examPid = request.getParameter("examPid");
 		 }
 		 
 		 if(time<=0){
-		 	location.href="${ctxPath}/common/toPersonPage";
+		 	location.href="${ctxPath}/common/toPersonalPage";
 		 }
 		/*  console.log(t); */
 		setTimeout("beginTime()",50);
@@ -181,6 +181,7 @@ String examPid = request.getParameter("examPid");
 			}
 		});
 	}
+	/**提交考卷**/
 	function commitExam(){
 		$.ajax({
 		url:"${ctxPath}/common/ajax/commitExam",
@@ -246,7 +247,7 @@ String examPid = request.getParameter("examPid");
 			
 			<div style="margin-left:20px;">
 				<p id="question" style="text-align: left;margin-left:10px;">
-					1.你是男的还是女的？
+					
 				</p>
 				<form>
 				<div id="answer" style="text-align: left;margin-left:30px;">

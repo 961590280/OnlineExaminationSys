@@ -7,9 +7,10 @@
     <result column="exam_paper_pid" property="examPaperPid" jdbcType="VARCHAR" />
     <result column="exam_begin_time" property="examBeginTime" jdbcType="VARCHAR" />
     <result column="exam_end_time" property="examEndTime" jdbcType="VARCHAR" />
+    <result column="exam_name" property="examName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, exam_type, exam_paper_pid, exam_begin_time, exam_end_time
+    uuid, exam_type, exam_paper_pid, exam_begin_time, exam_end_time,exam_name
   </sql>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -18,6 +19,12 @@
     from examination
     where uuid = #{uuid,jdbcType=VARCHAR}
   </select>
+  <!-- 获取所有测验**以后必须废除 -->
+   <select id="selectExams" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from examination
+   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from examination
     where uuid = #{uuid,jdbcType=VARCHAR}

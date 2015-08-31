@@ -2,6 +2,8 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+
+
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -38,19 +40,40 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			alert("刷新失败");
 		}
 		});
-		
-		
-		
-	
 	}
+	/**读取用户可参加的测验**/
+	$(document).ready(function (){
+		$.ajax({
+			url:"${ctxPath}/common/ajax/getExams",
+			success:function(data){
+				data = eval("("+data+")");
+				var html = "";
+				//console.log(data);
+				for(var temp in data["resultObj"]){
+				//console.log(temp);
+					html += "<li><a href='${ctxPath}/common/toExamPage?examPid="+data["resultObj"][temp]["uuid"]+"'>"+data["resultObj"][temp]["examName"]+"</a></li>";
+				}
+				$("#examList").html(html);
+			}
+		
+		});
 	
+	});
 	</script>
   </head>
   
   <body>
-Welecome your personPage
+Welecome to your personPage
+<div >
+<h3>personal examination list</h2>
+	<ul id="examList">
+		<li>
+		<a href="${ctxPath}/common/toExamPage?examPid=1">XXX考试</a><br/>
+		</li>
+	</ul>
+</div>
 
-<a href="${ctxPath}/common/toExamPage?examPid=1">XXX考试</a><br/>
-<input type="button" style="float: right;" value="刷新url缓存" onclick="refreshUrlCahce();">
+
+<input type="button" style="float: right;visibility: hidden;" value="刷新url缓存" onclick="refreshUrlCahce();">
   </body>
 </html>

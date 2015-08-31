@@ -1,5 +1,7 @@
 package com.cw.oes.mybatis.dao;
 
+import java.util.List;
+
 import com.cw.oes.mybatis.model.Examination;
 
 public interface ExaminationMapper {
@@ -14,4 +16,6 @@ public interface ExaminationMapper {
     int updateByPrimaryKeySelective(Examination record);
 
     int updateByPrimaryKey(Examination record);
+    
+    List<Examination> selectExams();
 }

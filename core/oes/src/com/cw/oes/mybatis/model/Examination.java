@@ -14,6 +14,7 @@ public class Examination {
 
     private String examEndTime;
 
+    private String examName;
     public String getUuid() {
         return uuid;
     }
@@ -53,4 +54,14 @@ public class Examination {
     public void setExamEndTime(String examEndTime) {
         this.examEndTime = examEndTime == null ? null : examEndTime.trim();
     }
+
+	public String getExamName() {
+		return examName;
+	}
+
+	public void setExamName(String examName) {
+		this.examName = examName;
+	}
+    
+    
 }

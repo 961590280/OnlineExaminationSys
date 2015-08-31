@@ -93,6 +93,34 @@ public class CommonService implements IService{
 		}
 		return rdf;
 	}
+	@Transactional
+	public ResponseDataForm getExams(RequestDataForm requestDataForm)
+			throws Exception {
+
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			ExaminationMapper examMapper = session.getMapper(ExaminationMapper.class);
+			List<Examination> exams = examMapper.selectExams();
+			
+			if(exams.size()>0){
+				
+				rdf.setResult(ResponseDataForm.SESSFUL);
+				rdf.setResultObj(exams);
+				
+			}else{
+				
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				rdf.setResultInfo("记录为空！");
+			}
+			
+		}finally{
+			
+			session.close();
+		}
+		
+		return rdf;
+	}
 	/**
 	 * 刷新缓存
 	 * @param requestDataForm

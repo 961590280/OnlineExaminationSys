@@ -45,8 +45,8 @@ public abstract class BaseController {
 		
 		//若url标识不存缓存中在则抛出异常
 		if (!urlCache.containsKey(urlFlag)) {
-			throw new CustomException(
-					"error! url["+urlFlag+"] undefined");
+			
+			
 		}else{
 			urlMap=(SysUrlServiceMap) urlCache.get(urlFlag);
 		}

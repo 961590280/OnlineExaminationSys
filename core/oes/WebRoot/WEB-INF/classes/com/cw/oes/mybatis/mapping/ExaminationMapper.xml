@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cw.oes.mybatis.dao.ExaminationMapper" >
+  <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.Examination" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="exam_type" property="examType" jdbcType="VARCHAR" />
+    <result column="exam_paper_pid" property="examPaperPid" jdbcType="VARCHAR" />
+    <result column="exam_begin_time" property="examBeginTime" jdbcType="VARCHAR" />
+    <result column="exam_end_time" property="examEndTime" jdbcType="VARCHAR" />
+    <result column="exam_name" property="examName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, exam_type, exam_paper_pid, exam_begin_time, exam_end_time,exam_name
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from examination
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <!-- 获取所有测验**以后必须废除 -->
+   <select id="selectExams" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from examination
+   </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from examination
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="examination" >
+    insert into examination (uuid, exam_type, exam_paper_pid, 
+      exam_begin_time, exam_end_time)
+    values (#{uuid,jdbcType=VARCHAR}, #{examType,jdbcType=VARCHAR}, #{examPaperPid,jdbcType=VARCHAR}, 
+      #{examBeginTime,jdbcType=VARCHAR}, #{examEndTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.Examination" >
+    insert into examination
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="examType != null" >
+        exam_type,
+      </if>
+      <if test="examPaperPid != null" >
+        exam_paper_pid,
+      </if>
+      <if test="examBeginTime != null" >
+        exam_begin_time,
+      </if>
+      <if test="examEndTime != null" >
+        exam_end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="examType != null" >
+        #{examType,jdbcType=VARCHAR},
+      </if>
+      <if test="examPaperPid != null" >
+        #{examPaperPid,jdbcType=VARCHAR},
+      </if>
+      <if test="examBeginTime != null" >
+        #{examBeginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="examEndTime != null" >
+        #{examEndTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cw.oes.mybatis.model.Examination" >
+    update examination
+    <set >
+      <if test="examType != null" >
+        exam_type = #{examType,jdbcType=VARCHAR},
+      </if>
+      <if test="examPaperPid != null" >
+        exam_paper_pid = #{examPaperPid,jdbcType=VARCHAR},
+      </if>
+      <if test="examBeginTime != null" >
+        exam_begin_time = #{examBeginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="examEndTime != null" >
+        exam_end_time = #{examEndTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cw.oes.mybatis.model.Examination" >
+    update examination
+    set exam_type = #{examType,jdbcType=VARCHAR},
+      exam_paper_pid = #{examPaperPid,jdbcType=VARCHAR},
+      exam_begin_time = #{examBeginTime,jdbcType=VARCHAR},
+      exam_end_time = #{examEndTime,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

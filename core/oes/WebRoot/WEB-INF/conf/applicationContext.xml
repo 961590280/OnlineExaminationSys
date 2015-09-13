@@ -18,12 +18,12 @@
 
 	<!-- 配置Interceptors -->
 	<!-- 后台登录拦截器  -->
-<!-- 	<mvc:interceptors>
+ 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/topic/**" />
-			<bean class="com.weimingfj.system.filter.LoginInterceptor" />
+			<mvc:mapping path="/common/**" />
+			<bean class="com.cw.oes.interceptor.LoginInterceptor" />
 		</mvc:interceptor>
-	</mvc:interceptors> -->
+	</mvc:interceptors>
 	
 	<!--datasource  开发--> 
     <bean id="dataSource" 

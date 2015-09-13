@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置好命名空间 -->
+<mapper namespace="com.cw.oes.dao.mapping.MemberMapper">
+
+	<resultMap type="Member" id="member">
+
+	  <id property="unid" column="unid" />
+	  <result property="userName" column="user_name" />
+	  <result property="userPwd" column="user_pwd" />
+	  <result property="userRegTime" column="user_reg_time" />
+	  <result property="userIsDel" column="user_is_del" />
+	 </resultMap>
+	
+	<!-- sql语句是针对表的操作，而resultMap说明了表和pojo的映射关系 --> 	
+ 	<select id="getAllMember" resultMap="member">
+	  select
+	  * from
+	  member_tab;
+ 	</select>
+ 	
+ 	 <select id="login" resultMap="member">
+	  select
+	  * from
+	  member_tab 
+	  where user_name = #{userCode} and user_is_del ='N';
+ 	</select>
+ 	
+ 	<select id="getOneMember" parameterType="String" resultMap="member">
+	  select
+	  * from
+	  member_tab
+	  where unid = #{unid};
+ 	</select>
+	<select id="getMemberByWhere" parameterType="java.util.Map" resultMap="member">
+	  select
+	  * from
+	  member
+	  where user_name like "%"+#{userName}+"%" or user_is_del = #{userIsDel} or user_reg_time like "%"+#{userRegTime}+"%";
+ 	</select>
+
+</mapper>

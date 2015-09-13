@@ -1,2 +1,2 @@
 # OnlineExaminationSys
-Serving for some people who need to finish their examination online.
+请用用户名为root密码为root的用户创建名为oes的数据库，并导入design文件夹下的oes.sql文件，在运行程序。

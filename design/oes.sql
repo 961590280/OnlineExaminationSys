@@ -64,7 +64,7 @@ CREATE TABLE `member_exam_link` (
 
 /*Data for the table `member_exam_link` */
 
-insert  into `member_exam_link`(`member_pid`,`exam_pid`,`answer`) values ('1','1','3:2|2:3|1:2'),('1','2','3:3|2:1|1:3');
+insert  into `member_exam_link`(`member_pid`,`exam_pid`,`answer`) values ('1','1','4:1'),('1','2','3:1|2:1|1:1');
 
 /*Table structure for table `paper` */
 

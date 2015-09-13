@@ -75,7 +75,7 @@ public class CommonController extends BaseController{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "<script>parent.alert('Hello Js');</script>";
+			return "index";
 		}
 	} 
 	

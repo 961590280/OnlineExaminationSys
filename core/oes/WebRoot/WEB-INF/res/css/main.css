@@ -1,5 +1,128 @@
 @CHARSET "UTF-8";
-#center{
+/* 个人主页 */
+
+.personal-contianer{
+	min-height: 600px;
+}
+.personal-panel{
+	margin-top:20px;
+}
+.personal-tab{
+	
+}
+.personal-tab a{
+	color: #8E959C;
+}
+.personal-like-table{
+	
+}
+.personal-star-td{
+	text-align: center;
+}
+.personal-star-td a{
+	color:black;
+}
+.personal-like-label{
+	margin: 5px;
+}
+
+.hidden{
+	visibility: hidden;
+}
+.show{
+	visibility:visible;
+}
+
+/* 登录窗体 */
+.login-container{
+	
+	min-height: 400px;
+	margin-top:80px;
+}
+.login-head{
+	color: #E9E6E6;
+	background-color: #2A1E1E;
+	border-color: #0E0D0D;	
 	
 	
+}
+/* 字体图标 */
+
+
+@font-face {font-family: 'iconfont';
+
+    src: url('iconfont.eot'); /* IE9*/
+
+    src: url('iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+
+    url('iconfont.woff') format('woff'), /* chrome、firefox */
+
+    url('iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+
+    url('iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+
+}
+
+.iconfont{font-family:"iconfont";
+
+font-size:16px;font-style:normal;}
+
+
+
+/* navBar 部分 */
+.userIcon{ font-size: 17px; z-index: 1;}/* 设置用户图标在 消息数量徽章下一层，和图标大小 */
+.messageBag{z-index:2; margin-left:-8px;margin-top:-20px;font-size: 8px}
+.textBadgeAlign{margin-bottom:4px; margin-left:5px; }
+
+/* footer 部分 */
+.footer{
+	background-color:#222;
+	padding-top:80px; 
+	
+}
+
+.footer-link{
+	color:#6F7E82;
+	
+}
+.footer-link h3{
+font-size: 25px;
+margin-bottom:30px;
+	
+}
+
+.link-list{
+	list-style: outside none none;
+    list-style-type: none;
+    list-style-image: none;
+    list-style-position: outside;
+    
+    line-height: 19px;
+	padding-left: 0px;
+}
+.link-list li{
+	
+	margin-bottom: 10px;
+}
+.link-list a{
+	
+	text-decoration: none;
+    text-decoration-color: -moz-use-text-color;
+    text-decoration-line: none;
+    text-decoration-style: solid;
+}
+.link-list a:HOVER{
+	color:#02DED;
+}
+.copyright{
+	font-size: 12px;text-align: center; color: #6F7E82;
+}
+.copyrightRow{
+	margin-top:50px;
+	margin-bottom:20px;
+}
+
+.footer-icon{
+	
+	font-size: 16px;margin-right: 13px;
 }

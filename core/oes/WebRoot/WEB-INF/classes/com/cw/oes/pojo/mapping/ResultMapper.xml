@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置好命名空间 -->
+<mapper namespace="com.cw.oes.pojo.mapping.ResultMapper">
+
+	<resultMap type="Result" id="result">
+
+	  <id property="unid" column="unid" />
+	  <result property="resultNum" column="result_num" />
+	  <result property="userPid" column="user_pid" />
+	  <result property="testPaperPid" column="test_paper_pid" />
+	  <result property="resultScore" column="result_score" />
+	  <result property="isPass" column="isPass" />
+	  <result property="judgingPaperTime" column="judgingPaper_time" />
+	  <result property="beginTime" column="begin_time" />
+	  <result property="finishTime" column="finish_time" />
+	  
+	 </resultMap>
+	
+	<!-- sql语句是针对表的操作，而resultMap说明了表和pojo的映射关系 --> 	
+ 	<select id="getAllResult" resultMap="result">
+	  select
+	  * from
+	  result_tab;
+ 	</select>
+ 	
+ 	
+ 	
+ 	<select id="getOneResult" parameterType="String" resultMap="result">
+	  select
+	  * from
+	  member_tab
+	  where unid = #{unid} ;
+ 	</select>
+ 	
+ 	<select id="getMembersResult" parameterType="java.util.Map" resultMap="result">
+	  select * from result_tab where user_pid = '${userPid}'
+	  <if test="testPaperPid != null">
+	  	and test_paper_pid =  '${testPaperPid}'
+	  </if>
+	  ;
+ 	</select>
+ 	
+ 	<insert id="addResult" parameterType="java.util.Map">
+ 	insert into result_tab (unid,user_pid,test_paper_pid)   
+ 	values(
+ 	'${unid}',
+ 	'${userPid}',
+ 	'${testPaperPid}'
+ 	
+ 	);
+ 	
+ 	</insert>
+ 	<update id="beginTest" parameterType="java.util.Map">
+ 	update result_tab 
+ 	set begin_time = now() 
+ 	where user_pid = '${userPid}' and test_paper_pid = '${testPaperPid}';
+ 	</update>
+ 
+ 	
+
+
+</mapper>

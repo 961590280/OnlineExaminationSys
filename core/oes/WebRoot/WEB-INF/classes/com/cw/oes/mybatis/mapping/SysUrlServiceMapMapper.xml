@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cw.oes.mybatis.dao.SysUrlServiceMapMapper" >
+  <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.SysUrlServiceMap" >
+    <id column="url_flag" property="urlFlag" jdbcType="VARCHAR" />
+    <result column="full_url" property="fullUrl" jdbcType="VARCHAR" />
+    <result column="priv_id" property="privId" jdbcType="VARCHAR" />
+    <result column="tilte" property="tilte" jdbcType="VARCHAR" />
+    <result column="service_command" property="serviceCommand" jdbcType="VARCHAR" />
+    <result column="page" property="page" jdbcType="VARCHAR" />
+    <result column="creater_pid" property="createrPid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    url_flag, full_url, priv_id, tilte, service_command, page, creater_pid, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_url_service_map
+    where url_flag = #{urlFlag,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询所有数据 -->
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_url_service_map
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_url_service_map
+    where url_flag = #{urlFlag,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cw.oes.mybatis.model.SysUrlServiceMap" >
+    insert into sys_url_service_map (url_flag, full_url, priv_id, 
+      tilte, service_command, page, 
+      creater_pid, create_time)
+    values (#{urlFlag,jdbcType=VARCHAR}, #{fullUrl,jdbcType=VARCHAR}, #{privId,jdbcType=VARCHAR}, 
+      #{tilte,jdbcType=VARCHAR}, #{serviceCommand,jdbcType=VARCHAR}, #{page,jdbcType=VARCHAR}, 
+      #{createrPid,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.SysUrlServiceMap" >
+    insert into sys_url_service_map
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="urlFlag != null" >
+        url_flag,
+      </if>
+      <if test="fullUrl != null" >
+        full_url,
+      </if>
+      <if test="privId != null" >
+        priv_id,
+      </if>
+      <if test="tilte != null" >
+        tilte,
+      </if>
+      <if test="serviceCommand != null" >
+        service_command,
+      </if>
+      <if test="page != null" >
+        page,
+      </if>
+      <if test="createrPid != null" >
+        creater_pid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="urlFlag != null" >
+        #{urlFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="fullUrl != null" >
+        #{fullUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="privId != null" >
+        #{privId,jdbcType=VARCHAR},
+      </if>
+      <if test="tilte != null" >
+        #{tilte,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCommand != null" >
+        #{serviceCommand,jdbcType=VARCHAR},
+      </if>
+      <if test="page != null" >
+        #{page,jdbcType=VARCHAR},
+      </if>
+      <if test="createrPid != null" >
+        #{createrPid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cw.oes.mybatis.model.SysUrlServiceMap" >
+    update sys_url_service_map
+    <set >
+      <if test="fullUrl != null" >
+        full_url = #{fullUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="privId != null" >
+        priv_id = #{privId,jdbcType=VARCHAR},
+      </if>
+      <if test="tilte != null" >
+        tilte = #{tilte,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCommand != null" >
+        service_command = #{serviceCommand,jdbcType=VARCHAR},
+      </if>
+      <if test="page != null" >
+        page = #{page,jdbcType=VARCHAR},
+      </if>
+      <if test="createrPid != null" >
+        creater_pid = #{createrPid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where url_flag = #{urlFlag,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cw.oes.mybatis.model.SysUrlServiceMap" >
+    update sys_url_service_map
+    set full_url = #{fullUrl,jdbcType=VARCHAR},
+      priv_id = #{privId,jdbcType=VARCHAR},
+      tilte = #{tilte,jdbcType=VARCHAR},
+      service_command = #{serviceCommand,jdbcType=VARCHAR},
+      page = #{page,jdbcType=VARCHAR},
+      creater_pid = #{createrPid,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR}
+    where url_flag = #{urlFlag,jdbcType=VARCHAR}
+  </update>
+</mapper>

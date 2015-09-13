@@ -93,6 +93,17 @@ public class CommonService implements IService{
 		}
 		return rdf;
 	}
+	/**
+	 * 安全退出
+	 * @param requestDataForm
+	 * @return
+	 */
+	@Transactional
+	public ResponseDataForm memberSignOut(RequestDataForm requestDataForm){
+		ResponseDataForm rdf = new ResponseDataForm();
+		requestDataForm.getRequest().getSession().setAttribute(Environment.SESSION_USER_LOGIN_INFO, null);
+		return rdf;
+	}
 	@Transactional
 	public ResponseDataForm getExams(RequestDataForm requestDataForm)
 			throws Exception {
@@ -291,15 +302,18 @@ public class CommonService implements IService{
 			MemberExamLinkKey memberExam = new MemberExamLinkKey();
 			memberExam.setExamPid(exam.getUuid());
 			memberExam.setMemberPid(member.getUuid());
+			if(answer.size()==0){
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				rdf.setResultInfo("你的答案为空,提交失败");
+				return rdf;
+			}
 			memberExam.setAnswer(AnswerUtil.coverIntoString(answer));
 			
-			
 			int scor = judgingPaper(topics,answer);
-			
 			int result = memberExamMapper.commitAnswer(memberExam);
 			if(result == 0){
 				rdf.setResult(ResponseDataForm.FAULAIE);
-				rdf.setResultInfo("提交失败");
+				rdf.setResultInfo("提交失败,请重新提交");
 				
 			}
 			rdf.setResult(ResponseDataForm.SESSFUL);

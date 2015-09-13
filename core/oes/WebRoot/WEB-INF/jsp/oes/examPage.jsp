@@ -189,7 +189,7 @@ String examPid = request.getParameter("examPid");
 			data = eval("("+data+")");
 			console.log(data);
 			if(data["result"] == "2"){
-				alert("提交失败，请重新提交！！");
+				alert(data["resultInfo"]);
 			}else{
 				alert("您答对 "+data["resultObj"]+" 题。点击确定，回到个人主页,查看详情！！");
 				location.href="${ctxPath}/common/toPersonalPage";

@@ -74,13 +74,13 @@ body { padding-top: 70px; }
        <c:if test="<%= !isNull%>">
 	      	 <li class="dropdown">
 	          <a href="" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
-          			<%=userSession.getUserCode() %> <span class="glyphicon glyphicon-user userIcon" aria-hidden="true" id="userIcon"><span class="badge messageBag" id="nav-badge" ></span></span> 
+          			<%=userSession.getUserCode() %> <span class="glyphicon glyphicon-user userIcon" aria-hidden="true" id="userIcon"><span class="badge messageBag" id="nav-badge" >1</span></span><span class="caret"></span> 
           			
 	          </a>
 	        	<ul class="dropdown-menu">
 	            <li><a href="${ctx}/oes/common/toPersonalPage">个人主页</a></li>
 	            <li><a href="">账号设置</a></li>
-	          	<li><a href="">消 息<span class="badge textBadgeAlign" id="nav-badge" ></span></a></li>
+	          	<li><a href="">消 息<span class="badge textBadgeAlign" id="nav-badge" >1</span></a></li>
 	            <li role="separator" class="divider"></li>
 	            <li><a href="javascript:void(memberSignOut())">&nbsp;退出 &nbsp;<span class="glyphicon glyphicon-off" aria-hidden="true"  ></span></a></li>
 	          </ul>

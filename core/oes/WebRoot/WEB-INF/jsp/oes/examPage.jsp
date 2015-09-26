@@ -13,6 +13,8 @@ String examPid = request.getParameter("examPid");
     <base href="<%=basePath%>">
     
     <title>My JSP 'index.jsp' starting page</title>
+     <!-- 引入top.jsp页面  -->
+    <jsp:include page="/WEB-INF/jsp/oes/subUnit/top.jsp"></jsp:include>
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
@@ -24,7 +26,7 @@ String examPid = request.getParameter("examPid");
 	<link rel="stylesheet" type="text/css" href="res/css/main.css">
 	<script type="text/javascript" src="res/js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript">
-	var time; //考试时间
+<%-- 	var time; //考试时间
 	var examPid = <%=examPid%>;
 	var examType;
 	var currentTopic = 1;//从1开始
@@ -201,7 +203,7 @@ String examPid = request.getParameter("examPid");
 	
 	function backPersonalPage(){
 		location.href="${ctxPath}/common/ajax/commitExam";
-	}
+	} --%>
 	</script>
 	<style type="text/css">
 	.red
@@ -231,7 +233,7 @@ String examPid = request.getParameter("examPid");
   </head>
   		
   <body style="padding: 0;margin: 0;height:100%;">
-  <div style="float:left;text-align: center;background-color: gray;width: 100%;height: 100%;position: relative;">
+<!--   <div style="float:left;text-align: center;background-color: gray;width: 100%;height: 100%;position: relative;">
 	<div class="pageTitle" style="height:100%;width: 800px;background-color:white;position: absolute;margin-left: 50%;left: -400px; ">
 		<h1 id="paperTitle">xxx测试</h1>
 		<p >
@@ -270,6 +272,44 @@ String examPid = request.getParameter("examPid");
  	剩余考试时间：
  	<p id="time" ></p>
  	<p id="warm" style="color:red;"></p>
+ 	</div> -->
+ 	
+ 	<div class="container-fluid ">
+ 		<div class="row">
+ 			<div class="col-md-2">
+				<div class="col-md-12">
+					<img src="res/testimg.png" alt="..." class="img-rounded" style="width: 100%;">
+				</div>
+				<div class="col-md-12">
+					<div class="col-md-6"><h5>姓名：<h5></div>
+					<div class="col-md-6"><h5>XXX</h5></div>
+				</div>
+ 			</div>
+ 			
+ 			
+ 			<div class="col-md-9">
+ 				<div class="col-md-2"></div>
+ 				<div class="col-md-8">
+ 					<div class="progress">
+					  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+					    <span class="sr-only">45% Complete</span>
+					  </div>
+					</div>
+ 				</div>
+ 				<div class="col-md-2"></div>
+ 				
+ 				<div class="col-md-5"></div>
+ 				<div class="col-md-2" style="text-align: center;">16:00</div>
+ 				<div class="col-md-5"></div>
+ 				
+ 				
+ 				
+ 			</div>
+ 		
+ 		
+ 		</div>
+ 	
  	</div>
   </body>
+   <jsp:include page="/WEB-INF/jsp/oes/subUnit/bottom.jsp"></jsp:include>
 </html>

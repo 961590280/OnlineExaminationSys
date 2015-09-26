@@ -129,3 +129,19 @@ margin-bottom:30px;
 	
 	font-size: 16px;margin-right: 13px;
 }
+
+/* 测验页面  */
+.exam-container{
+	padding-top:30px;
+}
+.exam-topics-div .row div{
+	margin-top: 10px;
+	padding-top: 10xp;
+}
+.answer{
+	font-size: 15px;
+	
+}
+.exam-time{
+	text-align: center;
+}

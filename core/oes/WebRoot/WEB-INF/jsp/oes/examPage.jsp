@@ -12,7 +12,7 @@ String examPid = request.getParameter("examPid");
   <head>
     <base href="<%=basePath%>">
     
-    <title>My JSP 'index.jsp' starting page</title>
+    <title>OES-个人测验</title>
      <!-- 引入top.jsp页面  -->
     <jsp:include page="/WEB-INF/jsp/oes/subUnit/top.jsp"></jsp:include>
 	<meta http-equiv="pragma" content="no-cache">
@@ -26,6 +26,30 @@ String examPid = request.getParameter("examPid");
 	<link rel="stylesheet" type="text/css" href="res/css/main.css">
 	<script type="text/javascript" src="res/js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript">
+	/**创建radio的html字符串**/
+	function createRadioOption(value,text){
+		return "<div class='radio'><label> <input type='radio' name='option' id='opn_"+value+"'  value='"+value+"' aria-label='"+text+"'>"+text+"</label></div>";
+	}
+	/** 打开答题面板 **/
+	function openTopicPanle(sort){
+		//alert(sort);
+		$('#topicPanle .modal-title').text("第"+sort+"题");
+		$('#topicPanle .modal-body .topic-head').text("下列是高级机器语言的是？");
+		var str = "";
+		str += createRadioOption("1","java");
+		str += createRadioOption("2","英语");
+		$('#topicPanle .modal-body .topic-body').html(str);
+		
+		
+		$('#topicPanle').modal({
+			
+		});
+		
+		
+	}
+	function beginExam(){
+		
+	}
 <%-- 	var time; //考试时间
 	var examPid = <%=examPid%>;
 	var examType;
@@ -232,7 +256,7 @@ String examPid = request.getParameter("examPid");
 </style>
   </head>
   		
-  <body style="padding: 0;margin: 0;height:100%;">
+  <body style="padding: 0;margin: 0;height:100%;" >
 <!--   <div style="float:left;text-align: center;background-color: gray;width: 100%;height: 100%;position: relative;">
 	<div class="pageTitle" style="height:100%;width: 800px;background-color:white;position: absolute;margin-left: 50%;left: -400px; ">
 		<h1 id="paperTitle">xxx测试</h1>
@@ -274,34 +298,84 @@ String examPid = request.getParameter("examPid");
  	<p id="warm" style="color:red;"></p>
  	</div> -->
  	
- 	<div class="container-fluid ">
- 		<div class="row">
- 			<div class="col-md-2">
-				<div class="col-md-12">
+ 	<div class="container-fluid exam-container" >
+ 		<div class="row ">
+ 			<div class="col-md-2 col-xs-12 ">
+				<div class="col-md-12 col-xs-5">
 					<img src="res/testimg.png" alt="..." class="img-rounded" style="width: 100%;">
 				</div>
-				<div class="col-md-12">
-					<div class="col-md-6"><h5>姓名：<h5></div>
-					<div class="col-md-6"><h5>XXX</h5></div>
+				<div class="col-md-12 col-xs-7">
+					<h5>姓名：xxx<h5>
+					<h5>测验名称：xxx<h5>
+					<button class="btn btn-success btn-lg btn-block"   type="button" >开始答题</button>
+					<!-- <button class="btn btn-danger btn-lg btn-block" type="button">交 &nbsp; &nbsp;卷</button> -->
 				</div>
- 			</div>
+			</div>
  			
  			
- 			<div class="col-md-9">
- 				<div class="col-md-2"></div>
- 				<div class="col-md-8">
- 					<div class="progress">
-					  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-					    <span class="sr-only">45% Complete</span>
-					  </div>
-					</div>
+ 			<div class="col-md-10 col-xs-12">
+	 			<div class="row">
+	 				<div class="col-md-12">
+	 					<div class="progress">
+						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						    <span class="sr-only"></span>
+						  </div>
+						</div>
+	 				</div>
+	 				<div class="col-md-5"></div>
+	 				<div class="col-md-2 exam-time" style="text-align: center;font-size: 20px;font-weight: 10px;">00:16:00/1:20:00</div>
+	 				<div class="col-md-5"></div>
+	 			</div>
+ 				<div class="row-fluid exam-topics-div">
+ 					
+ 						<div class="row">
+ 						<div class="col-md-1 col-xs-0"></div>
+ 						
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3" >
+ 							<button type="button" class="btn btn-primary  btn-lg btn-block" onclick="openTopicPanle('1')">第1题	<span class="badge answer">C</span></button>
+ 						
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第2题</button>
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第3题</button>
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第4题</button>
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第5题</button>
+ 						</div>
+ 						<div class="col-md-1 col-xs-0"></div>
+ 						</div>
+ 						<div class="row">
+ 						
+ 						<div class="col-md-1 col-xs-0"></div>
+ 						
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-primary  btn-lg btn-block" >第1题	<span class="badge answer">C</span></button>
+ 						
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第2题</button>
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第3题</button>
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第4题</button>
+ 						</div>
+ 						<div class="col-md-2 col-xs-6 col-md-offset-0 col-xs-offset-3">
+ 							<button type="button" class="btn btn-info  btn-lg btn-block" >第5题</button>
+ 						</div>
+ 						
+ 						<div class="col-md-1 col-xs-0"></div>
+ 						</div>
+ 					
+ 				
+	 				
  				</div>
- 				<div class="col-md-2"></div>
- 				
- 				<div class="col-md-5"></div>
- 				<div class="col-md-2" style="text-align: center;">16:00</div>
- 				<div class="col-md-5"></div>
- 				
  				
  				
  			</div>
@@ -310,6 +384,9 @@ String examPid = request.getParameter("examPid");
  		</div>
  	
  	</div>
+
+
   </body>
    <jsp:include page="/WEB-INF/jsp/oes/subUnit/bottom.jsp"></jsp:include>
+    <jsp:include page="/WEB-INF/jsp/oes/subUnit/modal.jsp"></jsp:include>
 </html>

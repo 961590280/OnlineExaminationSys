@@ -5,9 +5,10 @@
     <id column="member_pid" property="memberPid" jdbcType="VARCHAR" />
     <id column="exam_pid" property="examPid" jdbcType="VARCHAR" />
     <id column="answer" property="answer" jdbcType="VARCHAR" />
+    <id column="create_time" property="createTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-   member_pid,exam_pid,answer
+   member_pid,exam_pid,answer,create_time
   </sql>
   <delete id="deleteByPrimaryKey" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey" >
     delete from member_exam_link
@@ -41,8 +42,14 @@
   <update id="commitAnswer" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey">
   	update member_exam_link set answer = #{answer,jdbcType=VARCHAR} 
   	where member_pid = #{memberPid,jdbcType=VARCHAR}
-      and exam_pid = #{examPid,jdbcType=VARCHAR}
+      and exam_pid = #{examPid,jdbcType=VARCHAR} 
+      and create_time = #{createTime,jdbcType=VARCHAR}
   </update>
+  <!-- 开始测验 -->
+   <insert id="beginExam" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey">
+  	insert into member_exam_link (member_pid,exam_pid,create_time) values( #{memberPid,jdbcType=VARCHAR}, #{examPid,jdbcType=VARCHAR},  #{createTime,jdbcType=VARCHAR});
+  </insert>
+  
   <!-- 查询会员报名的所有考试 -->
    <select id="selectByMemberId" resultMap="com.cw.oes.mybatis.dao.ExaminationMapper.BaseResultMap" parameterType="java.lang.String" >
     select A.uuid,
@@ -66,10 +73,20 @@
     where member_pid = #{memberPid,jdbcType=VARCHAR}
     
   </select>
+  
+  
   <select id="selectByMemberIdExamId" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey"  >
       select 
    	<include refid="Base_Column_List" />
     from member_exam_link
     where exam_pid = #{examPid,jdbcType=VARCHAR} and member_pid = #{memberPid,jdbcType=VARCHAR};
   </select>
+  <!-- 个人测验的记录 -->
+   <select id="personalExamRecords" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey"  >
+      select 
+   	<include refid="Base_Column_List" />
+    from member_exam_link
+    where member_pid = #{uuid,jdbcType=VARCHAR} and answer != "" and answer is not null order by create_time desc;
+  </select>
+  
 </mapper>

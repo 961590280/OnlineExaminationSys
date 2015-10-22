@@ -18,12 +18,15 @@ import com.cw.oes.dao.impl.DaoHelper;
 import com.cw.oes.form.RequestDataForm;
 import com.cw.oes.form.ResponseData;
 import com.cw.oes.form.ResponseDataForm;
+import com.cw.oes.mybatis.dao.CollectionMapper;
 import com.cw.oes.mybatis.dao.ExaminationMapper;
 import com.cw.oes.mybatis.dao.MemberExamLinkMapper;
 import com.cw.oes.mybatis.dao.MemberMapper;
 import com.cw.oes.mybatis.dao.PaperMapper;
 import com.cw.oes.mybatis.dao.PaperTopicLinkMapper;
 import com.cw.oes.mybatis.dao.SysUrlServiceMapMapper;
+import com.cw.oes.mybatis.model.Collection;
+import com.cw.oes.mybatis.model.CollectionKey;
 import com.cw.oes.mybatis.model.Examination;
 import com.cw.oes.mybatis.model.Member;
 import com.cw.oes.mybatis.model.MemberExamLinkKey;
@@ -104,8 +107,14 @@ public class CommonService implements IService{
 		requestDataForm.getRequest().getSession().setAttribute(Environment.SESSION_USER_LOGIN_INFO, null);
 		return rdf;
 	}
+	/**
+	 * 获取感兴趣的测验
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
 	@Transactional
-	public ResponseDataForm getExams(RequestDataForm requestDataForm)
+	public ResponseDataForm getLikeExams(RequestDataForm requestDataForm)
 			throws Exception {
 
 		ResponseDataForm rdf = new ResponseDataForm();
@@ -164,6 +173,7 @@ public class CommonService implements IService{
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional
 	public ResponseDataForm beginExamByPersonal(RequestDataForm requestDataForm)
 			throws Exception {
 		ResponseDataForm rdf = new ResponseDataForm();	
@@ -184,17 +194,14 @@ public class CommonService implements IService{
 				rdf.setResultInfo("要参加的测验不存在！！");
 				return rdf;
 			}
-			  MemberExamLinkKey record = new MemberExamLinkKey();
+			MemberExamLinkKey record = new MemberExamLinkKey();
 			record.setExamPid(examPid);
 			record.setMemberPid(member.getUuid());
-			MemberExamLinkKey memberExam = memberExamMapper.selectByMemberIdExamId(record);
-			if(memberExam == null){//判断是否是新测验
-				memberExamMapper.insert(record);
-				session.commit();
-				memberExam = record;
-			}else{
-				memberExam.setAnswer("");//清空之前的答案
-			}
+			record.setCreateTime(DateUtil.getCurrDateStr());
+			memberExamMapper.beginExam(record);//插入
+			MemberExamLinkKey memberExam = record;
+			requestDataForm.getUserSession().setMemberExamLink(memberExam);
+
 			ANSWER_CACHE.put(member.getUuid()+memberExam.getExamPid(),new HashMap<String, Object>());
 			//读取考卷
 			Paper paper = paperMapper.selectByPrimaryKey(exam.getExamPaperPid());
@@ -209,6 +216,7 @@ public class CommonService implements IService{
 			rdf.setResult(ResponseDataForm.SESSFUL);
 			rdf.setResultInfo("测验开始");
 			rdf.setResultObj(paper);
+			session.commit();
 		}finally{
 			session.close();
 		}	
@@ -299,9 +307,7 @@ public class CommonService implements IService{
 		Map<String, Object> answer = (Map<String, Object>) ANSWER_CACHE.get(member.getUuid()+exam.getUuid());
 		try{
 			MemberExamLinkMapper memberExamMapper = session.getMapper(MemberExamLinkMapper.class);//
-			MemberExamLinkKey memberExam = new MemberExamLinkKey();
-			memberExam.setExamPid(exam.getUuid());
-			memberExam.setMemberPid(member.getUuid());
+			MemberExamLinkKey memberExam = requestDataForm.getUserSession().getMemberExamLink();
 			if(answer.size()==0){
 				rdf.setResult(ResponseDataForm.FAULAIE);
 				rdf.setResultInfo("你的答案为空,提交失败");
@@ -325,7 +331,7 @@ public class CommonService implements IService{
 		}
 		return rdf;
 	}
-	
+	/** 计算答题结果**/
 	public int judgingPaper(List<Topic> topics, Map<String, Object> answer){
 		int scor = 0;
 		for(int i = 0;i<topics.size();i++){
@@ -335,6 +341,174 @@ public class CommonService implements IService{
 			
 		}
 		return scor;
+	}
+	
+	/**
+	 * 返回用户个人信息
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	public ResponseDataForm getPersonalInfo(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		Member member = requestDataForm.getUserSession().getMember();
+		rdf.setResultObj(member);
+		
+		return rdf;
+		
+	}
+	/**
+	 * 读取个人测验记录列表
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	public ResponseDataForm getPersonalExamRecordList(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		List<Map<String,Object>> resultList =  new ArrayList<Map<String,Object>>();
+		
+		SqlSession session = DaoHelper.getSession();
+		Member member = requestDataForm.getUserSession().getMember();
+		
+		MemberExamLinkMapper memberExamMapper = session.getMapper(MemberExamLinkMapper.class);
+		ExaminationMapper examMapper = session.getMapper(ExaminationMapper.class);
+		List<MemberExamLinkKey> memberExamList =  memberExamMapper.personalExamRecords(member);
+		
+		if(memberExamList.size()>0){
+			for(MemberExamLinkKey temp : memberExamList){
+				Map<String,Object> record = new HashMap<String,Object>();
+				Examination exam = examMapper.selectByPrimaryKey(temp.getExamPid());
+				
+				record.put("examPid", temp.getExamPid());
+				record.put("createTime", temp.getCreateTime());
+				record.put("examName", exam.getExamName());
+				resultList.add(record);
+			}
+			rdf.setResult(ResponseDataForm.SESSFUL);
+			rdf.setResultObj(resultList);
+			
+		}else{
+			
+			rdf.setResult(ResponseDataForm.FAULAIE);
+			rdf.setResultInfo("记录为空！");
+		}
+		return rdf;
+		
+	}
+	/**
+	 * 收藏测验
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	
+	public ResponseDataForm collectionExam(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		List<Map<String,Object>> resultList =  new ArrayList<Map<String,Object>>();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			Member member = requestDataForm.getUserSession().getMember();
+			CollectionMapper collectionMapper = session.getMapper(CollectionMapper.class);
+			
+			String examPid = requestDataForm.getString("examPid");
+			
+			Collection collection = new Collection();
+			collection.setCollectionType("0");
+			collection.setCollectorPid(examPid);
+			collection.setUserPid(member.getUuid());
+			collection.setCreateTime(DateUtil.getCurrDateStr());
+			if(collectionMapper.selectByPrimaryKey(collection)!= null){
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				rdf.setResultInfo("已收藏");
+			}else{
+				collectionMapper.insert(collection);
+				rdf.setResult(ResponseDataForm.SESSFUL);
+			}
+			
+			
+			session.commit();
+			
+		}finally{
+			session.close();
+		}
+		return rdf;
+		
+	}
+	
+	/**
+	 * 取消收藏测验
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	
+	public ResponseDataForm unCollectionExam(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		List<Map<String,Object>> resultList =  new ArrayList<Map<String,Object>>();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			Member member = requestDataForm.getUserSession().getMember();
+			CollectionMapper collectionMapper = session.getMapper(CollectionMapper.class);
+			
+			String examPid = requestDataForm.getString("examPid");
+			
+			Collection collection = new Collection();
+			collection.setCollectionType("0");
+			collection.setCollectorPid(examPid);
+			collection.setUserPid(member.getUuid());
+			if(collectionMapper.selectByPrimaryKey(collection) == null){
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				rdf.setResultInfo("未收藏");
+			}else{
+				collectionMapper.deleteByPrimaryKey(collection);
+				rdf.setResult(ResponseDataForm.SESSFUL);
+			}
+			
+			
+			session.commit();
+			
+		}finally{
+			session.close();
+		}
+		return rdf;
+		
+	}
+	
+	public ResponseDataForm (RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		List<Map<String,Object>> resultList =  new ArrayList<Map<String,Object>>();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			Member member = requestDataForm.getUserSession().getMember();
+			CollectionMapper collectionMapper = session.getMapper(CollectionMapper.class);
+			
+			String examPid = requestDataForm.getString("examPid");
+			
+			Collection collection = new Collection();
+			collection.setCollectionType("0");
+			collection.setCollectorPid(examPid);
+			collection.setUserPid(member.getUuid());
+			if(collectionMapper.selectByPrimaryKey(collection) == null){
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				rdf.setResultInfo("未收藏");
+			}else{
+				collectionMapper.deleteByPrimaryKey(collection);
+				rdf.setResult(ResponseDataForm.SESSFUL);
+			}
+			
+			
+			session.commit();
+			
+		}finally{
+			session.close();
+		}
+		return rdf;
+		
 	}
 	@Override
 	public ResponseDataForm service(RequestDataForm requestDataForm)

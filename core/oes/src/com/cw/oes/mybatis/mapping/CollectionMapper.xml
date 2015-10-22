@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cw.oes.mybatis.dao.CollectionMapper" >
+  <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.Collection" >
+    <id column="user_pid" property="userPid" jdbcType="VARCHAR" />
+    <id column="collector_pid" property="collectorPid" jdbcType="VARCHAR" />
+    <id column="collection_type" property="collectionType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_pid, collector_pid, collection_type, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.CollectionKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from collection
+    where user_pid = #{userPid,jdbcType=VARCHAR}
+      and collector_pid = #{collectorPid,jdbcType=VARCHAR}
+      and collection_type = #{collectionType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.cw.oes.mybatis.model.CollectionKey" >
+    delete from collection
+    where user_pid = #{userPid,jdbcType=VARCHAR}
+      and collector_pid = #{collectorPid,jdbcType=VARCHAR}
+      and collection_type = #{collectionType,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cw.oes.mybatis.model.Collection" >
+    insert into collection (user_pid, collector_pid, collection_type, 
+      create_time)
+    values (#{userPid,jdbcType=VARCHAR}, #{collectorPid,jdbcType=VARCHAR}, #{collectionType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.Collection" >
+    insert into collection
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userPid != null" >
+        user_pid,
+      </if>
+      <if test="collectorPid != null" >
+        collector_pid,
+      </if>
+      <if test="collectionType != null" >
+        collection_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userPid != null" >
+        #{userPid,jdbcType=VARCHAR},
+      </if>
+      <if test="collectorPid != null" >
+        #{collectorPid,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionType != null" >
+        #{collectionType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cw.oes.mybatis.model.Collection" >
+    update collection
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_pid = #{userPid,jdbcType=VARCHAR}
+      and collector_pid = #{collectorPid,jdbcType=VARCHAR}
+      and collection_type = #{collectionType,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cw.oes.mybatis.model.Collection" >
+    update collection
+    set create_time = #{createTime,jdbcType=VARCHAR}
+    where user_pid = #{userPid,jdbcType=VARCHAR}
+      and collector_pid = #{collectorPid,jdbcType=VARCHAR}
+      and collection_type = #{collectionType,jdbcType=VARCHAR}
+  </update>
+</mapper>

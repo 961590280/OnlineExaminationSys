@@ -20,10 +20,10 @@
         -->
         
        <typeAlias alias="sysUrlService" type="com.cw.oes.mybatis.model.SysUrlServiceMap" />
-       <typeAlias alias="member" type="com.cw.oes.mybatis.model.Member" />
-       <typeAlias alias="paper" type="com.cw.oes.mybatis.model.Paper" />
-       <typeAlias alias="examination" type="com.cw.oes.mybatis.model.Examination" />
-       <typeAlias alias="topic" type="com.cw.oes.mybatis.model.Topic" />
+       <typeAlias alias="member"        type="com.cw.oes.mybatis.model.Member" />
+       <typeAlias alias="paper" 		type="com.cw.oes.mybatis.model.Paper" />
+       <typeAlias alias="examination" 	type="com.cw.oes.mybatis.model.Examination" />
+       <typeAlias alias="topic" 		type="com.cw.oes.mybatis.model.Topic" />
     </typeAliases>
 
     <!-- 配置数据库连接信息 -->
@@ -55,6 +55,8 @@
 	  <mapper resource="com/cw/oes/mybatis/mapping/PaperMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/TopicMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/PaperTopicLinkMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/CollectionMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/MessageMapper.xml" />
 	<!--   <mapper resource="com/cw/oes/mybatis/mapping/MemberExamLinkMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/PageMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/PageTopicLinkMapper.xml" />

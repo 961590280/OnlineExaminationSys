@@ -56,17 +56,6 @@ function isInputNull(divId){
 
 /** 数据加载区 **/
 
-//加载【猜你喜欢】 中的测验数据
-function loadLikeExams(data,id,url){
-	var html = "";
-	for(var temp in data["resultObj"]){
-		html +="<tr><td class=\"col-md-6 col-xs-12\">"+"<a href='"+url+data["resultObj"][temp]["uuid"]+"'>"+data["resultObj"][temp]["examName"]+"</a></td><td class=\"col-md-5 col-xd-10\">";
-		html +="</td><td class=\"col-md-1 col-xs-2 personal-star-td\"><span class=\"glyphicon glyphicon-star-empty\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"点击收藏\" ></span></td></tr>";
-	}
-	$("#"+id).html(html);
-	$('[data-toggle="tooltip"]').tooltip();//在文档充新加载完后执行
-	
-}
 
 /** 个人测验页面 **/
 

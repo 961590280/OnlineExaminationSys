@@ -7,9 +7,10 @@
     <result column="user_pwd" property="userPwd" jdbcType="VARCHAR" />
     <result column="user_reg_time" property="userRegTime" jdbcType="VARCHAR" />
     <result column="user_is_del" property="userIsDel" jdbcType="CHAR" />
+     <result column="user_head" property="userHead" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, user_name, user_pwd, user_reg_time, user_is_del
+    uuid, user_name, user_pwd, user_reg_time, user_is_del ,user_head
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

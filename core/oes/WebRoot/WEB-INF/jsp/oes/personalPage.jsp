@@ -45,30 +45,114 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 		});
 	}
-	/**读取用户可参加的测验**/
-	$(document).ready(function (){
+	/** 读取用户数据 用户名，头像，标签**/
+	function getUserInfo(){
 		$.ajax({
+		
+			url:"${ctxPath}/common/ajax/getPersonalInfo",
+			success:function(data){
+				data = eval("("+data+")");
+				console.log(data);
+				$("#user_name").text(data["resultObj"].userName);
+				$("#head_img").attr("src","res/personal-img/"+data["resultObj"].userHead);
+			}
+		
+		});
+	}
+	
+	//文档加载完后
+	$(document).ready(function (){
+	
+		getUserInfo();
+		loadLikeExams();
+		getPersonalExamRecords();
+	});
+//加载【猜你喜欢】 中的测验数据
+function loadLikeExams(){
+	var id = "examList";
+	
+	$.ajax({
 		
 			url:"${ctxPath}/common/ajax/getExams",
 			success:function(data){
-				isInputNull(1);
 				data = eval("("+data+")");
-				loadLikeExams(data,"examList","${ctxPath}/common/toExamPage?examPid=");
+				var html = "";
+				for(var temp in data["resultObj"]){
+					html +="<tr id = \"examPid_"+data["resultObj"][temp]["uuid"]+"\" ><td class=\"col-md-6 col-xs-12\">"+"<a href='${ctxPath}/common/toExamPage?examPid="+data["resultObj"][temp]["uuid"]+"'>"+data["resultObj"][temp]["examName"]+"</a></td><td class=\"col-md-5 col-xd-10\">";
+					html +="</td><td class=\"col-md-1 col-xs-2 personal-star-td\"><a href='javascript:void(0)' onclick='collectionExam("+data["resultObj"][temp]["uuid"]+")'><span class=\"glyphicon glyphicon-star-empty\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"点击收藏\" ></span></a></td></tr>";
+				}
+				$("#"+id).html(html);
+				$('[data-toggle="tooltip"]').tooltip();//在文档充新加载完后执行
 			}
 		
 		});
 	
-	});
-	//加载【猜你喜欢】 中的测验数据
-function loadLikeExams(data,id,url){
-	var html = "";
-	for(var temp in data["resultObj"]){
-		html +="<tr><td class=\"col-md-6 col-xs-12\">"+"<a href='"+url+data["resultObj"][temp]["uuid"]+"'>"+data["resultObj"][temp]["examName"]+"</a></td><td class=\"col-md-5 col-xd-10\">";
-		html +="</td><td class=\"col-md-1 col-xs-2 personal-star-td\"><span class=\"glyphicon glyphicon-star-empty\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"点击收藏\" ></span></td></tr>";
-	}
-	$("#"+id).html(html);
-	$('[data-toggle="tooltip"]').tooltip();//在文档充新加载完后执行
+}
+/** 收藏测验 **/
+function collectionExam(examPid){
 	
+	$.ajax({
+		url:"${ctxPath}/common/ajax/collectionExam",
+		data:{examPid:examPid},
+		success:function(data){
+			data = eval("("+data+")");
+			console.log(data)
+			if(data["result"] == 2){
+				
+				alert(data["resultInfo"]);
+				
+			}else{
+				$("tr#examPid_"+examPid+" td.personal-star-td span").removeClass("glyphicon-star-empty").addClass("glyphicon-star").attr("data-original-title","取消收藏");
+				$("tr#examPid_"+examPid+" td.personal-star-td a").attr("onclick","unCollectionExam("+examPid+")");
+			}
+		}
+		
+	});
+	
+	
+}
+/** 取消收藏 **/
+function unCollectionExam(examPid){
+
+	$.ajax({
+		url:"${ctxPath}/common/ajax/unCollectionExam",
+		data:{examPid:examPid},
+		success:function(data){
+			data = eval("("+data+")");
+			console.log(data)
+			if(data["result"] == 2){
+				
+				alert(data["resultInfo"]);
+				
+			}else{
+			
+				$("tr#examPid_"+examPid+" td.personal-star-td span").removeClass("glyphicon-star").addClass("glyphicon-star-empty").attr("data-original-title","点击收藏");
+				$("tr#examPid_"+examPid+" td.personal-star-td a").attr("onclick","collectionExam("+examPid+")");
+			}
+		}
+		
+	});
+
+	
+}
+/** 加载个人测验记录 **/
+function getPersonalExamRecords(){
+	
+	$.ajax({
+		
+			url:"${ctxPath}/common/ajax/getPersonalExamRecordList",
+			success:function(data){
+				data = eval("("+data+")");
+				console.log(data);
+				var html = "";
+				for(var temp in data["resultObj"]){
+					html +="<tr ><td  class=\"col-md-8\"> <a href=\"${ctxPath}/common/toExamRecordInfoPage?createTime="+data["resultObj"][temp]["createTime"]+"&examPid="+data["resultObj"][temp]["examPid"]+"\">"+data["resultObj"][temp]["examName"]+"</a></td><td class=\"col-md-4\">"+data["resultObj"][temp]["createTime"]+"</td></tr>";
+					
+				}
+				$("#examRecordList").html(html);
+			}
+		
+		});
 }
 	</script>
   </head>
@@ -84,15 +168,16 @@ function loadLikeExams(data,id,url){
 			<div class="col-xs-12 col-md-2" style="margin-bottom: 20px;">
 				<!-- 头像 -->
 					<div class="col-xs-6 col-md-12">
-					<img src="res/testimg.png" alt="..." class="img-rounded" style="width: 100%;">
+					<img id="head_img" src="res/personal-img/20151009admin.jpg"  class="img-rounded" style="width: 100%;">
 					</div>
 				
 					<!-- 用户昵称 -->
 					<div class="col-xs-6 col-md-12">
 						<div class="col-xs-12">
-						<h2>easyLife</h2>
+						<h2 id="user_name"></h2>
 						</div>
 						<div class="col-xs-12">
+						<!-- 标签区 -->
 							<span class="glyphicon glyphicon-tags"></span>
 							
 							
@@ -121,8 +206,9 @@ function loadLikeExams(data,id,url){
 						    <h4>测验按照从近到远的时间顺序排列</h4>
 					  </div>
 					   <table class="table personal-like-table" >
-					   <tbody id="oidExamList">
+					   <tbody id="examRecordList" >
 					   		<tr><td>暂无记录</td></tr>
+					   		
 					   </tbody>
 					  </table>
 					</div>

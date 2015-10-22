@@ -15,6 +15,8 @@ public class Member extends Model{
     private String userRegTime;
 
     private String userIsDel;
+    
+    private String userHead;
 
     public String getUuid() {
         return uuid;
@@ -55,4 +57,14 @@ public class Member extends Model{
     public void setUserIsDel(String userIsDel) {
         this.userIsDel = userIsDel == null ? null : userIsDel.trim();
     }
+
+	public String getUserHead() {
+		return userHead;
+	}
+
+	public void setUserHead(String userHead) {
+		 this.userHead = userHead == null ? null : userHead.trim();
+	}
+    
+    
 }

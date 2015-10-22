@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.cw.oes.mybatis.model.Examination;
 import com.cw.oes.mybatis.model.Member;
+import com.cw.oes.mybatis.model.MemberExamLinkKey;
 import com.cw.oes.mybatis.model.Paper;
 import com.cw.oes.mybatis.model.Topic;
 
@@ -30,6 +31,10 @@ public class UserSessionBean {
 	  * 测验
 	  */
 	private Examination exam;
+	/**
+	  * 个人测验结果
+	  */
+	private MemberExamLinkKey memberExamLink;
 	/**
 	 * 多租户登录名称
 	 */
@@ -111,4 +116,11 @@ public class UserSessionBean {
 	public void setPaper(Paper paper) {
 		this.paper = paper;
 	}
+	public MemberExamLinkKey getMemberExamLink() {
+		return memberExamLink;
+	}
+	public void setMemberExamLink(MemberExamLinkKey memberExamLink) {
+		this.memberExamLink = memberExamLink;
+	}
+	
 }

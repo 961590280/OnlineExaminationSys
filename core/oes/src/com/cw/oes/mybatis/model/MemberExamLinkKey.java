@@ -12,7 +12,7 @@ public class MemberExamLinkKey extends Model{
     
     private String answer;
 
-    
+    private String createTime;
     
     
     public String getAnswer() {
@@ -38,4 +38,13 @@ public class MemberExamLinkKey extends Model{
     public void setExamPid(String examPid) {
         this.examPid = examPid == null ? null : examPid.trim();
     }
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime == null ? null : createTime.trim();
+	}
+    
 }

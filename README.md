@@ -1,2 +1,4 @@
 # OnlineExaminationSys
-请用用户名为root密码为root的用户创建名为oes的数据库，并导入design文件夹下的oes.sql文件，在运行程序。
+部署：
+	1.导入design文件夹下oes_new.sql创建数据库（结构）
+	2.导入design文件夹下sys_url_service_map.sql导入oes_new数据库。（url和service映射的数据）

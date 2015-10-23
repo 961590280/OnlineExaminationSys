@@ -1,11 +1,41 @@
 package com.cw.oes.mybatis.model;
 
-public class Message extends MessageKey {
+public class Message {
+    private String uuid;
+
+    private String senderPid;
+
+    private String reciverPid;
+
     private String sendTime;
 
     private String type;
 
     private String isRead;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid == null ? null : uuid.trim();
+    }
+
+    public String getSenderPid() {
+        return senderPid;
+    }
+
+    public void setSenderPid(String senderPid) {
+        this.senderPid = senderPid == null ? null : senderPid.trim();
+    }
+
+    public String getReciverPid() {
+        return reciverPid;
+    }
+
+    public void setReciverPid(String reciverPid) {
+        this.reciverPid = reciverPid == null ? null : reciverPid.trim();
+    }
 
     public String getSendTime() {
         return sendTime;

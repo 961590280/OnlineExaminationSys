@@ -47,14 +47,37 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 	/** 读取用户数据 用户名，头像，标签**/
 	function getUserInfo(){
+		
+		var arr=["primary","success","info","warning","danger"];
 		$.ajax({
 		
 			url:"${ctxPath}/common/ajax/getPersonalInfo",
 			success:function(data){
 				data = eval("("+data+")");
-				console.log(data);
+				//console.log(data);
 				$("#user_name").text(data["resultObj"].userName);
 				$("#head_img").attr("src","res/personal-img/"+data["resultObj"].userHead);
+			}
+		
+		});
+		
+		$.ajax({
+			
+			url:"${ctxPath}/common/ajax/getPersonalTag",
+			success:function(data){
+				data = eval("("+data+")");
+				data = data["resultObj"];
+				var html ="";
+				console.log(data);
+				
+				if(data.length==0){
+					html="<span ><a>创建</a>个人标签</span>";
+					
+				}
+				for(var key in data){
+					html+="<span class='label label-"+arr[key%5]+"'>"+data[key].name+"</span>";
+				}
+				$("#tags").html(html);
 			}
 		
 		});
@@ -155,6 +178,12 @@ function getPersonalExamRecords(){
 		});
 }
 	</script>
+	<style type="text/css">
+	#tags{
+	margin-left:15px;
+	}
+	#tags span{ margin-left:5px;line-height: 2;}
+	</style>
   </head>
   
   <body>
@@ -179,7 +208,9 @@ function getPersonalExamRecords(){
 						<div class="col-xs-12">
 						<!-- 标签区 -->
 							<span class="glyphicon glyphicon-tags"></span>
+							<div id="tags" >
 							
+							</div>
 							
 						</div>
 					</div>

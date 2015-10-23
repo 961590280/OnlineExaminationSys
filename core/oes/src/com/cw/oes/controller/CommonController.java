@@ -50,8 +50,8 @@ public class CommonController extends BaseController{
 	@RequestMapping("{urlFlag}")
 	public Object common(@PathVariable String urlFlag, HttpServletRequest request,
 			HttpServletResponse response) {
+		System.getProperty("catalina.home"); 
 		
-		logger.debug("urlFlag=>" + urlFlag);
 		RequestDataForm requestDataForm;
 		try {
 			requestDataForm = getRequestDataForm(urlFlag, request, response);
@@ -70,11 +70,14 @@ public class CommonController extends BaseController{
 				page = responseDataForm.getPage();
 				if (StringUtils.isEmpty(page))
 					page = urlMap.getPage();
+				
 			}
+			
 			return page;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error(e,e.fillInStackTrace());
 			return "index";
 		}
 	} 
@@ -92,14 +95,19 @@ public class CommonController extends BaseController{
 	 public Object ajaxCall(@PathVariable String urlFlag, HttpServletRequest request, HttpServletResponse response)
 	    throws Exception
 	  {
-
-		RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
-		SysUrlServiceMap urlMap = requestDataForm.getUrlMap();
-		String serviceCommand = urlMap.getServiceCommand();
-		Class<? extends CommonService> clazz = commonService.getClass();//获取commonService类
-		Method method = clazz.getMethod(serviceCommand, requestDataForm.getClass());//获取CommonService类中的方法
-		logger.debug("cdbsmCommand=>" + serviceCommand);
-		return (ResponseDataForm) method.invoke(commonService, requestDataForm);//调用服务
+		 RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
+		 ResponseDataForm responseDataForm = null;
+		try{
+			SysUrlServiceMap urlMap = requestDataForm.getUrlMap();
+			String serviceCommand = urlMap.getServiceCommand();
+			Class<? extends CommonService> clazz = commonService.getClass();//获取commonService类
+			Method method = clazz.getMethod(serviceCommand, requestDataForm.getClass());//获取CommonService类中的方法
+			logger.debug("cdbsmCommand=>" + serviceCommand);
+			responseDataForm = (ResponseDataForm) method.invoke(commonService, requestDataForm);
+		}catch (Exception e){
+			logger.error(e,e.fillInStackTrace());
+		}
+		return responseDataForm;//调用服务
 	
 	  }
 	

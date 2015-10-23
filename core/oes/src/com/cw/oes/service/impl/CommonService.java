@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cw.oes.cache.GlobalCache;
+import com.cw.oes.controller.BaseController;
 import com.cw.oes.dao.IDao;
 import com.cw.oes.dao.impl.DaoHelper;
 import com.cw.oes.form.RequestDataForm;
@@ -25,6 +27,8 @@ import com.cw.oes.mybatis.dao.MemberMapper;
 import com.cw.oes.mybatis.dao.PaperMapper;
 import com.cw.oes.mybatis.dao.PaperTopicLinkMapper;
 import com.cw.oes.mybatis.dao.SysUrlServiceMapMapper;
+import com.cw.oes.mybatis.dao.TagMapper;
+import com.cw.oes.mybatis.dao.TagOtherLinkMapper;
 import com.cw.oes.mybatis.model.Collection;
 import com.cw.oes.mybatis.model.CollectionKey;
 import com.cw.oes.mybatis.model.Examination;
@@ -33,6 +37,7 @@ import com.cw.oes.mybatis.model.MemberExamLinkKey;
 import com.cw.oes.mybatis.model.Paper;
 import com.cw.oes.mybatis.model.PaperTopicLinkKey;
 import com.cw.oes.mybatis.model.SysUrlServiceMap;
+import com.cw.oes.mybatis.model.Tag;
 import com.cw.oes.mybatis.model.Topic;
 import com.cw.oes.pojo.TestPaper;
 import com.cw.oes.service.IService;
@@ -48,9 +53,9 @@ import com.cw.oes.utils.UserSessionBean;
  */
 @Service("commonService")
 public class CommonService implements IService{
-	
+	//缓存考试期间提交的答案
 	private static Map<String,Object> ANSWER_CACHE =  new HashMap<String, Object>();
-	
+	protected static Logger logger = Logger.getLogger(CommonService.class);
 	@Autowired
 	private IDao myDao;
 	/**
@@ -354,7 +359,33 @@ public class CommonService implements IService{
 		ResponseDataForm rdf = new ResponseDataForm();
 		Member member = requestDataForm.getUserSession().getMember();
 		rdf.setResultObj(member);
+		return rdf;
 		
+	}
+	/**
+	 * 返回用户标签
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	public ResponseDataForm getPersonalTag(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		Member member = requestDataForm.getUserSession().getMember();
+		try{
+			
+			
+			TagOtherLinkMapper linkMapper = session.getMapper(TagOtherLinkMapper.class); 
+			List<Tag> tags = linkMapper.getPersonalTags(member.getUuid());
+			
+			
+			rdf.setResultObj(tags);
+			
+			
+		}finally{
+			session.close();
+		}
 		return rdf;
 		
 	}
@@ -478,38 +509,7 @@ public class CommonService implements IService{
 		
 	}
 	
-	public ResponseDataForm (RequestDataForm requestDataForm)
-			throws Exception {
-		ResponseDataForm rdf = new ResponseDataForm();
-		List<Map<String,Object>> resultList =  new ArrayList<Map<String,Object>>();
-		SqlSession session = DaoHelper.getSession();
-		try{
-			Member member = requestDataForm.getUserSession().getMember();
-			CollectionMapper collectionMapper = session.getMapper(CollectionMapper.class);
-			
-			String examPid = requestDataForm.getString("examPid");
-			
-			Collection collection = new Collection();
-			collection.setCollectionType("0");
-			collection.setCollectorPid(examPid);
-			collection.setUserPid(member.getUuid());
-			if(collectionMapper.selectByPrimaryKey(collection) == null){
-				rdf.setResult(ResponseDataForm.FAULAIE);
-				rdf.setResultInfo("未收藏");
-			}else{
-				collectionMapper.deleteByPrimaryKey(collection);
-				rdf.setResult(ResponseDataForm.SESSFUL);
-			}
-			
-			
-			session.commit();
-			
-		}finally{
-			session.close();
-		}
-		return rdf;
-		
-	}
+
 	@Override
 	public ResponseDataForm service(RequestDataForm requestDataForm)
 			throws Exception {

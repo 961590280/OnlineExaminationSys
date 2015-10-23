@@ -56,7 +56,10 @@
 	  <mapper resource="com/cw/oes/mybatis/mapping/TopicMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/PaperTopicLinkMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/CollectionMapper.xml" />
-	  <mapper resource="com/cw/oes/mybatis/mapping/MessageMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/MessageMapper.xml" /> 
+	  <mapper resource="com/cw/oes/mybatis/mapping/TagMapper.xml" />
+	  <mapper resource="com/cw/oes/mybatis/mapping/TagOtherLinkMapper.xml" />
+	  
 	<!--   <mapper resource="com/cw/oes/mybatis/mapping/MemberExamLinkMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/PageMapper.xml" />
 	  <mapper resource="com/cw/oes/mybatis/mapping/PageTopicLinkMapper.xml" />

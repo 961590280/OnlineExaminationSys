@@ -1,16 +1,15 @@
 package com.cw.oes.mybatis.dao;
 
 import com.cw.oes.mybatis.model.Message;
-import com.cw.oes.mybatis.model.MessageKey;
 
 public interface MessageMapper {
-    int deleteByPrimaryKey(MessageKey key);
+    int deleteByPrimaryKey(String uuid);
 
     int insert(Message record);
 
     int insertSelective(Message record);
 
-    Message selectByPrimaryKey(MessageKey key);
+    Message selectByPrimaryKey(String uuid);
 
     int updateByPrimaryKeySelective(Message record);
 

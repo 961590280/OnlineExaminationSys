@@ -83,6 +83,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			
 			</div>
 		</div>
+		<!-- 内容部分 -->
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+			<div class="row">
+			<h3>1.下面哪些是Thread类的方法（）</h3>
+			
+			<div class="btn-group" role="group" aria-label="...">
+		 	<button type="button" class="btn btn-default">
+		 		<span class=" glyphicon glyphicon-pencil"></span>
+		 	
+		 	</button>
+			</div>
+			<h4>row</h4>
+			<h4>row</h4>
+			<h4>row</h4>
+			<h4>row</h4>
+			
+			</div>
+			
+			</div>
+			<div class="col-md-2"></div>
+			
+		</div>
 
 
 	</div>

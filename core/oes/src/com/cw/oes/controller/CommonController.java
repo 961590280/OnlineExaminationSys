@@ -75,7 +75,7 @@ public class CommonController extends BaseController{
 			
 			return page;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 			logger.error(e,e.fillInStackTrace());
 			return "index";
@@ -93,21 +93,21 @@ public class CommonController extends BaseController{
 	 @RequestMapping({"/ajax/{urlFlag}"})
 	 @ResponseBody
 	 public Object ajaxCall(@PathVariable String urlFlag, HttpServletRequest request, HttpServletResponse response)
-	    throws Exception
-	  {
+	    throws Exception{
+		 
 		 RequestDataForm requestDataForm = getRequestDataForm(urlFlag, request, response);
 		 ResponseDataForm responseDataForm = null;
-		try{
+		 try{
 			SysUrlServiceMap urlMap = requestDataForm.getUrlMap();
 			String serviceCommand = urlMap.getServiceCommand();
 			Class<? extends CommonService> clazz = commonService.getClass();//获取commonService类
 			Method method = clazz.getMethod(serviceCommand, requestDataForm.getClass());//获取CommonService类中的方法
 			logger.debug("cdbsmCommand=>" + serviceCommand);
 			responseDataForm = (ResponseDataForm) method.invoke(commonService, requestDataForm);
-		}catch (Exception e){
+		 }catch (Exception e){
 			logger.error(e,e.fillInStackTrace());
-		}
-		return responseDataForm;//调用服务
+		 }
+		 return responseDataForm;//调用服务
 	
 	  }
 	

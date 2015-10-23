@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cw.oes.cache.GlobalCache;
-import com.cw.oes.controller.BaseController;
 import com.cw.oes.dao.IDao;
 import com.cw.oes.dao.impl.DaoHelper;
 import com.cw.oes.form.RequestDataForm;
@@ -53,9 +51,9 @@ import com.cw.oes.utils.UserSessionBean;
  */
 @Service("commonService")
 public class CommonService implements IService{
-	//缓存考试期间提交的答案
+	//保存考试期间提交的答案
 	private static Map<String,Object> ANSWER_CACHE =  new HashMap<String, Object>();
-	protected static Logger logger = Logger.getLogger(CommonService.class);
+	
 	@Autowired
 	private IDao myDao;
 	/**

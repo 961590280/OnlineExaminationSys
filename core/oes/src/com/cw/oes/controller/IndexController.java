@@ -50,6 +50,8 @@ public class IndexController extends BaseController{
 	@RequestMapping("{urlFlag}")
 	public Object common(@PathVariable String urlFlag, HttpServletRequest request,
 			HttpServletResponse response) {
+			
+			
 		
 			return "index";
 	

@@ -8,9 +8,10 @@
     <result column="user_reg_time" property="userRegTime" jdbcType="VARCHAR" />
     <result column="user_is_del" property="userIsDel" jdbcType="CHAR" />
      <result column="user_head" property="userHead" jdbcType="VARCHAR" />
+      <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, user_name, user_pwd, user_reg_time, user_is_del ,user_head
+    uuid, user_name, user_pwd, user_reg_time, user_is_del ,user_head,user_email
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -92,10 +93,19 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cw.oes.mybatis.model.Member" >
     update member
-    set user_name = #{userName,jdbcType=VARCHAR},
-      user_pwd = #{userPwd,jdbcType=VARCHAR},
-      user_reg_time = #{userRegTime,jdbcType=VARCHAR},
-      user_is_del = #{userIsDel,jdbcType=CHAR}
+    set user_pwd = #{userPwd,jdbcType=VARCHAR}
+     <if test="userRegTime != null" >
+     , user_reg_time = #{userRegTime,jdbcType=VARCHAR}
+      </if>
+      <if test="userIsDel != null" >
+     , user_is_del = #{userIsDel,jdbcType=VARCHAR}
+      </if>
+      <if test="userHead != null" >
+     , user_head =  #{userHead,jdbcType=VARCHAR}
+      </if>
+      <if test="userEmail != null" >
+     , user_email =  #{userEmail,jdbcType=VARCHAR}
+      </if>
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
 </mapper>

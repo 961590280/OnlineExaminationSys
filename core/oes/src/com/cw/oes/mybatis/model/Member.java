@@ -17,6 +17,10 @@ public class Member extends Model{
     private String userIsDel;
     
     private String userHead;
+    
+    private String userEmail;
+    
+    
 
     public String getUuid() {
         return uuid;
@@ -64,6 +68,14 @@ public class Member extends Model{
 
 	public void setUserHead(String userHead) {
 		 this.userHead = userHead == null ? null : userHead.trim();
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
     
     

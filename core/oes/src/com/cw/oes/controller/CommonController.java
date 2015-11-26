@@ -106,6 +106,7 @@ public class CommonController extends BaseController{
 			responseDataForm = (ResponseDataForm) method.invoke(commonService, requestDataForm);
 		 }catch (Exception e){
 			logger.error(e,e.fillInStackTrace());
+			System.out.println(e);
 		 }
 		 return responseDataForm;//调用服务
 	

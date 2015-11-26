@@ -1,5 +1,6 @@
 package com.cw.oes.interceptor;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cw.oes.utils.CookiesUtil;
 import com.cw.oes.utils.Environment;
 import com.cw.oes.utils.UserSessionBean;
 
@@ -33,17 +35,61 @@ public class LoginInterceptor implements HandlerInterceptor{
 		HttpSession session = request.getSession();
 		String path = request.getContextPath();
 		String reqUrl = request.getServletPath();
-		if(reqUrl.contains("/common/")){
-			//登录页面和登录请求不进行过滤
-			if("/common/toLoginPage".equals(reqUrl) || "/common/memberLogin".equals(reqUrl)||"/common/index".equals(reqUrl)||"/common/ajax/memberLogin".equals(reqUrl)) {
-				return true;
-			}
+		if(reqUrl.contains("/common/")){//对需要用户登录的请求进行拦截
+			
+			
+			
 			
 			String returnUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/common/toLoginPage?err=2"; //返回页
 			UserSessionBean usb = (UserSessionBean) session.getAttribute(Environment.SESSION_USER_LOGIN_INFO);  //获取用户会话信息
+			
+			
+			
+			
+			if("/common/toLoginPage".equals(reqUrl)){
+				//如果已经登陆
+				if(usb != null){
+					returnUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/common/index";
+					response.sendRedirect(returnUrl);
+					return false;
+				}
+			}
+			
+			//登录页面和登录请求不进行过滤
+			if("/common/toLoginPage".equals(reqUrl)||"/common/autoLogin".equals(reqUrl) || "/common/memberLogin".equals(reqUrl)||"/common/index".equals(reqUrl)||"/common/ajax/memberLogin".equals(reqUrl)) {
+				
+				
+				return true;
+			}
+			
 			if(usb == null) {
-				response.sendRedirect(returnUrl);
-				return false;
+				
+				/**
+				 * 尝试读取cookie自动登录
+				 */
+				Cookie[] cookies = request.getCookies();
+		        if(cookies != null){
+		            for(Cookie cookie : cookies)
+		            {
+		                if(cookie.getName().equals("oes-cookie"))
+		                {
+		                	returnUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/common/autoLogin?cookie="+cookie.getValue()+"&reqUrl="+request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+reqUrl; 
+		                	response.sendRedirect(returnUrl);
+		                    return true;
+		                }
+		            }
+		        }
+				
+				
+		        
+				if(reqUrl.contains("/ajax/")){//判断是否是ajax请求
+					
+					response.setStatus(60000);
+					return false;
+				}else{
+					response.sendRedirect(returnUrl);
+					return false;
+				}
 			}
 		}	
 		return true;

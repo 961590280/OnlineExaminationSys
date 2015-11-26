@@ -41,6 +41,8 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 			
 			var userCode = $('#userCode').val();
 			var userPwd = $('#userPwd').val();
+			var autoLogin = $("input[name='autoLogin']:checked").val();
+			
 			
 			if (userCode=="" || userPwd == "") {
 				
@@ -51,7 +53,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				
 			}else{
 				$.post("${ctxPath}/common/ajax/memberLogin",
-						{userCode:userCode,userPwd:userPwd},
+						{userCode:userCode,userPwd:userPwd,autoLogin:autoLogin},
 						function(data){
 							var errorInfo = $("#loginErrorInfo");//错误提示框
 							data = eval("("+data+")");
@@ -118,9 +120,19 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				      <span class="" aria-hidden="false" id="glyphicon" ></span>
 				    </div>
 				  </div>
-			  
+			  	  <div class="form-group">
+				    <div class="col-md-offset-2 col-md-10">
+				    	<label class="checkbox-inline">
+						  <input  type="checkbox" id="input-checkbox" name="autoLogin" value="true"/> 未来 1 周自动登录
+						</label>
+				    </div>
+				  </div>	
+			  		
 				  <div class="form-group">
-				    <div class="col-sm-offset-5 col-sm-10"><button type="button" class="btn btn-info" onclick="submitForm()">登 录</button></div>
+				 
+				  	<div class=" col-sm-1"></div>
+				    <div class=" col-sm-10"><button type="button" class="btn btn-info btn-block" onclick="submitForm()">登&nbsp; 录</button></div>
+				 	<div class=" col-sm-1"></div>
 				  </div>
 			</form>
 			</div>

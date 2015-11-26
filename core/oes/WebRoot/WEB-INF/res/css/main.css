@@ -32,6 +32,28 @@
 .show{
 	visibility:visible;
 }
+.no-more-record{
+	font-size: 15px;
+	color: #949495;
+	text-align: center;
+}
+.error-well{
+	border: solid 1px #D04437;
+	background-color: white;
+	margin: 10px 10px 10px 10px;
+}
+.panel-menu-group{
+	float:right;
+}
+.panel-menu-group button{
+	padding:5px 5px;
+}
+
+
+.remove-record-btn span{
+	color:#D04437 ;
+}
+
 /* 个人测试页面 */
 
 
@@ -147,4 +169,101 @@ margin-bottom:30px;
 }
 .exam-topic-error{
 	text-align: center;
+}
+/**测验结果页面 **/
+.exam-record-header{height: 150px;
+position: fixed;
+width: 100%;
+background: #FFF none repeat scroll 0% 0%;
+z-index: 100;
+margin-top: -20px;}
+.exam-record-contianer{min-height: 600px;
+margin-top: 150px;}
+.exam-record-title{height: 100px;background-color: #F5F5F5;border-bottom: solid 1px #999999;}
+.record-note{margin-top: 15px;}
+.textarea-note{visibility: hidden;}
+.record-options{font-size: 20px;}
+.options-correct{margin-right:5px;color: green;}
+.options-error{margin-right:5px;color: red;}
+.options-empty{margin-right:5px;color:gray;}
+.options-content{word-wrap: break-word;}
+.content-correct{color: green;font-weight: bold;}
+.content-error{color: red;font-weight: bold;}
+.menu-bar{margin-top: 10px;
+box-shadow:0 10px 15px white;
+-moz-box-shadow:0 10px 15px white;
+-webkit-box-shadow:0 10px 15px white;}
+
+/** 账号设置 **/
+.count-setting-container{
+	min-height: 500px;
+}
+.panel-gray{
+	border: solid  1px #D8D8D8;
+}
+.panel-gray .panel-heading{
+	background-color: #F5F5F5;
+	border-bottom: solid  1px #D8D8D8;
+}
+.email-input{
+	width: 300px;
+}
+.img-input{
+	width: 100px;
+	border: 1px solid #D8D8D8;
+}
+.setting-form-group{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.btn-chnImg{
+	
+}
+.chnImg-info{
+	margin-top: 20px;
+	font-size: 15px;
+	color: #949495;
+	
+}
+#img-path{
+	margin-top: -22px;filter: alpha(opacity=0);-moz-opacity: 0;opacity: 0;;cursor:pointer;-moz-opacity:0;width: 82px;height: 35px;
+}
+/* 图片剪裁模态窗 */
+#crop-img img{
+	width: 100%;
+	height: 500px;
+	
+}
+
+#preView-img{
+	width: 160px;
+	height: 160px;
+	float: none;
+	border: 1px solid #EEE;
+	border-radius: 4px;
+	background-color: #FFF;
+	overflow: hidden;
+}
+.crop-tips{
+	font-size: 14px;
+	margin-top: 30px;
+	width: 200px;
+	margin-left: 30px;
+}
+.crop-tips-sign{
+	font-size: 25px;
+	margin-right: 5px;
+	color: #808080;
+	margin-left: -30px;
+}
+/** 引用css **/
+img.loadding{  
+	 margin-left: 60px;
+	width: 20px;
+	margin-top: 6px;
+}
+button.loading{/* 更改图像按钮css */
+	float: left;
+	margin-right: -90px;
+	padding-right: 40px;
 }

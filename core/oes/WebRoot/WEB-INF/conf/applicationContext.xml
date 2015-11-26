@@ -15,7 +15,13 @@
 
 	<!-- 配置注解驱动的Spring MVC Controller 的编程模型.注:次标签只在 Servlet MVC工作! -->
 	<mvc:annotation-driven />
-
+	<!-- 引入数据库配置文件  jdbcInfo.properties -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+		     <value>classpath:jdbcInfo.properties</value><!-- 因为属性文件是放在src下所以添加classpath-->
+		</property>
+	</bean>
+	
 	<!-- 配置Interceptors -->
 	<!-- 后台登录拦截器  -->
  	<mvc:interceptors>
@@ -29,12 +35,12 @@
     <bean id="dataSource" 
 		class="org.apache.commons.dbcp.BasicDataSource" 
 		destroy-method="close"> 
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
 		<property name="url" 
-			value="jdbc:mysql://localhost:3306/oes?useUnicode=true&amp;characterEncoding=utf-8&amp;useOldAliasMetadataBehavior=true">
+			value="${jdbc.url}">
 		</property>
-		<property name="username" value="root"></property> 
-		<property name="password" value="root"></property>
+		<property name="username" value="${jdbc.username}"></property> 
+		<property name="password" value="${jdbc.password}"></property>
 		<property name="validationQuery" value="select 1" />
 		<property name="maxIdle" value="5" />
 		<property name="maxWait" value="100" />

@@ -75,18 +75,18 @@
   </select>
   
   
-  <select id="selectByMemberIdExamId" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey"  >
+  <select id="selectByMemberIdExamIdCreateTime" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey"  >
       select 
    	<include refid="Base_Column_List" />
     from member_exam_link
-    where exam_pid = #{examPid,jdbcType=VARCHAR} and member_pid = #{memberPid,jdbcType=VARCHAR};
+    where exam_pid = #{examPid,jdbcType=VARCHAR} and member_pid = #{memberPid,jdbcType=VARCHAR} and create_time = #{createTime,jdbcType=VARCHAR} ;
   </select>
   <!-- 个人测验的记录 -->
-   <select id="personalExamRecords" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey"  >
+   <select id="personalExamRecords" resultMap="BaseResultMap" parameterType="java.util.HashMap"  >
       select 
    	<include refid="Base_Column_List" />
     from member_exam_link
-    where member_pid = #{uuid,jdbcType=VARCHAR} and answer != "" and answer is not null order by create_time desc;
+    where member_pid = #{uuid,jdbcType=VARCHAR} and answer != "" and answer is not null order by create_time desc limit #{begin,jdbcType=INTEGER},#{end,jdbcType=INTEGER};
   </select>
   
 </mapper>

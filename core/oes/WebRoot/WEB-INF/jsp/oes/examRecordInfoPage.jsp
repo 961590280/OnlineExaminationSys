@@ -2,7 +2,8 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-
+String examPid = request.getParameter("examPid");
+String createTime = request.getParameter("createTime");
 
 %>
 
@@ -23,6 +24,77 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
 	<script type="text/javascript">
+	var examPid = '<%=examPid%>';
+	var createTime = '<%=createTime%>';
+	var indexArr = ['A','B','C','D','E','F','G','H'];//选项序号
+	
+	$(function () {
+		  getExamRecord();
+		  $('[data-toggle="tooltip"]').tooltip();//工具提示要调用tooltip方法
+	})
+	/* 读取测验记录  */
+	function getExamRecord(){
+		$.ajax({
+			url:"${ctxPath}/common/ajax/getPersonalExamRecordInfo",
+			data:{examPid:examPid,createTime:createTime},
+			success:function(data){
+				data = eval("("+data+")");
+				data = data.resultObj;
+				
+				
+				
+				console.log(data);
+				var html = '';
+				
+				
+				$("#examTitle").html(data.examTitle);//测验名称
+				$("#date").html(data.date);//考试时间
+				var topicsHtml = '';//题目html
+				for(var key in data.examPaper.topics){
+					var topic = data.examPaper.topics[key];
+					var answer = data.answers[parseInt(key)+1];//回答
+					//alert()
+					//console.log(parseInt(key)+1);
+					topicsHtml+="<div class=\"row\"  ><div class=\"col-md-8\"><h3>";
+					if(answer==null){
+						topicsHtml+="<a href=\"javascript:void(0)\"><span class=\" glyphicon glyphicon-question-sign options-empty\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"没有作答的题目\" ></span></a>";
+						
+					}else if(answer == topic.correctAnswer){
+						topicsHtml+="<a href=\"javascript:void(0)\"><span class=\" glyphicon glyphicon-ok-sign options-correct\"  ></span></a>";
+					}else{
+						topicsHtml+="<a href=\"javascript:void(0)\"><span class=\" glyphicon glyphicon-remove-sign options-error\"  ></span></a>";
+					}
+					topicsHtml+=topic.topicTitle+"</h3>";
+					
+					
+					for(var optKey in topic.options){
+						if(topic.options[optKey]==null){
+							break;
+						}
+						topicsHtml+="<div class=\"col-md-12 record-options\" ><div class=\"col-md-1\">";
+						topicsHtml+="</div><div class=\"col-md-10 options-content ";
+						if((parseInt(optKey)+1)==topic.correctAnswer){//如果选项为正确答案则显示正确图标
+							
+							topicsHtml+="content-correct ";
+						}else if(answer ==(parseInt(optKey)+1)&&(parseInt(optKey)+1)!=topic.correctAnswer){//如果选项为正确答案则显示正确图标
+							topicsHtml+="content-error ";						
+						}
+						
+						topicsHtml+="\">"+indexArr[optKey]+'.'+topic.options[optKey]+"</div></div>";
+					}
+					topicsHtml+="</div><div class=\"col-md-4\"><div class=\"col-md-12\">";
+					topicsHtml+="<div class=\"btn-group\" role=\"group\" aria-label=\"...\">";
+					topicsHtml+="<button  type=\"button\" class=\"btn btn-default record-note\" > <span class=\" glyphicon glyphicon-edit\"></span> 笔记</button>";
+					topicsHtml+="<button  type=\"button\" class=\"btn btn-default record-note\" > <span class=\" glyphicon glyphicon-star-empty\"></span> 重点</button>";
+					topicsHtml+="</div></div><div class=\"col-md-12\" style=\"margin-top: 20px;\"> <textarea class=\"form-control textarea-note\" rows=\"4\"></textarea></div></div></div>";
+				}
+				
+				$("#topics").html(topicsHtml);
+				
+			}
+		});
+	}
+	
 	
 	</script>
   </head>
@@ -31,22 +103,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
   <!-- 导航栏 -->
 	<jsp:include page="/WEB-INF/jsp/oes/subUnit/navBar.jsp"></jsp:include>
-	
-	
-	<div class="container-fluid personal-contianer">
-		<div class="row">
+	<div class="exam-record-header">
+	<div class="row exam-record-title" >
 			
 			
 			<div class="col-md-3"></div>
-			<div class="col-md-6" style="text-align: center;"><h1>xxx测验</h1></div>
-			<div class="col-md-3"><h3>时间：xxxx-xx-xx</h3></div>
+			<div class="col-md-6" style="text-align: center;"><h1 id="examTitle">xxx测验</h1></div>
+			<div class="col-md-3"><h4 id="date">时间：xxxx-xx-xx</h4></div>
 		
 			
 		
-		</div>
-		<div class="row">
+	</div>
+	<div class="row menu-bar">
 			<div class="col-md-1"></div>
-			<div class="col-md-2">
+			<div class="col-md-3">
 				<div class="btn-toolbar" role="toolbar" aria-label="...">
 					 <div class="btn-group" role="group" aria-label="...">
 					 <div class="btn-group" role="group">
@@ -57,22 +127,40 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					    <ul class="dropdown-menu">
 					      <li><a href="#">显示全部题目</a></li>
 					      <li><a href="#">显示答错题目</a></li>
+					      <li><a href="#">显示重点题目</a></li>
+					    </ul>
+					    
+					    
+					    
+					  </div>
+					  
+					  <div class="btn-group" role="group">
+					    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					      备用
+					      <span class="caret"></span>
+					    </button>
+					    <ul class="dropdown-menu">
+					      <li><a href="#">Dropdown link</a></li>
+					      <li><a href="#">Dropdown link</a></li>
 					    </ul>
 					  </div>
 					 </div>
   					
 				</div>
 			</div>
-			<div class="col-md-6"></div>
-			<div class="col-md-2">
+			<div class="col-md-4"></div>
+			<div class="col-md-3">
 				<div class="btn-toolbar" role="toolbar" aria-label="...">
 					 <div class="btn-group" role="group" aria-label="...">
-					 	<button type="button" class="btn btn-default">
-					 		<span class="glyphicon glyphicon-th-large"></span>
+					 	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="通过邮件分享给好友">
+					 		<span class=" glyphicon glyphicon-share"> </span> 分享
 					 	
 					 	</button>
-					 	<button type="button" class="btn btn-default">
-					 		<span class="glyphicon glyphicon-th-large"></span>
+					 	<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="导出Word文件">
+					 		<span class="glyphicon glyphicon-download-alt"> </span> 导出
+					 	</button>
+					 	<button type="button" class="btn btn-primary" >
+					 		<span class="glyphicon glyphicon-print"> </span> 打印
 					 	</button>
 					 </div>
   					
@@ -83,28 +171,78 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			
 			</div>
 		</div>
+		</div>
+	
+	<div class="container-fluid exam-record-contianer">
+		
+		
 		<!-- 内容部分 -->
 		<div class="row">
-			<div class="col-md-2"></div>
-			<div class="col-md-8">
+			<div class="col-md-1"></div>
+			<div class="col-md-10" id="topics">
+			<div class="row"  >
+				<div class="col-md-8">
+					<h3>1.下面哪些是Thread类的方法（）</h3>
+					<div class="col-md-12 record-options" ><div class="col-md-1"> <span class=" glyphicon glyphicon-ok options-correct"  style=""></span></div><div class="col-md-10 options-content" >A.rowrowrowrowrowrowrowrowrowrowrowrowrowrowrowrow</div></div>
+					<div class="col-md-12 record-options"  ><div class="col-md-1"><span class=" glyphicon glyphicon-remove options-error" style=""></span></div><div class="col-md-10 options-content" > B.row</div></div>
+					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
+					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
+				
+				</div>
+				<div class="col-md-4">
+					<div class="col-md-12">
+					<div class="btn-group" role="group" aria-label="...">
+				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-edit"></span> 笔记</button>
+				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-star-empty"></span> 重点</button>
+					</div>
+					</div>
+					<div class="col-md-12" style="margin-top: 20px;">
+					<textarea class="form-control" rows="4"></textarea>
+					</div>
+				</div>
+			</div>
+			
 			<div class="row">
-			<h3>1.下面哪些是Thread类的方法（）</h3>
-			
-			<div class="btn-group" role="group" aria-label="...">
-		 	<button type="button" class="btn btn-default">
-		 		<span class=" glyphicon glyphicon-pencil"></span>
-		 	
-		 	</button>
+				<div class="col-md-8">
+					<h3>1.下面哪些是Thread类的方法（）</h3>
+					<div class="col-md-12 record-options" ><div class="col-md-1"> <span class=" glyphicon glyphicon-ok options-correct"  style=""></span></div><div class="col-md-10 options-content" >A.rowrowrowrowrowrowrowrowrowrowrowrowrowrowrowrow</div></div>
+					<div class="col-md-12 record-options"  ><div class="col-md-1"><span class=" glyphicon glyphicon-remove options-error" style=""></span></div><div class="col-md-10 options-content" > B.row</div></div>
+					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
+					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
+				
+				</div>
+				<div class="col-md-4">
+					<div class="col-md-12">
+				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-edit"></span> 笔记</button>
+					</div>
+					<div class="col-md-12" style="margin-top: 20px;visibility: hidden;">
+					<textarea class="form-control" rows="4"></textarea>
+					</div>
+				</div>
 			</div>
-			<h4>row</h4>
-			<h4>row</h4>
-			<h4>row</h4>
-			<h4>row</h4>
 			
+			
+			<div class="row">
+				<div class="col-md-8">
+					<h3>1.下面哪些是Thread类的方法（）</h3>
+					<div class="col-md-12 record-options" ><div class="col-md-1"> <span class=" glyphicon glyphicon-ok options-correct"  style=""></span></div><div class="col-md-10 options-content" >A.rowrowrowrowrowrowrowrowrowrowrowrowrowrowrowrow</div></div>
+					<div class="col-md-12 record-options"  ><div class="col-md-1"><span class=" glyphicon glyphicon-remove options-error" style=""></span></div><div class="col-md-10 options-content" > B.row</div></div>
+					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
+					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
+				
+				</div>
+				<div class="col-md-4">
+					<div class="col-md-12">
+				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-edit"></span> 笔记</button>
+					</div>
+					<div class="col-md-12" style="margin-top: 20px;visibility: hidden;">
+					<textarea class="form-control" rows="4"></textarea>
+					</div>
+				</div>
 			</div>
 			
 			</div>
-			<div class="col-md-2"></div>
+			<div class="col-md-1"></div>
 			
 		</div>
 

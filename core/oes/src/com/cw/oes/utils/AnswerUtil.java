@@ -36,7 +36,11 @@ public class AnswerUtil {
 	public static Map coverIntoMap(String answerStr){
 		Map answer =new HashMap<String, Object>(); 
 		
-		String[] strArr = answerStr.split("|");
+		String[] strArr = answerStr.split("\\|");
+		if(strArr.length<1){
+			return null;
+		}
+		
 		
 		for(String str : strArr){
 			String[] tempArr = str.split(":");

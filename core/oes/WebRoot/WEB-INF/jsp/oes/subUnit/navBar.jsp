@@ -103,7 +103,7 @@ body { padding-top: 70px; }
       	<c:if test="<%=isNull %>">
 	      	<form class="navbar-form navbar-right"  >
 		       <button type="button" class="btn  btn-primary navbar-btn" onclick="toPage('${ctxPath}/common/toLoginPage')"> 登   录 </button>
-		       <button type="button" class="btn  btn-default navbar-btn" onclick="toPage('11')"> 注   册 </button>
+		       <button type="button" class="btn  btn-default navbar-btn" onclick="toPage('${ctxPath}/common/toRegisterPage')"> 注   册 </button>
 	     	</form>
       	
       	</c:if>

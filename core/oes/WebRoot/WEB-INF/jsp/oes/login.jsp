@@ -27,7 +27,6 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	
 	
 	
-	
 
 	<script type="text/javascript">
 	//rediect index page
@@ -107,14 +106,14 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 			 <form class="form-horizontal" id="memberLoginForm">
 			 
 				  <div class="form-group">
-				    <label for="userCode" class="col-sm-3 control-label">用 户 名</label>
+				    <label for="userCode" class="col-sm-3 control-label">用  户  名</label>
 				    <div class="col-sm-8" id="div_input_username">
 				      <input type="text" class="form-control" id="userCode" name="userCode" placeholder="UserName" onblur="isInputNull('div_input_username')" onChange="isInputNull('div_input_username')">
 				      <span class="" aria-hidden="false" id="glyphicon" ></span>			    
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="userPwd" class="col-sm-3 control-label">密 码</label>
+				    <label for="userPwd" class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
 				    <div class="col-sm-8" id="div_input_password">
 				      <input type="password" class="form-control" id="userPwd" name="userPwd" placeholder="Password" onblur="isInputNull('div_input_password')" onChange="isInputNull('div_input_password')">
 				      <span class="" aria-hidden="false" id="glyphicon" ></span>

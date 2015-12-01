@@ -6,7 +6,8 @@ public interface MemberMapper {
     int deleteByPrimaryKey(String uuid);
 
     int insert(Member record);
-
+    int register(Member record);
+    int emailIsUsed(String email);
     int insertSelective(Member record);
 
     Member selectByPrimaryKey(String uuid);

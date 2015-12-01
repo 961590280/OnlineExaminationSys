@@ -1,6 +1,7 @@
 package com.cw.oes.service.impl;
 
 import java.io.FileOutputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +57,7 @@ import com.cw.oes.utils.AnswerUtil;
 import com.cw.oes.utils.CookiesUtil;
 import com.cw.oes.utils.DateUtil;
 import com.cw.oes.utils.Environment;
+import com.cw.oes.utils.ImgUtil;
 import com.cw.oes.utils.UserSessionBean;
 import com.cw.oes.utils.Util;
 import com.google.common.util.concurrent.ExecutionError;
@@ -98,6 +100,14 @@ public class CommonService implements IService{
 			
 			Member member = memberMapper.selectByCode(userName);
 			if(member != null && userPwd.equals(member.getUserPwd())){
+				
+				if("N".equals(member.getIsVerified())){
+					rdf.setResult(ResponseDataForm.FAULAIE);
+					rdf.setResultInfo("未验证邮箱，请登录邮箱进行验证");
+					
+					return rdf;
+					
+				}
 				rdf.setResult(ResponseDataForm.SESSFUL);
 				rdf.setResultInfo("登录成功");
 				//设置session
@@ -131,7 +141,62 @@ public class CommonService implements IService{
 		}
 		return rdf;
 	}
-	
+
+	/**
+	 * 用户注册
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	public ResponseDataForm memberRegister(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			String email = requestDataForm.getString("userEmail");
+			String password = requestDataForm.getString("userPwd");
+			MemberMapper memeberMapper = session.getMapper(MemberMapper.class);
+			Member record = new Member();
+			record.setUserEmail(email);
+			record.setUserName(email);
+			record.setUserPwd(password);
+		
+			memeberMapper.register(record);
+			rdf.setResult(ResponseData.SESSFUL);
+			session.commit();
+			
+		}finally{
+			session.close();
+		}
+		return rdf;
+	}
+	/**
+	 * 用户注册
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	public ResponseDataForm memberIsUsed(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			String email = requestDataForm.getString("email");
+			MemberMapper memberMapper = session.getMapper(MemberMapper.class);
+			
+			if(memberMapper.emailIsUsed(email)!=1){
+				rdf.setResult(ResponseData.SESSFUL);
+			}else{
+				rdf.setResult(ResponseData.FAULAIE);
+			}
+			
+		}finally{
+			session.close();
+		}
+		return rdf;
+	}
 	/**
 	 * 自动登录
 	 * @param requestDataForm
@@ -147,6 +212,8 @@ public class CommonService implements IService{
 		try{
 			String cookie = requestDataForm.getString("cookie");
 			String reqUrl = requestDataForm.getString("reqUrl");
+			
+			reqUrl = URLDecoder.decode(reqUrl, "UTF-8"); 
 			String[] strs = CookiesUtil.cookieDencryption(cookie).split(",");
         	String userName = strs[0];
         	String userPwd = strs[1];
@@ -725,40 +792,52 @@ public class CommonService implements IService{
 			throws Exception {
 		ResponseDataForm rdf = new ResponseDataForm();
 		SqlSession session = DaoHelper.getSession();
-		FileOutputStream out = null;
+		
 		try{
 			MemberMapper memberMapper = session.getMapper(MemberMapper.class);
 			Member member = requestDataForm.getUserSession().getMember();
 			String data = requestDataForm.getString("data");
-			HttpServletRequest  request = requestDataForm.getRequest();
-			
-			String path = this.getClass().getResource("").toURI().getPath();
-			path = path.substring(1, path.indexOf("classes"));
-			
-			
-			String suffix = data.substring(data.indexOf("/")+1,data.indexOf(";"));
-	
-			data = data.split(",")[1];
-			BASE64Decoder decoder = new BASE64Decoder();
-			byte[] decodedBytes = decoder.decodeBuffer(data); 
-			String filePath = path+"/res/personal-img/";
-			String fileName = UUID.randomUUID()+"."+suffix;
 		
-			out = new FileOutputStream(filePath+fileName);
-			out.write(decodedBytes);
-			Map<String, Object> resultObj = new HashMap<String, Object>();
-			resultObj.put("fileName", fileName);
 			
+			String fileName = new ImgUtil().img64BaseSave(data);//将字符串图片数据转为文件保存
 			
 			member.setUserHead(fileName);
 			memberMapper.updateByPrimaryKey(member);
+			
+			Map<String, Object> resultObj = new HashMap<String, Object>();
+			resultObj.put("fileName", fileName);
 			rdf.setResultObj(resultObj);
+			rdf.setResultInfo(ResponseDataForm.SESSFUL);
+			
+			session.commit();
+		}finally{
+			session.close();
+		}
+		return rdf;
+	}
+	
+	/**
+	 * 保存账号设置
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	public ResponseDataForm countSettingSave(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			MemberMapper memberMapper = session.getMapper(MemberMapper.class);
+			Member member = requestDataForm.getUserSession().getMember();
+			String email = requestDataForm.getString("email");
+			member.setUserEmail(email);
+			memberMapper.updateByPrimaryKey(member);
+			
 			rdf.setResultInfo(ResponseDataForm.SESSFUL);
 			session.commit();
 		}finally{
-			
-			  out.close();   
-			  session.close();
+			session.close();
 		}
 		return rdf;
 	}

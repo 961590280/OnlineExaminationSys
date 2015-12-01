@@ -20,7 +20,7 @@ public class Member extends Model{
     
     private String userEmail;
     
-    
+    private String isVerified;
 
     public String getUuid() {
         return uuid;
@@ -76,6 +76,14 @@ public class Member extends Model{
 
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
+	}
+
+	public String getIsVerified() {
+		return isVerified;
+	}
+
+	public void setIsVerified(String isVerified) {
+		this.isVerified = isVerified;
 	}
     
     

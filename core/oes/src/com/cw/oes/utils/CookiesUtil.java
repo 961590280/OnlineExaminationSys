@@ -1,6 +1,10 @@
 package com.cw.oes.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -69,6 +73,34 @@ public class CookiesUtil {
 	
 	public static void main(String[] args) {
 		cookieDencryption("Vm0wd2QyVkhVWGhUV0docFVtMW9WRll3Wkc5WFJsbDNXa1JTVjAxWGVGWlZNakExVmpGS2RHVkliRmhoTWsweFZtMTRTMk14V25GVQ0KYkdScFVtdHdTVlpxU2pSWlYwMTVWR3RzYUEwS1VteHdjRll3V2tkTk1WcHlXa1JTVkUxc1NrbFdiWFJyWVVFd1MxVnRNVzlYVmxWMw0KVm10MFUxWnNjSHBXTWpGSFZqQXhWMk5HWkZWV2JGcFlXVlZGZDFNeGNGaGpSVXBRVlZRd09RMEs=");
+	}
+	/**
+	 * 将请求的url编码为UTF-8的格式 
+	 * @param request
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String requestURLEncode(HttpServletRequest request) throws UnsupportedEncodingException{
+		String reqUrl = request.getServletPath();//请求的url
+		Enumeration paramNames = request.getParameterNames();
+		
+    	if(paramNames.hasMoreElements()){
+    		reqUrl+="?";
+    		
+    	}
+    	 while (paramNames.hasMoreElements()) {  
+             String paramName = (String) paramNames.nextElement();  
+   
+             String[] paramValues = request.getParameterValues(paramName);  
+             if (paramValues.length == 1) {  
+                 String paramValue = paramValues[0];  
+                 if (paramValue.length() != 0) {  
+                	 reqUrl +=(paramName+"="+paramValue+"&"); 
+                 }  
+             }  
+         } 
+    	reqUrl = URLEncoder.encode(reqUrl,"UTF-8");
+		return reqUrl;
 	}
 
 }

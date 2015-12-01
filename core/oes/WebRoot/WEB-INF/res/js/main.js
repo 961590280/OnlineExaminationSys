@@ -90,32 +90,43 @@ function hideAlert($e){
 function isInputNull(divId){
 	//alert();
 	var input = $("#"+divId+" input");
-	var div = $("#"+divId);
-	var span = $("#"+divId+" #"+"glyphicon");
 	
 	if(input.val() != ""){
 		
-		div.removeClass(DIV_OK_CLASS);
-		div.removeClass(DIV_ERROR_CLASS);
-		span.removeClass(INPUT_OK_ICON_CLASS);
-		span.removeClass(INPUT_ERROR_ICON_CLASS);
-	
-		div.addClass(DIV_OK_CLASS);
-		span.addClass(INPUT_OK_ICON_CLASS);
+		verifiedCorrect(divId);
 	}else{
+		verifiedError(divId);
 		
-		div.removeClass(DIV_OK_CLASS);
-		div.removeClass(DIV_ERROR_CLASS);
-		span.removeClass(INPUT_OK_ICON_CLASS);
-		span.removeClass(INPUT_ERROR_ICON_CLASS);
-		
-		div.addClass(DIV_ERROR_CLASS);
-		span.addClass(INPUT_ERROR_ICON_CLASS);
 		return true;
 		
 	}
 	
 	return false;
+}
+function verifiedCorrect(divId){
+	var div = $("#"+divId);
+	var span = $("#"+divId+" #"+"glyphicon");
+	div.removeClass(DIV_OK_CLASS);
+	div.removeClass(DIV_ERROR_CLASS);
+	span.removeClass(INPUT_OK_ICON_CLASS);
+	span.removeClass(INPUT_ERROR_ICON_CLASS);
+
+	div.addClass(DIV_OK_CLASS);
+	span.addClass(INPUT_OK_ICON_CLASS);
+	
+}
+function verifiedError(divId){
+	var div = $("#"+divId);
+	var span = $("#"+divId+" #"+"glyphicon");
+
+	div.removeClass(DIV_OK_CLASS);
+	div.removeClass(DIV_ERROR_CLASS);
+	span.removeClass(INPUT_OK_ICON_CLASS);
+	span.removeClass(INPUT_ERROR_ICON_CLASS);
+	
+	div.addClass(DIV_ERROR_CLASS);
+	span.addClass(INPUT_ERROR_ICON_CLASS);
+	
 }
 
 /** 数据加载区 **/

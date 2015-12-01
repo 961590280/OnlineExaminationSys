@@ -26,7 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var $modal;//模态框
 	var $cropImg;//剪裁图片的父div
 	var $imgInfo;//提示框
-	
+	var $saveInfo;
 	$(function () {
 	
 	  getUserInfo();
@@ -41,18 +41,39 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			url:"${ctxPath}/common/ajax/getPersonalInfo",
 			success:function(data){
 				data = eval("("+data+")");
+				console.log(data);
 				$("#img-input").attr("src","res/personal-img/"+data["resultObj"].userHead);
+				$("#email-input").val(data["resultObj"].userEmail);
+			}
+		
+		});
+	}
+	
+	function saveCountsetting(){
+		var email = $('#email-input').val();
+		$.ajax({
+			
+			url:"${ctxPath}/common/ajax/countSettingSave",
+			data:{email:email},
+			success:function(data){
+				data = eval("("+data+")");
+				console.log(data);
+				if(data.resultInfo == 1){
+					showAlert($saveInfo, "保存成功", ALERT_SUCCESS);
+					
+				}
+				
 			}
 		
 		});
 	}
 	/* 初始化 */
 	function init(){
-		  $modal   = $('#cutImgPanle');
-		  $cropImg = $('#crop-img');
-		  $imgInfo = $("#imgInfo");//提示框
+		  $modal    = $('#cutImgPanle');
+		  $cropImg  = $('#crop-img');
+		  $imgInfo  = $('#imgInfo');//裁剪图片警告框
+		  $saveInfo = $('#saveInfo');//保存设置警告框
 		  
-		  /* 注册事件 */
 		  $('#save').bind("click",function(){//为模态窗口的保存按钮注册事件
 			  
 				uploadImg($image.cropper('getCroppedCanvas').toDataURL());
@@ -156,7 +177,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<div class="panel panel-gray">
 				  <div class="panel-heading">个人资料</div>
 				  <div class="panel-body">
-	   				 <form action="">
+	   				 <form action="${ctxPath }/common/ajax/countSettingSave" method="post">
 	   				 
 	   				 	<div class="form-group setting-form-group">
 		   				 	 <label for="img-input">头像</label>
@@ -179,11 +200,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    					 	</div>
 	    					 </div>
 	   				 	</div>
-	   				 	<div class="form-group setting-form-group">
+	   				 	<div class="form-group setting-form-group row">
+	   				 	   
+	   				 		<div class="col-md-8" style="margin-bottom: 20px;">
 		   				 	 <label for="email-input">社交邮箱</label>
-	    					 <input type="email" class="form-control email-input" id="email-input" placeholder="">	
+	    					 <input type="email" class="form-control email-input" name="email" id="email-input" placeholder="">	
+	   				 		</div>
+	   				 		<div class="col-md-4">
+	   				 			<div class="col-sm-12 alert hidden" role="alert" id="saveInfo" >
+										
+								</div>
+	   				 		</div>
 	   				 	</div>
-	   				 	 <button type="submit" class="btn btn-primary">保存</button>
+	   				 	 <button type="button" onclick="saveCountsetting()" class="btn btn-primary">保存</button>
 	   				 </form>
 	   				 
 				   </div>

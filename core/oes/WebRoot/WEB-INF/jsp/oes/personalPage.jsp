@@ -235,7 +235,7 @@ function refleshLike(){
 			<div class="col-xs-12 col-md-2" style="margin-bottom: 20px;">
 				<!-- 头像 -->
 					<div class="col-xs-6 col-md-12">
-					<img id="head_img" src=""  class="img-rounded" style="width: 100%;">
+					<img id="head_img" src=""  class="img-rounded" style="width: 100%;border: 1px solid #A5A5A5;">
 					</div>
 				
 					<!-- 用户昵称 -->

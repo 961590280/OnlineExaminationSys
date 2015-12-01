@@ -55,16 +55,19 @@ String createTime = request.getParameter("createTime");
 					var answer = data.answers[parseInt(key)+1];//回答
 					//alert()
 					//console.log(parseInt(key)+1);
-					topicsHtml+="<div class=\"row\"  ><div class=\"col-md-8\"><h3>";
+					topicsHtml+="<div class=\"row";
 					if(answer==null){
+						topicsHtml+=" f-null-topics\" ><div class=\"col-md-8\"><h3>";
 						topicsHtml+="<a href=\"javascript:void(0)\"><span class=\" glyphicon glyphicon-question-sign options-empty\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"没有作答的题目\" ></span></a>";
 						
 					}else if(answer == topic.correctAnswer){
+						topicsHtml+=" f-correct-topics\" ><div class=\"col-md-8\"><h3>";
 						topicsHtml+="<a href=\"javascript:void(0)\"><span class=\" glyphicon glyphicon-ok-sign options-correct\"  ></span></a>";
 					}else{
+						topicsHtml+=" f-error-topics\" ><div class=\"col-md-8\"><h3>";
 						topicsHtml+="<a href=\"javascript:void(0)\"><span class=\" glyphicon glyphicon-remove-sign options-error\"  ></span></a>";
 					}
-					topicsHtml+=topic.topicTitle+"</h3>";
+					topicsHtml += topic.topicTitle+"</h3>";
 					
 					
 					for(var optKey in topic.options){
@@ -94,7 +97,35 @@ String createTime = request.getParameter("createTime");
 			}
 		});
 	}
-	
+	/* 题目显示  */
+	function showErrorTopics(){
+		$("#topics .row").each(function(){
+			if(!$(this).hasClass("f-error-topics")){
+				$(this).hide();
+			}
+			if($(this).hasClass("f-error-topics")){
+				alert();
+				$(this).show();
+			};
+		});
+		
+	}
+	function showNullTopics(){
+		$("#topics .row").each(function(){
+			if(!$(this).hasClass("f-null-topics")){
+				$(this).hide();
+			}
+			if($(this).hasClass("f-null-topics")){
+				$(this).show();
+			};
+		});
+	}
+	function showAllTopics(){
+		$("#topics .row").each(function(){
+			$(this).show();
+		});
+		
+	}
 	
 	</script>
   </head>
@@ -108,8 +139,8 @@ String createTime = request.getParameter("createTime");
 			
 			
 			<div class="col-md-3"></div>
-			<div class="col-md-6" style="text-align: center;"><h1 id="examTitle">xxx测验</h1></div>
-			<div class="col-md-3"><h4 id="date">时间：xxxx-xx-xx</h4></div>
+			<div class="col-md-6" style="text-align: center;"><h1 id="examTitle"></h1></div>
+			<div class="col-md-3"><h4 id="date"></h4></div>
 		
 			
 		
@@ -125,9 +156,9 @@ String createTime = request.getParameter("createTime");
 					      <span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					      <li><a href="#">显示全部题目</a></li>
-					      <li><a href="#">显示答错题目</a></li>
-					      <li><a href="#">显示重点题目</a></li>
+					      <li><a href="javascript:void(0)" onclick="showAllTopics()">显示全部题目</a></li>
+					      <li><a href="javascript:void(0)" onclick="showErrorTopics()">显示答错题目</a></li>
+					      <li><a href="javascript:void(0)" onclick="showNullTopics()">显示没有答题题目</a></li>
 					    </ul>
 					    
 					    
@@ -181,65 +212,12 @@ String createTime = request.getParameter("createTime");
 			<div class="col-md-1"></div>
 			<div class="col-md-10" id="topics">
 			<div class="row"  >
-				<div class="col-md-8">
-					<h3>1.下面哪些是Thread类的方法（）</h3>
-					<div class="col-md-12 record-options" ><div class="col-md-1"> <span class=" glyphicon glyphicon-ok options-correct"  style=""></span></div><div class="col-md-10 options-content" >A.rowrowrowrowrowrowrowrowrowrowrowrowrowrowrowrow</div></div>
-					<div class="col-md-12 record-options"  ><div class="col-md-1"><span class=" glyphicon glyphicon-remove options-error" style=""></span></div><div class="col-md-10 options-content" > B.row</div></div>
-					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
-					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
 				
-				</div>
-				<div class="col-md-4">
-					<div class="col-md-12">
-					<div class="btn-group" role="group" aria-label="...">
-				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-edit"></span> 笔记</button>
-				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-star-empty"></span> 重点</button>
-					</div>
-					</div>
-					<div class="col-md-12" style="margin-top: 20px;">
-					<textarea class="form-control" rows="4"></textarea>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-md-8">
-					<h3>1.下面哪些是Thread类的方法（）</h3>
-					<div class="col-md-12 record-options" ><div class="col-md-1"> <span class=" glyphicon glyphicon-ok options-correct"  style=""></span></div><div class="col-md-10 options-content" >A.rowrowrowrowrowrowrowrowrowrowrowrowrowrowrowrow</div></div>
-					<div class="col-md-12 record-options"  ><div class="col-md-1"><span class=" glyphicon glyphicon-remove options-error" style=""></span></div><div class="col-md-10 options-content" > B.row</div></div>
-					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
-					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
 				
-				</div>
-				<div class="col-md-4">
-					<div class="col-md-12">
-				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-edit"></span> 笔记</button>
-					</div>
-					<div class="col-md-12" style="margin-top: 20px;visibility: hidden;">
-					<textarea class="form-control" rows="4"></textarea>
-					</div>
-				</div>
 			</div>
 			
 			
-			<div class="row">
-				<div class="col-md-8">
-					<h3>1.下面哪些是Thread类的方法（）</h3>
-					<div class="col-md-12 record-options" ><div class="col-md-1"> <span class=" glyphicon glyphicon-ok options-correct"  style=""></span></div><div class="col-md-10 options-content" >A.rowrowrowrowrowrowrowrowrowrowrowrowrowrowrowrow</div></div>
-					<div class="col-md-12 record-options"  ><div class="col-md-1"><span class=" glyphicon glyphicon-remove options-error" style=""></span></div><div class="col-md-10 options-content" > B.row</div></div>
-					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
-					<div class="col-md-12 record-options" ><div class="col-md-1"></span></div><div class="col-md-10 options-content"> B.row</div></div>
-				
-				</div>
-				<div class="col-md-4">
-					<div class="col-md-12">
-				 	 <button  type="button" class="btn btn-default record-note" > <span class=" glyphicon glyphicon-edit"></span> 笔记</button>
-					</div>
-					<div class="col-md-12" style="margin-top: 20px;visibility: hidden;">
-					<textarea class="form-control" rows="4"></textarea>
-					</div>
-				</div>
-			</div>
+			
 			
 			</div>
 			<div class="col-md-1"></div>

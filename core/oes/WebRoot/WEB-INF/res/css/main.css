@@ -1,4 +1,9 @@
 @CHARSET "UTF-8";
+
+body{
+	
+	font-family: 微软雅黑;
+}
 /* 个人主页 */
 
 .personal-contianer{
@@ -96,7 +101,7 @@ font-size:16px;font-style:normal;}
 
 /* navBar 部分 */
 .userIcon{ font-size: 17px; z-index: 1;}/* 设置用户图标在 消息数量徽章下一层，和图标大小 */
-.messageBag{z-index:2; margin-left:-8px;margin-top:-20px;font-size: 8px}
+.messageBag{z-index:2; margin-left:-8px;margin-top:-20px;font-size: 8px; -webkit-transform: scale(0.7); -webkit-transform-origin-x: 0;}
 .textBadgeAlign{margin-bottom:4px; margin-left:5px; }
 
 /* footer 部分 */
@@ -226,7 +231,7 @@ box-shadow:0 10px 15px white;
 	
 }
 #img-path{
-	margin-top: -22px;filter: alpha(opacity=0);-moz-opacity: 0;opacity: 0;;cursor:pointer;-moz-opacity:0;width: 82px;height: 35px;
+	margin-top: -22px;filter: alpha(opacity=0);-moz-opacity: 0;opacity: 0;;cursor:pointer;-moz-opacity:0;width: 82px;height: 35px;z-index: 9999;
 }
 /* 图片剪裁模态窗 */
 #crop-img img{
@@ -266,4 +271,13 @@ button.loading{/* 更改图像按钮css */
 	float: left;
 	margin-right: -90px;
 	padding-right: 40px;
+}
+/** 注册页面  **/
+.register-info{padding: 5px 0 0 20px;
+}
+.register-info .glyphicon{
+color:#4E7EA6;#B3BFCE
+}
+.register-info p{
+color:#B3BFCE;font-size: 13px;
 }

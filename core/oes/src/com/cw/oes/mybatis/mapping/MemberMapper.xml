@@ -9,15 +9,20 @@
     <result column="user_is_del" property="userIsDel" jdbcType="CHAR" />
      <result column="user_head" property="userHead" jdbcType="VARCHAR" />
       <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+       <result column="is_verified" property="isVerified" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, user_name, user_pwd, user_reg_time, user_is_del ,user_head,user_email
+    uuid, user_name, user_pwd, user_reg_time, user_is_del ,user_head,user_email,is_verified
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from member
     where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="emailIsUsed" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select count(1) from member where user_email = #{email,jdbcType=VARCHAR} || user_name = #{email,jdbcType=VARCHAR}
   </select>
   <!-- 根据用户名查找用户 -->
   <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -35,6 +40,20 @@
       user_reg_time, user_is_del)
     values (#{uuid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, 
       #{userRegTime,jdbcType=VARCHAR}, #{userIsDel,jdbcType=CHAR})
+  </insert>
+   <insert id="register" parameterType="com.cw.oes.mybatis.model.Member" >
+    insert into member (
+      uuid,
+      user_name,
+      user_pwd,
+      user_email, 
+      user_reg_time) 
+    values (
+     UUID(),
+     #{userName,jdbcType=VARCHAR}, 
+     #{userPwd,jdbcType=VARCHAR}, 
+     #{userEmail,jdbcType=VARCHAR}, 
+     now())
   </insert>
   <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.Member" >
     insert into member

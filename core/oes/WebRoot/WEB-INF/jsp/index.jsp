@@ -30,7 +30,10 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
   <body >
   	<!-- 导航栏 -->
 	<jsp:include page="/WEB-INF/jsp/oes/subUnit/navBar.jsp"></jsp:include>
-	<div style="height: 900px;"></div>
+	<div class="" style="height: 900px;">
+	
+	
+	</div>
 	<jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include>
   </body>
 </html>

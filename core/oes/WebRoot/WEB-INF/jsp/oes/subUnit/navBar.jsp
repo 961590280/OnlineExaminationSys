@@ -14,6 +14,17 @@ if(userSession == null){
 }
 %>
 <script type="text/javascript">
+
+var userId ;
+var userPwd;
+$(function(){
+	if(<%=isNull %> != true){
+		getUserInfoNav();
+		getNewMessages();
+	}
+	
+});
+
 function memberSignOut(){
 	$.ajax({
 		url:"${ctxPath}/common/ajax/memberSignOut",
@@ -23,6 +34,66 @@ function memberSignOut(){
 		
 	});
 	
+	
+}
+
+
+
+/* 读取用户信息 */
+function getUserInfoNav(){
+	$.ajax({
+		
+		url:"${ctxPath}/common/ajax/getPersonalInfo",
+		success:function(data){
+			data = eval("("+data+")");
+			$("#nav-userName").text(data["resultObj"].userName);
+			
+			userId = data["resultObj"].uuid;
+			userPwd = data["resultObj"].userPwd;
+		}
+	
+	});
+}
+
+function getNewMessages(){
+	
+	var url =  "ws://"+window.location.host+"${ctxPath}/ws/message?useId="+userId+"&userPwd="+userPwd;
+	
+	var socket = new WebSocket(url); 
+	// 打开Socket 
+	socket.onopen = function(event) { 
+	  var data = {userId : userId,
+			  	  userPwd : userPwd};
+	   data =  JSON.stringify(data);
+	   /*   console.log(data); */
+	   // 发送一个初始化消息
+	   socket.send(data); 
+
+	  // 监听消息
+	  socket.onmessage = function(event) { 
+		  var data = eval("("+event.data+")");
+		  console.log(data.length);
+		  var num = data.length;
+		  if(num > 0){
+			  $("#nav-badge1").text(data.length);
+			  $("#nav-badge2").text(data.length);
+		  }
+	     
+	  }; 
+
+	  // 监听Socket的关闭
+	  socket.onclose = function(event) { 
+	    console.log('Client notified socket has closed',event); 
+	  }; 
+
+	  // 关闭Socket.... 
+	  //socket.close() 
+	};
+	
+}
+//站内搜索
+function siteSearch(){
+	alert("敬请期待");
 }
 </script>
 <style type="text/css">
@@ -46,12 +117,12 @@ body { padding-top: 70px; }
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li ><a href="#">测验资源 </a></li>
-        <li><a href="#">在线考试</a></li>
+        <li ><a href="${ctxPath}/common/comingSoon">测验资源 </a></li>
+        <li><a href="${ctxPath}/common/comingSoon">在线考试</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">合作<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">广告栏位</a></li>
+            <li><a href="${ctxPath}/common/comingSoon">广告栏位</a></li>
           </ul>
         </li>
       </ul>
@@ -61,7 +132,7 @@ body { padding-top: 70px; }
         <div class="input-group">
 	      <input type="text" class="form-control" placeholder="站内搜索...">
 	      <span class="input-group-btn">
-	        <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
+	        <button class="btn btn-info" type="button" onclick="siteSearch()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 搜索</button>
 	      </span>
     	</div>
           
@@ -74,15 +145,16 @@ body { padding-top: 70px; }
        <c:if test="<%= !isNull%>">
 	      	 <li class="dropdown">
 	          <a href="" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
-          			<%=userSession.getUserCode() %> <span class="glyphicon glyphicon-user userIcon" aria-hidden="true" id="userIcon"><span class="badge messageBag" id="nav-badge" >1</span></span><span class="caret"></span> 
+	          	<span  id="nav-userName"></span>
+          		 <span class="glyphicon glyphicon-user userIcon" aria-hidden="true" id="userIcon"><span class="badge messageBag " id="nav-badge1" ></span></span><span class="caret"></span> 
           			
 	          </a>
 	        	<ul class="dropdown-menu">
-	            <li><a href="${ctx}/oes/common/toPersonalPage">个人主页</a></li>
-	            <li><a href="${ctx}/oes/common/toCountSettingPage">账号设置</a></li>
-	          	<li><a href="">消 息<span class="badge textBadgeAlign" id="nav-badge" >1</span></a></li>
+	            <li><a href="${ctxPath}/common/toPersonalPage">个人主页</a></li>
+	            <li><a href="${ctxPath}/common/toCountSettingPage">账号设置</a></li>
+	          	<li><a href="">消 息<span class="badge textBadgeAlign" id="nav-badge2" ></span></a></li>
 	            <li role="separator" class="divider"></li>
-	            <li><a href="javascript:void(memberSignOut())">退&nbsp;出  <span class="glyphicon glyphicon-off" aria-hidden="true"  ></span></a></li>
+	            <li><a href="javascript:void(0)" onclick="memberSignOut()">退&nbsp;出  <span class="glyphicon glyphicon-off" aria-hidden="true"  ></span></a></li>
 	          </ul>
         	</li>
         	<li>
@@ -93,17 +165,17 @@ body { padding-top: 70px; }
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">帮助<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">在线机器人</a></li>
+            <li><a href="${ctxPath}/common/comingSoon">FAQ</a></li>
+            <li><a href="${ctxPath}/common/comingSoon">在线机器人</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">关于${userSession}</a></li>
+            <li><a href="${ctxPath}/common/comingSoon">关于</a></li>
           </ul>
         </li>
       	</ul>
       	<c:if test="<%=isNull %>">
 	      	<form class="navbar-form navbar-right"  >
-		       <button type="button" class="btn  btn-primary navbar-btn" onclick="toPage('${ctxPath}/common/toLoginPage')"> 登   录 </button>
-		       <button type="button" class="btn  btn-default navbar-btn" onclick="toPage('${ctxPath}/common/toRegisterPage')"> 注   册 </button>
+		       <button type="button" class="btn  btn-primary navbar-btn" onclick="toPage('${ctxPath}/common/toLoginPage')"> 回  归 </button>
+		       <button type="button" class="btn  btn-default navbar-btn" onclick="toPage('${ctxPath}/common/toRegisterPage')"> 加  入 </button>
 	     	</form>
       	
       	</c:if>

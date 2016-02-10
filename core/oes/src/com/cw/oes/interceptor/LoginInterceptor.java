@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cw.oes.utils.CookiesUtil;
+import com.cw.oes.security.*;
 import com.cw.oes.utils.Environment;
 import com.cw.oes.utils.UserSessionBean;
 
@@ -64,7 +64,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 			
 			//登录页面和登录请求不进行过滤
 			if("/common/toLoginPage".equals(reqUrl)||"/common/autoLogin".equals(reqUrl) || "/common/memberLogin".equals(reqUrl)||"/common/index".equals(reqUrl)||"/common/ajax/memberLogin".equals(reqUrl)||"/common/toRegisterPage".equals(reqUrl)||"/common/ajax/memberRegister".equals(reqUrl)
-					||"/common/ajax/memberIsUsed".equals(reqUrl)) {
+					||"/common/ajax/memberIsUsed".equals(reqUrl)||"/common/verifyEmail".equals(reqUrl)||"/common/varifySuccess".equals(reqUrl)) {
 				
 				
 				return true;
@@ -82,20 +82,14 @@ public class LoginInterceptor implements HandlerInterceptor{
 		                if(cookie.getName().equals("oes-cookie"))
 		                {
 		                	returnUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/common/autoLogin?cookie="+cookie.getValue()+"&reqUrl="+request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path; 
-		                	
-		                	
-		                	returnUrl	+=	CookiesUtil.requestURLEncode(request);
-		                	System.out.println(reqUrl);
-		                	
+		                	returnUrl +=	CookiesUtil.requestURLEncode(request);
 		                	response.sendRedirect(returnUrl);
 		                    return true;
 		                }
 		            }
 		        }
-				
-				
 		        
-				if(reqUrl.contains("/ajax/")){//判断是否是ajax请求
+		        if(reqUrl.contains("/ajax/")){//判断是否是ajax请求
 					
 					response.setStatus(60000);
 					return false;

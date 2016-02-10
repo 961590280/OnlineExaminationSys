@@ -43,24 +43,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				data = eval("("+data+")");
 				console.log(data);
 				$("#img-input").attr("src","res/personal-img/"+data["resultObj"].userHead);
-				$("#email-input").val(data["resultObj"].userEmail);
+				$("#username-input").val(data["resultObj"].userName);
 			}
 		
 		});
 	}
-	
+	/* 保存账号设置 */
 	function saveCountsetting(){
-		var email = $('#email-input').val();
+		var userName = $('#username-input').val();
+		if(userName == ""){
+			showAlert($saveInfo, "用户昵称不能为空", ALERT_ERROR);
+			return ;
+		}
 		$.ajax({
 			
 			url:"${ctxPath}/common/ajax/countSettingSave",
-			data:{email:email},
+			data:{userName:userName},
 			success:function(data){
 				data = eval("("+data+")");
 				console.log(data);
 				if(data.resultInfo == 1){
 					showAlert($saveInfo, "保存成功", ALERT_SUCCESS);
-					
+					getUserInfoNav();
 				}
 				
 			}
@@ -203,8 +207,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	   				 	<div class="form-group setting-form-group row">
 	   				 	   
 	   				 		<div class="col-md-8" style="margin-bottom: 20px;">
-		   				 	 <label for="email-input">社交邮箱</label>
-	    					 <input type="email" class="form-control email-input" name="email" id="email-input" placeholder="">	
+		   				 	 <label for="nickName-input">用户昵称</label>
+	    					 <input type="text" class="form-control email-input" name="userName" id="username-input" placeholder="">	
 	   				 		</div>
 	   				 		<div class="col-md-4">
 	   				 			<div class="col-sm-12 alert hidden" role="alert" id="saveInfo" >

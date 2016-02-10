@@ -20,6 +20,14 @@ public class JsonUtil {
 	}
 	
 	/**
+	 * 将对象转为json字符串
+	 * @param obj
+	 * @return
+	 */
+	public static String objectToJsonStr(Object obj){
+		return  gson.toJson(obj);
+	}
+	/**
 	 * 将json转换成map
 	 * @param jsonStr
 	 * @return

@@ -48,6 +48,10 @@ public class UserSessionBean {
 	 */
 	private String userName;
 	/**
+	 * 用户密码
+	 */
+	private String userPassword;
+	/**
 	 * 用户其他信息
 	 */
 	private Map<String, Object> userInfo;
@@ -121,6 +125,12 @@ public class UserSessionBean {
 	}
 	public void setMemberExamLink(MemberExamLinkKey memberExamLink) {
 		this.memberExamLink = memberExamLink;
+	}
+	public String getUserPassword() {
+		return userPassword;
+	}
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 	
 }

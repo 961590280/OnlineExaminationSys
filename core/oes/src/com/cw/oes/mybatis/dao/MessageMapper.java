@@ -1,5 +1,8 @@
 package com.cw.oes.mybatis.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.cw.oes.mybatis.model.Message;
 
 public interface MessageMapper {
@@ -14,4 +17,6 @@ public interface MessageMapper {
     int updateByPrimaryKeySelective(Message record);
 
     int updateByPrimaryKey(Message record);
+    
+    List<Message> getNewMessage(Map select);
 }

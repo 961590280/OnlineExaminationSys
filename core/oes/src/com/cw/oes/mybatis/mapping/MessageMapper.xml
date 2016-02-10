@@ -8,9 +8,10 @@
     <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="is_read" property="isRead" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, sender_pid, reciver_pid, send_time, type, is_read
+    uuid, sender_pid, reciver_pid, send_time, type, is_read,content
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -103,4 +104,12 @@
       is_read = #{isRead,jdbcType=VARCHAR}
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
+  <!-- 获取最新消息 -->
+    <select id="getNewMessage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    m.* 
+    from message m
+   left join member mm on mm.uuid = reciver_pid 
+   where reciver_pid = #{userId,jdbcType=VARCHAR} and mm.user_pwd = #{userPwd,jdbcType=VARCHAR} and is_read = 'N'
+  </select>
 </mapper>

@@ -12,7 +12,10 @@ public class Message {
     private String type;
 
     private String isRead;
+    
+    private String content;
 
+    
     public String getUuid() {
         return uuid;
     }
@@ -60,4 +63,13 @@ public class Message {
     public void setIsRead(String isRead) {
         this.isRead = isRead == null ? null : isRead.trim();
     }
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+    
 }

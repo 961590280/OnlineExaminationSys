@@ -11,20 +11,21 @@ import sun.misc.BASE64Decoder;
 
 
 public class ImgUtil {
-	public String img64BaseSave(String data) throws URISyntaxException, IOException{
+	public String img64BaseSave(String data,String filePath) throws URISyntaxException, IOException{
 		FileOutputStream out = null;
 		String fileName = null;
 		try{
 			String path = this.getClass().getResource("").toURI().getPath();
-			path = path.substring(1, path.indexOf("classes"));
+			path = path.substring(0, path.indexOf("classes"));
 			
+			System.out.println(path);
 			
 			String suffix = data.substring(data.indexOf("/")+1,data.indexOf(";"));
 	
 			data = data.split(",")[1];
 			BASE64Decoder decoder = new BASE64Decoder();
 			byte[] decodedBytes = decoder.decodeBuffer(data); 
-			String filePath = path+"/res/personal-img/";
+			filePath = path+filePath;
 			fileName = UUID.randomUUID()+"."+suffix;
 		
 			out = new FileOutputStream(filePath+fileName);

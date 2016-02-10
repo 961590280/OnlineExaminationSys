@@ -25,11 +25,11 @@
     select count(1) from member where user_email = #{email,jdbcType=VARCHAR} || user_name = #{email,jdbcType=VARCHAR}
   </select>
   <!-- 根据用户名查找用户 -->
-  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByEmail" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from member
-    where user_name = #{userName,jdbcType=VARCHAR}
+    where user_email = #{userEmail,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from member
@@ -47,13 +47,15 @@
       user_name,
       user_pwd,
       user_email, 
-      user_reg_time) 
+      user_reg_time,
+      user_head) 
     values (
      UUID(),
      #{userName,jdbcType=VARCHAR}, 
      #{userPwd,jdbcType=VARCHAR}, 
      #{userEmail,jdbcType=VARCHAR}, 
-     now())
+     now(),
+     #{userHead,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.Member" >
     insert into member
@@ -92,7 +94,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cw.oes.mybatis.model.Member" >
+ <!--  <update id="updateByPrimaryKeySelective" parameterType="com.cw.oes.mybatis.model.Member" >
     update member
     <set >
       <if test="userName != null" >
@@ -109,10 +111,13 @@
       </if>
     </set>
     where uuid = #{uuid,jdbcType=VARCHAR}
-  </update>
+  </update> -->
   <update id="updateByPrimaryKey" parameterType="com.cw.oes.mybatis.model.Member" >
     update member
     set user_pwd = #{userPwd,jdbcType=VARCHAR}
+      <if test="userName != null" >
+     , user_name =  #{userName,jdbcType=VARCHAR}
+      </if>
      <if test="userRegTime != null" >
      , user_reg_time = #{userRegTime,jdbcType=VARCHAR}
       </if>
@@ -124,6 +129,9 @@
       </if>
       <if test="userEmail != null" >
      , user_email =  #{userEmail,jdbcType=VARCHAR}
+      </if>
+       <if test="isVerified != null" >
+     , is_verified =  #{isVerified,jdbcType=VARCHAR}
       </if>
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>

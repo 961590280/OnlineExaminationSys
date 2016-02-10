@@ -7,7 +7,7 @@ String examPid = request.getParameter("examPid");
 
 %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML >
 <html style="height:100%;">
   <head>
     <base href="<%=basePath%>">
@@ -27,41 +27,71 @@ String examPid = request.getParameter("examPid");
 	var allTime;
 	var topicNum;
 	var examPid = <%=examPid%>;//测验id
+	var userPid ;
 	var isFinished = false;
 	
+	var init = false;
+	var socket;
+	var timer;
+	
 	$(function(){
-		
-		getUserInfo();
-		
+		getExamInfo();
 	});
+	
+	
+	
 	
 	/** 开始考试 **/
 	function beginExam(){
-		$.ajax({
-			url:"${ctxPath}/common/ajax/beginExamByPersonal",
-			data:{
-					examPid:examPid
-					},
-			type:"post",
-			success:function(data){
+		
+		
+		/* if(!confirm("开始考试后不能退出全屏和关闭摄像头")){
+			return ;
+		} */
+		
+		requestFullScreen();
+		
+		//初始化视频和socket
+		initVideo(function(){
+			initVideoSocket();
+			videoListen();
+			$("#begin-btn").removeAttr("disabled");
+			init = true; 
 			
-				data = eval("("+data+")");
-				//
-				console.log(data);
-				$("#exam-personal-info button").removeClass("btn-success").addClass("btn-danger").html("交 &nbsp; &nbsp;卷").attr("onclick","commitExam()");
-				allTime = data["resultObj"].finishedTime;
-				examType = data["resultObj"].type;
-				topicNum = data["resultObj"].topicNum;
+			$.ajax({
+				url:"${ctxPath}/common/ajax/beginExamByPersonal",
+				data:{
+						examPid:examPid
+						},
+				type:"post",
+				success:function(data){
 				
-				$(".exam-time #time-all").text(timeStr(allTime));
-				$("#progress-bar").addClass("active");
-				//allTime = 1000*10;
-				
-				beginTime(allTime);//时间控件开始倒计时
-				loadTopics(topicNum);//显示答题按钮
-				
-			}
+					data = eval("("+data+")");
+					
+					$("#exam-personal-info button").removeClass("btn-success").addClass("btn-danger").html("交 &nbsp; &nbsp;卷").attr("onclick","commitExam()");
+					allTime = data["resultObj"].finishedTime;
+					examType = data["resultObj"].type;
+					topicNum = data["resultObj"].topicNum;
+					
+					$(".exam-time #time-all").text(timeStr(allTime));
+					$("#progress-bar").addClass("active");
+					
+					beginTime(allTime);//时间控件开始倒计时
+					loadTopics(topicNum);//显示答题按钮
+					
+				}
+			});
+			
 		});
+		
+		
+		
+		
+		
+		
+	
+		
+		
 	}
 	/** 加载题目数，显示题目按钮 **/
 	function loadTopics(num){
@@ -190,6 +220,9 @@ String examPid = request.getParameter("examPid");
 			$("#progress-bar").css("width","0%");
 			
 			isFinished = true;
+			
+			videoStreamClose();
+			exitFullscreen();
 			return true;
 		}else{
 			/*  console.log(t); */
@@ -269,34 +302,41 @@ String examPid = request.getParameter("examPid");
 	}
 	/** 交卷  **/
 	function commitExam(){
-		$.ajax({
-			url:"${ctxPath}/common/ajax/commitExam",
-			success:function(data){
-				data = eval("("+data+")");
-				console.log(data);
-				if(data["result"] == "2"){
-					alert(data["resultInfo"]);
-				}else{
-					alert("您答对 "+data["resultObj"]+" 题。点击确定，回到个人主页,查看详情！！");
-					location.href="${ctxPath}/common/toPersonalPage";
+		
+		
+		
+		if(confirm("确定交卷吗？")){
+			$.ajax({
+				url:"${ctxPath}/common/ajax/commitExam",
+				success:function(data){
+					data = eval("("+data+")");
+					console.log(data);
+					if(data["result"] == "2"){
+						alert(data["resultInfo"]);
+					}else{
+						alert("您答对 "+data["resultObj"]+" 题。点击确定，回到个人主页,查看详情！！");
+						location.href="${ctxPath}/common/toPersonalPage";
+					}
 				}
-			}
-			
+				
 			});
+		}
+		
 		
 	}
 	
 	/** 显示测验和考试信息 **/
-	function getUserInfo(){
+	function getExamInfo(){
 		$.ajax({
 			
 			url:"${ctxPath}/common/ajax/getPersonalInfo",
 			success:function(data){
 				data = eval("("+data+")");
-				console.log(data);
 				$("#personalName").text(data["resultObj"].userName);
 				$("#head_img").attr("src","res/personal-img/"+data["resultObj"].userHead);
 				
+				userPid = data["resultObj"].uuid;
+				console.log(data["resultObj"]);
 			}
 		
 		});
@@ -308,12 +348,140 @@ String examPid = request.getParameter("examPid");
 				data = eval("("+data+")");
 				
 				$("#examName").text(data["resultObj"].examName);
+				console.log(data["resultObj"].uuid);
 			}
 		
 		});
 		
 	}
+	
+	
+	/* 初始化摄像头 */
+	
+	
+	function initVideo(back){
+		var video = document.getElementById("video");
+		
+		
+		var errocb = function(error) {
+			alert("请确保摄像头可用，浏览器支持摄像头和浏览器摄像头权限开启后刷新页面");
+			console.log("Video capture error: ", error.code); 
+		};
+		
+		
+		if (navigator.getUserMedia) { // 标准的API
+			
+			navigator.getUserMedia({ "video": true }, function (stream) {
+				video.src = stream;
+				back();
+            }, errocb);
 
+		} else if (navigator.webkitGetUserMedia) { // WebKit 核心的API
+			navigator.webkitGetUserMedia({ "video": true }, function (stream) {
+				video.src = window.webkitURL.createObjectURL(stream);
+				back();
+				
+            }, errocb);
+		
+		}else if(navigator.mozGetUserMedia) { // Firefox-prefixed
+			navigator.mozGetUserMedia({ "video": true }, function(stream){
+				video.src = window.URL.createObjectURL(stream);
+				back();
+			}, errocb);
+		}
+	
+	}
+	/* 初始化socket */
+	function initVideoSocket(){
+		var url =  "ws://"+window.location.host+"${ctxPath}/ws/monitoring?userId="+userPid+"&examId="+examPid;
+		
+		
+		socket = new WebSocket(url); 
+		
+		socket.binaryType = "arraybuffer";
+		// 打开Socket 
+		socket.onopen = function(event) { 
+		  // 监听消息
+		  socket.onmessage = function(event) { 
+			  var data = eval("("+event.data+")");
+		  }; 
+
+		  // 监听Socket的关闭
+		  socket.onclose = function(event) { 
+		    console.log('Client notified socket has closed',event); 
+		  }; 
+		};
+	}
+	
+	
+	//设置视频监听事件
+	function videoListen(){
+		
+		
+		var video = document.getElementById("video");
+		
+		video.addEventListener('playing', function(){//当摄像头打开后事件
+			  var ctx = canvas.getContext("2d");
+	          var PACKAGE_LEN = 8000;			//设置包长度
+	          
+	          timer = setInterval(function() {
+	              ctx.drawImage(video, 0,0,180,110);//绘制canvas
+				  var data = canvas.toDataURL("image/jpeg");
+				  var len = data.length;
+				  
+	      		try { 
+	      			var packages = parseInt(len/PACKAGE_LEN);//计算包的个数
+	      			var index = 0;
+	      			
+	      			for(var i = 0;i<packages;i++){
+	      				socket.send(data.substring(index,index += PACKAGE_LEN));
+	      			}
+	      			
+	      			if(index<len){
+	      				socket.send(data.substring(index+1,len+1));
+	      			}
+	      		} catch (ex) { 
+	      			console.log(ex); 
+	      		}
+	          }, 250);
+	     },false);
+	}
+	
+	//关闭视频流操作
+	function videoStreamClose(){
+		
+		if(timer!=null){
+			clearInterval(timer);//清空interval
+		}
+		
+		if(socket != null){
+			socket.close(); //关闭socke
+			document.getElementById("video").pause();//暂停摄像头
+		}
+	}
+	
+	//进入全屏
+	function requestFullScreen() {
+	    var de = document.documentElement;
+	    if (de.requestFullscreen) {
+	        de.requestFullscreen();
+	    } else if (de.mozRequestFullScreen) {
+	        de.mozRequestFullScreen();
+	    } else if (de.webkitRequestFullScreen) {
+	        de.webkitRequestFullScreen();
+	    }
+	}
+	//退出全屏
+	function exitFullscreen() {
+	    var de = document;
+	    if (de.exitFullscreen) {
+	        de.exitFullscreen();
+	    } else if (de.mozCancelFullScreen) {
+	        de.mozCancelFullScreen();
+	    } else if (de.webkitCancelFullScreen) {
+	        de.webkitCancelFullScreen();
+	    }
+	}
 	</script>
 	<style type="text/css">
 	.red
@@ -343,18 +511,20 @@ String examPid = request.getParameter("examPid");
   </head>
   		
   <body style="padding: 0;margin: 0;height:100%;" >
-
+	<!-- 摄像头部分 -->
+	<video id="video" autoplay="" style='width:0;height:0;'></video>
+	<canvas id="canvas" style="width:180px;height:110px;margin-top:-220px;"></canvas>
  	<div class="container-fluid exam-container" >
  		<div class="row ">
  			<div id="exam-personal-info" class="col-md-2 col-xs-12 ">
 				<div class="col-md-12 col-xs-5">
-					<img id="head_img" src="res/testimg.png" alt="..." class="img-rounded" style="width: 100%;">
+					<img id="head_img" src="" alt="..." class="img-rounded" style="width: 100%;">
 				</div>
 				<div class="col-md-12 col-xs-7">
 					<h5 >姓名：<span id="personalName"></span><h5>
 					<h5>测验名称：<span id="examName"></span><h5>
-					<button  class="btn btn-success btn-lg btn-block"  type="button" onclick="beginExam()">开始答题</button>
-					<!-- <button class="btn btn-danger btn-lg btn-block" type="button">交 &nbsp; &nbsp;卷</button> -->
+					<button id="begin-btn"  class="btn btn-success btn-lg btn-block"  type="button"  onclick="beginExam()">开始答题</button>
+					
 				</div>
 			</div>
  			
@@ -375,7 +545,7 @@ String examPid = request.getParameter("examPid");
  				<div id="exam-topics-div" class="row-fluid exam-topics-div">
  					
  				<div class="col-md-4"></div>
- 				<div class="col-md-4"><h3>点击<a href="javascript:beginExam()">开始答题</a>开始测验</h3></div>
+ 				<div class="col-md-4"><h3>点击按钮开始测验</h3></div>
  				<div class="col-md-4"></div>
  				
 	 				

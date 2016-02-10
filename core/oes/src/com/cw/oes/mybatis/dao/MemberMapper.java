@@ -11,7 +11,7 @@ public interface MemberMapper {
     int insertSelective(Member record);
 
     Member selectByPrimaryKey(String uuid);
-    Member selectByCode(String code);
+    Member selectByEmail(String code);
 
     int updateByPrimaryKeySelective(Member record);
 

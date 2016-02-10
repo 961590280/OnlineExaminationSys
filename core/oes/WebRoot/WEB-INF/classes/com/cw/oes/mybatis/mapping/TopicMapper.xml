@@ -30,6 +30,7 @@
       #{opn7,jdbcType=VARCHAR}, #{isCorrect,jdbcType=VARCHAR}, #{difficulty,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=VARCHAR}, #{editTime,jdbcType=VARCHAR})
   </insert>
+  
   <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.Topic" >
     insert into topic
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -127,4 +128,11 @@
       </if>
     </trim>
   </insert>
+  
+  
+  <!-- 判断题目是否存在 -->
+   <select id="isExistedById" resultType="int" parameterType="java.lang.String" >
+    select count(*) from topic
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
 </mapper>

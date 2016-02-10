@@ -5,6 +5,7 @@
     <id column="paper_pid" property="paperPid" jdbcType="VARCHAR" />
     <id column="topic_pid" property="topicPid" jdbcType="VARCHAR" />
     <id column="sort" property="sort" jdbcType="INTEGER" />
+    
   </resultMap>
   <sql id="Base_Column_List" >
     paper_pid, topic_pid, sort 

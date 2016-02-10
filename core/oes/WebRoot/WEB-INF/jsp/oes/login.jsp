@@ -12,7 +12,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
     <base href="<%=basePath%>">
     <!-- 引入top.jsp页面  -->
     <jsp:include page="/WEB-INF/jsp/oes/subUnit/top.jsp"></jsp:include>
-    <title>OES 登录</title>
+    <title>OES 回归</title>
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,12 +38,12 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	<%}%>
 		function submitForm() {
 			
-			var userCode = $('#userCode').val();
+			var userEmail = $('#userEmail').val();
 			var userPwd = $('#userPwd').val();
 			var autoLogin = $("input[name='autoLogin']:checked").val();
 			
 			
-			if (userCode=="" || userPwd == "") {
+			if (userEmail=="" || userPwd == "") {
 				
 				  isInputNull("div_input_username");
 				  isInputNull("div_input_password");
@@ -52,7 +52,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				
 			}else{
 				$.post("${ctxPath}/common/ajax/memberLogin",
-						{userCode:userCode,userPwd:userPwd,autoLogin:autoLogin},
+						{userEmail:userEmail,userPwd:userPwd,autoLogin:autoLogin},
 						function(data){
 							var errorInfo = $("#loginErrorInfo");//错误提示框
 							data = eval("("+data+")");
@@ -85,14 +85,12 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	
 	</script>
 	<style type="text/css">
-	
-	body { padding-top: 70px; }
 	</style>
   </head>
   
-  <body >
+  <body style="padding-top:100px;">
 	 	<!-- 导航栏 -->
-	<jsp:include page="/WEB-INF/jsp/oes/subUnit/navBar.jsp"></jsp:include>
+	<%-- <jsp:include page="/WEB-INF/jsp/oes/subUnit/navBar.jsp"></jsp:include> --%>
 
 	<div class="container-fluid login-container" >
 	<div class="row-fluid">
@@ -100,7 +98,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 		</div>
 		<div class="col-md-4 ">
 		<div class="panel panel-default">
-			<div class="login-head panel-heading "><h4>欢迎登录 OES</h4></div>
+			<div class="login-head panel-heading "><h4>欢迎回来 OES</h4></div>
 			
 			 <div class="panel-body">
 			 <form class="form-horizontal" id="memberLoginForm">
@@ -108,7 +106,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				  <div class="form-group">
 				    <label for="userCode" class="col-sm-3 control-label">用  户  名</label>
 				    <div class="col-sm-8" id="div_input_username">
-				      <input type="text" class="form-control" id="userCode" name="userCode" placeholder="UserName" onblur="isInputNull('div_input_username')" onChange="isInputNull('div_input_username')">
+				      <input type="text" class="form-control" id="userEmail" name="userCode" placeholder="UserEmail" onblur="isInputNull('div_input_username')" onChange="isInputNull('div_input_username')">
 				      <span class="" aria-hidden="false" id="glyphicon" ></span>			    
 				    </div>
 				  </div>
@@ -122,7 +120,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 			  	  <div class="form-group">
 				    <div class="col-md-offset-2 col-md-10">
 				    	<label class="checkbox-inline">
-						  <input  type="checkbox" id="input-checkbox" name="autoLogin" value="true"/> 未来 1 周自动登录
+						  <input  type="checkbox" id="input-checkbox" name="autoLogin" value="true"/> 锁定当前设备一周
 						</label>
 				    </div>
 				  </div>	
@@ -130,7 +128,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				  <div class="form-group">
 				 
 				  	<div class=" col-sm-1"></div>
-				    <div class=" col-sm-10"><button type="button" class="btn btn-info btn-block" onclick="submitForm()">登&nbsp; 录</button></div>
+				    <div class=" col-sm-10"><button type="button" class="btn btn-info btn-block" onclick="submitForm()">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认</button></div>
 				 	<div class=" col-sm-1"></div>
 				  </div>
 			</form>
@@ -151,7 +149,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	</div>
 
  	<!-- footer -->
-	<jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include>
+	<%-- <jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include> --%>
   </body>
 </html>
 <jsp:include page="/WEB-INF/jsp/oes/subUnit/bottom.jsp"></jsp:include>

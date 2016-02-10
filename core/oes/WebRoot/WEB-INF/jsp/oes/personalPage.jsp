@@ -38,7 +38,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				alert(data.resultInfo);
 				
 			}
-			console.log(data.result);
+			/* console.log(data.result); */
 		},
 		error:function(){
 			alert("刷新失败");
@@ -55,7 +55,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			success:function(data){
 				data = eval("("+data+")");
 				//console.log(data);
-				$("#user_name").text(data["resultObj"].userName);
+				
 				$("#head_img").attr("src","res/personal-img/"+data["resultObj"].userHead);
 			}
 		
@@ -68,10 +68,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				data = eval("("+data+")");
 				data = data["resultObj"];
 				var html ="";
-				console.log(data);
+				/* console.log(data); */
 				
 				if(data.length==0){
-					html="<span ><a>创建</a>个人标签</span>";
+					html="<span >暂无标签</span>";
 					
 				}
 				for(var key in data){
@@ -83,17 +83,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		});
 	}
 	
-	//文档加载完后
-	$(document).ready(function (){
-	
-		getUserInfo();
-		loadLikeExams();
-		getPersonalExamRecords();
-	});
+
 //加载【猜你喜欢】 中的测验数据
 function loadLikeExams(){
  	var id = "examList";
-	
+ 	$("#"+id).html("");//清空数据
+ 	
 	$.ajax({
 		
 			url:"${ctxPath}/common/ajax/getExams",
@@ -119,7 +114,7 @@ function collectionExam(examPid){
 		data:{examPid:examPid},
 		success:function(data){
 			data = eval("("+data+")");
-			console.log(data)
+			/* console.log(data) */
 			if(data["result"] == 2){
 				
 				alert(data["resultInfo"]);
@@ -142,7 +137,7 @@ function unCollectionExam(examPid){
 		data:{examPid:examPid},
 		success:function(data){
 			data = eval("("+data+")");
-			console.log(data)
+			/* console.log(data) */
 			if(data["result"] == 2){
 				
 				alert(data["resultInfo"]);
@@ -172,7 +167,7 @@ function getPersonalExamRecords(){
 				
 				
 				data = eval("("+data+")");
-				console.log(data);
+				/* console.log(data); */
 				var html = "";
 				for(var temp in data["resultObj"]){
 					
@@ -204,6 +199,7 @@ function getPersonalExamRecords(){
 /* 刷新测验记录列表  */
 function refleshRecords(){
 	pageNum = 0;
+	$("#examRecordList").html("");
 	getPersonalExamRecords();
 }
 /* 编辑测验记录 */
@@ -217,6 +213,52 @@ function refleshLike(){
 	pageNum = 0;
 	loadLikeExams();
 }
+
+function addPersonalTag(){
+	alert("敬请期待");
+}
+
+//个人测验标签页
+function personalExamTab(){
+	$("#examRecordList").html("");//清空数据
+	pageNum = 0;
+	selectTab(1);
+	loadLikeExams();
+	getPersonalExamRecords();
+	
+}
+//考试信息标签页
+function examInfoTab(){
+	selectTab(2);
+	
+	
+}
+//订阅资料标签页
+function subscriptionMaterialTab(){
+	selectTab(3);
+}
+//我的圈子标签页
+function myCircleTab(){
+	selectTab(4);
+}
+//标签页选中
+function selectTab(index){
+	$("ul.personal-tab li.active").removeClass("active");
+	$("div.tab-container").hide();
+	var active = $("ul.personal-tab li.tab"+index);
+	if(active!=null){
+		active.addClass("active");
+	}
+	
+	$("div.tab-container.tab"+index).show();
+	
+}
+//文档加载完后
+$(document).ready(function (){
+	
+	getUserInfo();
+	personalExamTab(); //加载个人测验
+});
 	</script>
 	<style type="text/css">
 
@@ -235,7 +277,7 @@ function refleshLike(){
 			<div class="col-xs-12 col-md-2" style="margin-bottom: 20px;">
 				<!-- 头像 -->
 					<div class="col-xs-6 col-md-12">
-					<img id="head_img" src=""  class="img-rounded" style="width: 100%;border: 1px solid #A5A5A5;">
+					<img id="head_img" src=""  class="img-rounded" style="width: 100%;height: 150px;">
 					</div>
 				
 					<!-- 用户昵称 -->
@@ -249,8 +291,9 @@ function refleshLike(){
 							<div id="tags" class="col-md-12">
 							
 							</div>
-							
-							
+							<div class="col-md-12" style="margin-top:5px;">
+								<button class="btn btn-sm btn-default btn-block" onclick="addPersonalTag()" data-toggle="tooltip" data-placement="bottom" title="设置标签可推送感兴趣资料">创建个人标签</button>
+							</div>
 						</div>
 					</div>
 					
@@ -260,64 +303,83 @@ function refleshLike(){
 				<div class="row-fluid">
 				<!-- 加标签 tab -->
 				<ul class="nav nav-tabs personal-tab">
-				  <li role="presentation" class="active"><a href="#">个人测验</a></li>
-				  <li role="presentation"><a href="#">考试信息</a></li>
-				  <li role="presentation"><a href="#">订阅资料</a></li>
-				  <li role="presentation"><a href="#">我的圈子</a></li>
+				  <li role="presentation" class="active tab1"><a href="javascript:void(0)" onclick="personalExamTab();">个人测验</a></li>
+				  <li role="presentation" class="tab2"><a href="javascript:void(0)" onclick="examInfoTab();">考试信息</a></li>
+				  <li role="presentation" class="tab3"><a href="javascript:void(0)" onclick="subscriptionMaterialTab();">订阅资料</a></li>
+				  <li role="presentation" class="tab4"><a href="javascript:void(0)" onclick="myCircleTab();">我的圈子</a></li>
 				</ul>
 				</div>
 				
-				<!-- 加个面板 -->
-				<div class="col-md-6" style="margin-top:20px;">
-					<div class="panel panel-info personal-panel ">
-					  <div class="panel-heading">
-					  	<span class="glyphicon glyphicon-tasks"></span> &nbsp; 测验记录
-					  	  <div  class="btn-group panel-menu-group" role="group">
-						    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
-						    <ul class="dropdown-menu">
-						      <li><a href="javascript:void(0)" onclick="refleshRecords()">刷新</a></li>
-						      <li><a href="javascript:void(0)" onclick="editRecords()">编辑</a></li>
-						    </ul>
+				
+				
+				<!-- 标签内容div  -->
+				<!-- 标签页 个人测验 -->
+				<div class="row-fluid tab-container tab1">
+					<!-- 加个面板 -->
+					<div class="col-md-6" style="margin-top:20px;">
+						<div class="panel panel-info personal-panel ">
+						  <div class="panel-heading">
+						  	<span class="glyphicon glyphicon-tasks"></span> &nbsp; 测验记录
+						  	  <div  class="btn-group panel-menu-group" role="group">
+							    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+							    <ul class="dropdown-menu">
+							      <li><a href="javascript:void(0)" onclick="refleshRecords()">刷新</a></li>
+							      <li><a href="javascript:void(0)" onclick="editRecords()">编辑</a></li>
+							    </ul>
+							  </div>
 						  </div>
-					  </div>
-					  <div class="panel-body">
-						    <h4>测验按照从近到远的时间顺序排列</h4>
-					  </div>
-					   <table class="table personal-like-table table-hover" >
-					   <tbody id="examRecordList" >
-					   		<tr><td>暂无记录</td></tr>
-					   		
-					   </tbody>
-					  </table>
+						  <div class="panel-body">
+							    <h4>测验按照从近到远的时间顺序排列</h4>
+						  </div>
+						   <table class="table personal-like-table table-hover" >
+						   <tbody id="examRecordList" >
+						   		<tr><td>暂无记录</td></tr>
+						   		
+						   </tbody>
+						  </table>
+						</div>
 					</div>
+					
+					<div class="col-md-6" style="margin-top:20px;">
+						<div class="panel panel-danger personal-panel">
+						  <div class="panel-heading">
+						  	<span class="glyphicon glyphicon-heart"></span> &nbsp; 猜你喜欢
+						  	
+						  	<a style="float:right;color:#A94442;" href="javascript:refleshLike();" ><span class="glyphicon glyphicon-refresh"></span></a>
+						  </div>
+						  <div class="panel-body">
+						  	 <h4>通过您给自己添加的标签与平时的收藏，我们会为您推荐您感兴趣的测验</h4>
+						  </div>
+						  <table class="table personal-like-table table-hover" >
+						   <tbody id="examList" >
+						   		<tr style="background-color: white;"><td>
+						   			<div class="well well-lg error-well" >
+						   			暂无推荐<br/>您可以在 <a href="#" ><strong>测验资源</strong></a> 查看各种分类的资源或者直接在导航栏中进行站内<a href=""><strong>搜索</strong></a>您想要的内容
+						   			</div>
+						   			
+						   		
+						   			</td>
+						   		</tr>
+						   		</tbody>
+						  </table>
+						</div>
+					</div>
+				
 				</div>
 				
-				<div class="col-md-6" style="margin-top:20px;">
-					<div class="panel panel-danger personal-panel">
-					  <div class="panel-heading">
-					  	<span class="glyphicon glyphicon-heart"></span> &nbsp; 猜你喜欢
-					  	
-					  	<a style="float:right;color:#A94442;" href="javascript:refleshLike();" ><span class="glyphicon glyphicon-refresh"></span></a>
-					  </div>
-					  <div class="panel-body">
-					  	 <h4>通过您给自己添加的标签与平时的收藏，我们会为您推荐您感兴趣的测验</h4>
-					  </div>
-					  <table class="table personal-like-table table-hover" >
-					   <tbody id="examList" >
-					   		<tr style="background-color: white;"><td>
-					   			<div class="well well-lg error-well" >
-					   			暂无推荐<br/>您可以在 <a href="#" ><strong>测验资源</strong></a> 查看各种分类的资源或者直接在导航栏中进行站内<a href=""><strong>搜索</strong></a>您想要的内容
-					   			</div>
-					   			
-					   		
-					   		</td></tr>
-					   		</tbody>
-					  </table>
-					</div>
+				
+				<!-- 标签页  考试信息-->
+				<div class="row-fluid tab-container tab2">
+					
 				</div>
-				
-				
-				
+				<!-- 标签页  订阅资料-->
+				<div class="row-fluid tab-container tab3">
+					<h1>敬请期待...</h1>
+				</div>
+				<!-- 标签页  我的圈子-->
+				<div class="row-fluid tab-container tab4">
+					<h1>敬请期待...</h1>
+				</div>
 					
 			
 			</div>

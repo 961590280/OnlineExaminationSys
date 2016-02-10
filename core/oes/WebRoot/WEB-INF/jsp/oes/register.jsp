@@ -68,10 +68,10 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 					error+="邮箱不合法！！<br/>";
 				}
 				if(passwordWrong){
-					error+="密码不合法！！<br/>";
+					error+="暗号不合法！！<br/>";
 				}
 				if(passwordComWrong){
-					error+="确认密码错误！<br/>"
+					error+="确认暗号错误！<br/>"
 				}
 				errorInfo.html(error);
 				errorInfo.removeClass("hidden");
@@ -187,15 +187,17 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	
 	</script>
 	<style type="text/css">
+	body{
+		padding-top:100px;
+	}
 	
-	body { padding-top: 70px; }
 
 	</style>
   </head>
   
   <body >
 	 	<!-- 导航栏 -->
-	<jsp:include page="/WEB-INF/jsp/oes/subUnit/navBar.jsp"></jsp:include>
+	<%-- <jsp:include page="/WEB-INF/jsp/oes/subUnit/navBar.jsp"></jsp:include> --%>
 
 	<div class="container-fluid login-container" >
 	<div class="row-fluid">
@@ -203,7 +205,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 		</div>
 		<div class="col-md-4 ">
 		<div class="panel panel-default">
-			<div class="login-head panel-heading "><h4>欢迎注册 OES 账号</h4></div>
+			<div class="login-head panel-heading "><h4>欢迎加入 OES</h4></div>
 			
 			 <div class="panel-body">
 			 <form class="form-horizontal" id="memberRgisterForm">
@@ -222,7 +224,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				  </div>
 				  <div class="form-group row">
 				   <div class="col-md-12">
-				    <label for="userPwdRgister" class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+				    <label for="userPwdRgister" class="col-sm-3 control-label">暗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</label>
 				    <div class="col-md-8" id="div_input_password">
 				      <input type="password" class="form-control" id="userPwdRegister" name="userPwdRegister" placeholder="Password" onblur="isPasswordValified('div_input_password')" onChange="isPasswordValified('div_input_password')">
 				      <span class="" aria-hidden="false" id="glyphicon" ></span>			    
@@ -231,13 +233,13 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				     <div class="col-md-8 col-md-offset-3  register-info password">
 				    	<p>
 				    	<span class="glyphicon glyphicon-info-sign " aria-hidden="false"  ></span> 
-				    	密码以字母开头，由6~12位数字或字母组成，仅能包含._两种符号
+				    	暗号以字母开头，由6~12位数字或字母组成，仅能包含._两种符号
 				    	</p>
 				     </div>
 				  </div>
 				  <div class="form-group row">
 				   <div class="col-md-12">
-				    <label for="userPwdComfir" class="col-sm-3 control-label">确认密码</label>
+				    <label for="userPwdComfir" class="col-sm-3 control-label">确认暗号</label>
 				    <div class="col-md-8" id="div_input_password_comfir">
 				      <input type="password" class="form-control" id="userPwdComfir" name="userPwdComfirRegister" placeholder="PasswordComfir" >
 				      <span class="" aria-hidden="false" id="glyphicon" ></span>			    
@@ -245,7 +247,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				    </div>
 				     <div class="col-md-8 col-md-offset-3 register-info passwordCom">
 				    	<p><span class="glyphicon glyphicon-info-sign " aria-hidden="false"  ></span>
-				    	请再次输入密码，以确保密码没有输错	
+				    	请再次输入暗号，以确保暗号没有输错	
 				    	</p> 
 				    </div>
 				  </div>	
@@ -253,7 +255,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				  <div class="form-group">
 				 
 				  	<div class=" col-sm-1"></div>
-				    <div class=" col-sm-10"><button type="button" class="btn btn-success btn-block" onclick="submitForm()">注&nbsp; 册</button></div>
+				    <div class=" col-sm-10"><button type="button" class="btn btn-success btn-block" onclick="submitForm()">加&nbsp; 入</button></div>
 				 	<div class=" col-sm-1"></div>
 				  </div>
 			</form>
@@ -274,7 +276,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	</div>
 
  	<!-- footer -->
-	<jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include>
+	<%-- <jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include> --%>
   </body>
 </html>
 <jsp:include page="/WEB-INF/jsp/oes/subUnit/bottom.jsp"></jsp:include>

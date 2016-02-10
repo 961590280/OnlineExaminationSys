@@ -41,7 +41,11 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-  
+  <listener>  
+     <listener-class>  
+         org.springframework.web.context.request.RequestContextListener  
+     </listener-class>  
+</listener> 
   <!-- springMVC 前端控制器类 映射所有url请求-->
   <servlet>
     <servlet-name>oes</servlet-name>

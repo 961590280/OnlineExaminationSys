@@ -1,31 +1,25 @@
 package com.cw.oes.service.impl;
 
-import java.io.FileOutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.HttpRequest;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import sun.misc.BASE64Decoder;
-
 import com.cw.oes.cache.GlobalCache;
 import com.cw.oes.dao.IDao;
 import com.cw.oes.dao.impl.DaoHelper;
+import com.cw.oes.email.EmailVerify;
 import com.cw.oes.form.RequestDataForm;
 import com.cw.oes.form.ResponseData;
 import com.cw.oes.form.ResponseDataForm;
@@ -33,34 +27,31 @@ import com.cw.oes.model.impl.ExamPaperModel;
 import com.cw.oes.model.impl.PersonalExamRecordModel;
 import com.cw.oes.model.impl.TopicModel;
 import com.cw.oes.mybatis.dao.CollectionMapper;
+import com.cw.oes.mybatis.dao.ExamNoteMapper;
 import com.cw.oes.mybatis.dao.ExaminationMapper;
 import com.cw.oes.mybatis.dao.MemberExamLinkMapper;
 import com.cw.oes.mybatis.dao.MemberMapper;
 import com.cw.oes.mybatis.dao.PaperMapper;
 import com.cw.oes.mybatis.dao.PaperTopicLinkMapper;
-import com.cw.oes.mybatis.dao.SysUrlServiceMapMapper;
-import com.cw.oes.mybatis.dao.TagMapper;
 import com.cw.oes.mybatis.dao.TagOtherLinkMapper;
+import com.cw.oes.mybatis.dao.TopicMapper;
 import com.cw.oes.mybatis.model.Collection;
-import com.cw.oes.mybatis.model.CollectionKey;
+import com.cw.oes.mybatis.model.ExamNote;
 import com.cw.oes.mybatis.model.Examination;
 import com.cw.oes.mybatis.model.Member;
 import com.cw.oes.mybatis.model.MemberExamLinkKey;
 import com.cw.oes.mybatis.model.Paper;
-import com.cw.oes.mybatis.model.PaperTopicLinkKey;
-import com.cw.oes.mybatis.model.SysUrlServiceMap;
 import com.cw.oes.mybatis.model.Tag;
 import com.cw.oes.mybatis.model.Topic;
-import com.cw.oes.pojo.TestPaper;
+import com.cw.oes.security.CookiesUtil;
+import com.cw.oes.security.PasswordMD5;
 import com.cw.oes.service.IService;
 import com.cw.oes.utils.AnswerUtil;
-import com.cw.oes.utils.CookiesUtil;
+import com.cw.oes.utils.AutoIdenticonUtil;
 import com.cw.oes.utils.DateUtil;
 import com.cw.oes.utils.Environment;
 import com.cw.oes.utils.ImgUtil;
 import com.cw.oes.utils.UserSessionBean;
-import com.cw.oes.utils.Util;
-import com.google.common.util.concurrent.ExecutionError;
 
 /**
  * 业务层实现
@@ -89,17 +80,18 @@ public class CommonService implements IService{
 		try{
 			
 			//用getString方法直接有参数名获取参数的值
-			String userName = requestDataForm.getString("userCode");// 账号
+			String userEmail = requestDataForm.getString("userEmail");// 登陆邮箱
 			String userPwd = requestDataForm.getString("userPwd");// 密码
 			String autoLogin =  requestDataForm.getString("autoLogin");
 			
-			
+			//密码加密后比较
+			String userPwdMD5 = PasswordMD5.passwordEncrypt(userPwd);
 			
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("userCode", userName);
+			params.put("userCode", userEmail);
 			
-			Member member = memberMapper.selectByCode(userName);
-			if(member != null && userPwd.equals(member.getUserPwd())){
+			Member member = memberMapper.selectByEmail(userEmail);
+			if(member != null && userPwdMD5.equals(member.getUserPwd())){
 				
 				if("N".equals(member.getIsVerified())){
 					rdf.setResult(ResponseDataForm.FAULAIE);
@@ -118,7 +110,7 @@ public class CommonService implements IService{
 				requestDataForm.getRequest().getSession().setAttribute(Environment.SESSION_USER_LOGIN_INFO, userSession);
 				
 				if(autoLogin!=null&&"true".equals(autoLogin)){//设置cookie
-					Cookie cookie = new Cookie("oes-cookie",URLEncoder.encode(CookiesUtil.cookieEncryption(userName, userPwd), "utf-8"));
+					Cookie cookie = new Cookie("oes-cookie",URLEncoder.encode(CookiesUtil.encryption(userEmail+","+userPwd), "utf-8"));
 					cookie.setPath(requestDataForm.getRequest().getContextPath( ));
 					cookie.setMaxAge(1000*60*60*24*7);
 					requestDataForm.getResponse().addCookie(cookie);
@@ -156,23 +148,42 @@ public class CommonService implements IService{
 		try{
 			String email = requestDataForm.getString("userEmail");
 			String password = requestDataForm.getString("userPwd");
+			//密码加密后保存
+			password = PasswordMD5.passwordEncrypt(password);
+			
 			MemberMapper memeberMapper = session.getMapper(MemberMapper.class);
 			Member record = new Member();
 			record.setUserEmail(email);
 			record.setUserName(email);
 			record.setUserPwd(password);
 		
-			memeberMapper.register(record);
-			rdf.setResult(ResponseData.SESSFUL);
-			session.commit();
+			HttpServletRequest  request = requestDataForm.getRequest();
+			String code = URLEncoder.encode(CookiesUtil.encryption(email), "utf-8");
+
 			
+			String url = request.getScheme()
+					+"://"+request.getServerName()
+					+":"+request.getServerPort()+request.getContextPath()
+					+"/common/verifyEmail?verifyCode="
+					+code;
+			EmailVerify.sendVarifyEmail(email,url);
+			
+			AutoIdenticonUtil iden = new AutoIdenticonUtil();
+			String imgName = UUID.randomUUID().toString()+".png";
+			iden.createAndSave(email, imgName);
+			
+			rdf.setResult(ResponseData.SESSFUL);
+			
+			record.setUserHead(imgName);
+			memeberMapper.register(record);
+			session.commit();
 		}finally{
 			session.close();
 		}
 		return rdf;
 	}
 	/**
-	 * 用户注册
+	 * 判断邮箱是否被使用
 	 * @param requestDataForm
 	 * @return
 	 * @throws Exception
@@ -183,15 +194,44 @@ public class CommonService implements IService{
 		ResponseDataForm rdf = new ResponseDataForm();
 		SqlSession session = DaoHelper.getSession();
 		try{
-			String email = requestDataForm.getString("email");
+            String email = requestDataForm.getString("email");
+            MemberMapper memberMapper = session.getMapper(MemberMapper.class);
+            if(memberMapper.emailIsUsed(email)!=1){
+                rdf.setResult(ResponseData.SESSFUL);
+            }else{
+                rdf.setResult(ResponseData.FAULAIE);
+            }
+		}finally{
+			session.close();
+		}
+		return rdf;
+	}
+	/**
+	 * 邮箱验证
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	public ResponseDataForm verifyEmail(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			String verifyCode = requestDataForm.getString("verifyCode");
+			String email = CookiesUtil.dencryption(URLDecoder.decode(verifyCode, "UTF-8"));
 			MemberMapper memberMapper = session.getMapper(MemberMapper.class);
 			
-			if(memberMapper.emailIsUsed(email)!=1){
-				rdf.setResult(ResponseData.SESSFUL);
-			}else{
-				rdf.setResult(ResponseData.FAULAIE);
-			}
-			
+			Member member =  memberMapper.selectByEmail(email);
+			member.setIsVerified("Y");
+			memberMapper.updateByPrimaryKey(member);
+			session.commit();
+			HttpServletRequest request = requestDataForm.getRequest();
+			String url = request.getScheme()
+					+"://"+request.getServerName()
+					+":"+request.getServerPort()+request.getContextPath()
+					+"/common/varifySuccess?userEmail="+member.getUserEmail();
+			requestDataForm.getResponse().sendRedirect(url);
 		}finally{
 			session.close();
 		}
@@ -214,17 +254,16 @@ public class CommonService implements IService{
 			String reqUrl = requestDataForm.getString("reqUrl");
 			
 			reqUrl = URLDecoder.decode(reqUrl, "UTF-8"); 
-			String[] strs = CookiesUtil.cookieDencryption(cookie).split(",");
-        	String userName = strs[0];
-        	String userPwd = strs[1];
+			String[] strs = CookiesUtil.dencryption(cookie).split(",");
+        	String userEmail = strs[0];
+        	String userPwd = PasswordMD5.passwordEncrypt(strs[1]);
 			
 			
 			
+			/*Map<String, Object> params = new HashMap<String, Object>();
+			params.put("userEmail", userEmail);*/
 			
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("userCode", userName);
-			
-			Member member = memberMapper.selectByCode(userName);
+			Member member = memberMapper.selectByEmail(userEmail);
 			if(member != null && userPwd.equals(member.getUserPwd())){
 				rdf.setResult(ResponseDataForm.SESSFUL);
 				rdf.setResultInfo("自动登录成功");
@@ -258,10 +297,16 @@ public class CommonService implements IService{
 		ResponseDataForm rdf = new ResponseDataForm();
 		
 		//注销cookie
-		Cookie cookie = new Cookie("oes-cookie","");
-		cookie.setPath(requestDataForm.getRequest().getContextPath( ));
-		cookie.setMaxAge(0);
-		requestDataForm.getResponse().addCookie(cookie);
+		Cookie[] cookies = requestDataForm.getRequest().getCookies();
+		for(Cookie  cookie: cookies){
+			if(cookie.getName().equals("oes-cookie")){
+				
+				cookie.setPath(requestDataForm.getRequest().getContextPath( ));
+				cookie.setMaxAge(0);
+				requestDataForm.getResponse().addCookie(cookie);
+			}
+		}
+		
 		
 		requestDataForm.getRequest().getSession().setAttribute(Environment.SESSION_USER_LOGIN_INFO, null);
 		return rdf;
@@ -625,6 +670,44 @@ public class CommonService implements IService{
 		return rdf;
 		
 	}
+	
+	/**
+	 * 保存题目笔记
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	public ResponseDataForm saveTopicNote(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		try{
+			String content = URLDecoder.decode(requestDataForm.getString("content"), "UTF-8");
+			
+			System.out.println(requestDataForm.getString("content"));
+			System.out.println(content);
+			System.out.println(URLDecoder.decode(content, "UTF-8"));
+			
+			String topicId = requestDataForm.getString("topicId");
+			ExamNoteMapper examNoteMapper = session.getMapper(ExamNoteMapper.class);
+			Member member = requestDataForm.getUserSession().getMember();
+			ExamNote note = new ExamNote();
+			note.setMemberPid(member.getUuid());
+			note.setTopicPid(topicId);
+			note.setContent(content);
+			if(examNoteMapper.getNoteByPid(note) != null){
+				examNoteMapper.updateByPrimaryKeySelective(note);
+			}else{
+				examNoteMapper.insert(note);
+			}
+			rdf.setResultInfo(ResponseDataForm.SESSFUL);
+			session.commit();
+		}finally{
+			session.close();
+		}
+		return rdf;
+	}
 	/**
 	 * 收藏测验
 	 * @param requestDataForm
@@ -733,6 +816,8 @@ public class CommonService implements IService{
 			memberExamLinkKey.setCreateTime(createTime);
 			MemberExamLinkKey memberExamLink = memberExamLinkMapper.selectByMemberIdExamIdCreateTime(memberExamLinkKey);
 			
+			ExamNoteMapper examNote = session.getMapper(ExamNoteMapper.class);
+			
 			Examination exam = examinationMapper.selectByPrimaryKey(memberExamLink.getExamPid());
 			
 			Paper paper = paperMapper.selectByPrimaryKey(exam.getExamPaperPid());
@@ -756,6 +841,18 @@ public class CommonService implements IService{
 				topicModel.setOptions(options);
 				topicModel.setUuid(topic.getUuid());
 				topicModel.setTopicTitle(topic.getContent());
+				
+				ExamNote note = new ExamNote();
+				note.setTopicPid(topic.getUuid());
+				note.setMemberPid(memberPid);
+				note =  examNote.getNoteByPid(note);
+				if(note!=null){//如果不存在笔记记录则设置笔记内容为空和重点为N
+					topicModel.setTopicNote(note.getContent());
+					topicModel.setIsImport(note.getIsImport());
+				}else{
+					topicModel.setTopicNote("");
+					topicModel.setIsImport("N");
+				}
 				
 				topicList.add(topicModel);
 			}
@@ -799,7 +896,7 @@ public class CommonService implements IService{
 			String data = requestDataForm.getString("data");
 		
 			
-			String fileName = new ImgUtil().img64BaseSave(data);//将字符串图片数据转为文件保存
+			String fileName = new ImgUtil().img64BaseSave(data,"/res/personal-img/");//将字符串图片数据转为文件保存
 			
 			member.setUserHead(fileName);
 			memberMapper.updateByPrimaryKey(member);
@@ -830,8 +927,8 @@ public class CommonService implements IService{
 		try{
 			MemberMapper memberMapper = session.getMapper(MemberMapper.class);
 			Member member = requestDataForm.getUserSession().getMember();
-			String email = requestDataForm.getString("email");
-			member.setUserEmail(email);
+			String userName = requestDataForm.getRequest().getParameter("userName");
+			member.setUserName(userName);
 			memberMapper.updateByPrimaryKey(member);
 			
 			rdf.setResultInfo(ResponseDataForm.SESSFUL);
@@ -841,6 +938,65 @@ public class CommonService implements IService{
 		}
 		return rdf;
 	}
+	
+	
+	/**
+	 * 设置重点
+	 * @param requestDataForm
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	public ResponseDataForm setImport(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		String topicId = requestDataForm.getString("topicId");
+		String isImport = requestDataForm.getString("isImport");
+		String noteId = requestDataForm.getString("noteId");
+		String userId = requestDataForm.getUserSession().getUserId();
+		try{
+			TopicMapper topicMapper = session.getMapper(TopicMapper.class);
+			
+			Topic topic = new Topic();
+			topic.setUuid(topicId);
+			if(topicMapper.isExistedById(topicId) > 0){
+				ExamNoteMapper noteMapper = session.getMapper(ExamNoteMapper.class);
+				
+				ExamNote note = new ExamNote();
+				note.setMemberPid(userId);
+				note.setTopicPid(topicId);
+				note = noteMapper.getNoteByPid(note);
+				
+				
+				if(note == null){
+					//若记录为空则插入新的记录
+					note = new ExamNote();
+					note.setUuid(UUID.randomUUID().toString());
+					note.setMemberPid(userId);
+					note.setTopicPid(topicId);
+					note.setIsImport(isImport);
+					noteMapper.insertSelective(note);
+				}else{
+					note.setIsImport(isImport);
+					noteMapper.updateByPrimaryKeySelective(note);
+				}
+				
+				rdf.setResult(ResponseDataForm.SESSFUL);
+				session.commit();
+			}else{
+				rdf.setResultInfo("题目不存在");
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				
+			}
+		
+		}finally{
+			session.close();
+		}
+		return rdf;
+		
+	}
+	
 
 	@Override
 	public ResponseDataForm service(RequestDataForm requestDataForm)

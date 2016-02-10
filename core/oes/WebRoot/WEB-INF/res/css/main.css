@@ -58,7 +58,9 @@ body{
 .remove-record-btn span{
 	color:#D04437 ;
 }
-
+.personal-like-table tr{
+	text-align: center;
+}
 /* 个人测试页面 */
 
 
@@ -67,7 +69,6 @@ body{
 .login-container{
 	
 	min-height: 400px;
-	margin-top:80px;
 }
 .login-head{
 	color: #E9E6E6;
@@ -182,8 +183,7 @@ width: 100%;
 background: #FFF none repeat scroll 0% 0%;
 z-index: 100;
 margin-top: -20px;}
-.exam-record-contianer{min-height: 600px;
-margin-top: 150px;}
+.exam-record-contianer{min-height: 600px;margin-top: 150px;margin-bottom: 20px;}
 .exam-record-title{height: 100px;background-color: #F5F5F5;border-bottom: solid 1px #999999;}
 .record-note{margin-top: 15px;}
 .textarea-note{visibility: hidden;}
@@ -198,7 +198,32 @@ margin-top: 150px;}
 box-shadow:0 10px 15px white;
 -moz-box-shadow:0 10px 15px white;
 -webkit-box-shadow:0 10px 15px white;}
+/* 笔记编辑框 当没有编辑时 */
+.redactor_box_nofocus{
+	border: none;
+}
+.redactor_box_nofocus ul{
+	display: none;
+}
 
+.save-message{
+	position: fixed;
+	right: 20px;
+	bottom:100px;
+	font-size: 20px;
+	background-color: #337AB7;
+	width: 75px;
+	height: 35px;
+	padding: 7px 10px;
+	-webkit-border-radius: 10px;
+	color:white;
+    border-radius: 10px;
+}
+.save-message p{
+	display: inline;
+	font-size:15px;
+	margin: 5px 0px 0px 5px;
+}
 /** 账号设置 **/
 .count-setting-container{
 	min-height: 500px;
@@ -281,3 +306,4 @@ color:#4E7EA6;#B3BFCE
 .register-info p{
 color:#B3BFCE;font-size: 13px;
 }
+.clear{clear: both;}

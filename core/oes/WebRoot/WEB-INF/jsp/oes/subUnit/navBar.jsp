@@ -100,12 +100,16 @@ function siteSearch(){
 
 body { padding-top: 70px; }
 .navbar-inverse a{font-size: 18px;z-index: 1;}
-</style>
-<div class="container-fluid">
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+.dropdown-toggle-top{
+		background-color: RGBA(8, 8, 8, 0);
+	}
+</style>
+
+
+<nav id="nav-bar" class="navbar navbar-inverse navbar-fixed-top nav-bar-unfixed">
   <div class="container-fluid">
-    <div class="navbar-header">
+    <div class="navbar-header" >
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
@@ -173,11 +177,16 @@ body { padding-top: 70px; }
         </li>
       	</ul>
       	<c:if test="<%=isNull %>">
-	      	<form class="navbar-form navbar-right"  >
+	       <form class="navbar-form navbar-right"  >
 		       <button type="button" class="btn  btn-primary navbar-btn" onclick="toPage('${ctxPath}/common/toLoginPage')"> 回  归 </button>
 		       <button type="button" class="btn  btn-default navbar-btn" onclick="toPage('${ctxPath}/common/toRegisterPage')"> 加  入 </button>
-	     	</form>
+	     	</form> 
       	
+      	
+      		<%-- <ul class="nav navbar-nav navbar-right">
+		        <li><a href="${ctxPath}/common/toLoginPage">回  归</a></li>
+		        <li><a href="${ctxPath}/common/toRegisterPage">加  入 </a></li>
+		    </ul> --%>
       	</c:if>
       	</div><!-- /.navbar-collapse -->
   	</div><!-- /.container-fluid -->
@@ -186,6 +195,4 @@ body { padding-top: 70px; }
 	
 	
 	
-	
 
-	</div>

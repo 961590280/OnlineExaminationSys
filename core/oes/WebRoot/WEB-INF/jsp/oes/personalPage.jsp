@@ -214,8 +214,8 @@ function refleshLike(){
 	loadLikeExams();
 }
 
-function addPersonalTag(){
-	alert("敬请期待");
+function setTag(){
+	$('#tags-modal').modal({});
 }
 
 //个人测验标签页
@@ -292,7 +292,7 @@ $(document).ready(function (){
 							
 							</div>
 							<div class="col-md-12" style="margin-top:5px;">
-								<button class="btn btn-sm btn-default btn-block" onclick="addPersonalTag()" data-toggle="tooltip" data-placement="bottom" title="设置标签可推送感兴趣资料">创建个人标签</button>
+								<button class="btn btn-sm btn-default btn-block" onclick="setTag()" data-toggle="tooltip" data-placement="bottom" title="标签">管理个人标签</button>
 							</div>
 						</div>
 					</div>
@@ -389,6 +389,45 @@ $(document).ready(function (){
 <div >
 
 </div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="tags-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog  " role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">创建标签</h4>
+	      </div>
+	      <div class="modal-body">
+	        <div class="container-fluid">
+				<!-- 搜索div -->
+				<div class="row">
+					<div class="form-group">
+				      <input type="text" class="form-control" placeholder="搜索标签">
+				     
+			    	</div>
+						
+				</div>
+				
+				<!-- 搜索结果 -->
+				<div id="search-tags-resualt">
+					 <span class="label label-default tag-search-result">java</span>
+					 <span class="label label-default">c++</span>
+				</div>	 
+				
+				<!-- 编辑标签  -->
+				<div>
+							
+				</div>       
+	        </div>
+	      </div>
+	     <!--  <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		</div> -->
+	    </div>
+	  </div>
+	</div>
 
 <jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include>
 

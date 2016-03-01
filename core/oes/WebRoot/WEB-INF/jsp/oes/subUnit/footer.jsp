@@ -19,7 +19,7 @@
 					  <li ><span class="glyphicon glyphicon-envelope footer-icon" ></span>邮 箱：<a href="mailto:961590280@qq.com"> 961590280@qq.com</a></li>
 					   <li ><i class="icon-github footer-icon" ></i>github：<a href="https://github.com/961590280/OnlineExaminationSys" target="_blank"> @OnlineExaminationSys</a></li>
 					   <li ><i class="icon-linkedin footer-icon" ></i>linkedin：<a href="" target="_blank"></a></li>
-					  <li ><span class="glyphicon glyphicon-phone-alt footer-icon"></span>电 话：<a> xxx-xxxxxx</a></li>
+					  <li ><span class="glyphicon glyphicon-phone"></span> &nbsp;&nbsp;手 机：<a> 137 5113 6406</a></li>
 						
 					</ul>
 				</div>

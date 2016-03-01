@@ -14,3 +14,5 @@ var ctxPath ="${ctxPath}";
 <script type="text/javascript" src="res/js/jquery-1.7.2.min.js"></script>
 
 <link href="res/css/main.css" rel="stylesheet"> 
+<link href="res/plug-in/preload/css/Icomoon/style.css" rel="stylesheet" type="text/css" />
+<link href="res/plug-in/preload/css/main.css" rel="stylesheet" type="text/css" />

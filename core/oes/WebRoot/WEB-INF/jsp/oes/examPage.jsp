@@ -49,49 +49,55 @@ String examPid = request.getParameter("examPid");
 			return ;
 		} */
 		
-		requestFullScreen();
 		
+		persoanlExam();
+		/* publicExam(); */
+		
+	}
+	/* 个人测验 */
+	function persoanlExam(){
+		initExamPaper();
+	}
+	/* 公开考试  */
+	function publicExam(){
+		requestFullScreen(); //全屏
 		//初始化视频和socket
 		initVideo(function(){
 			initVideoSocket();
-			videoListen();
-			$("#begin-btn").removeAttr("disabled");
-			init = true; 
-			
-			$.ajax({
-				url:"${ctxPath}/common/ajax/beginExamByPersonal",
-				data:{
-						examPid:examPid
-						},
-				type:"post",
-				success:function(data){
-				
-					data = eval("("+data+")");
-					
-					$("#exam-personal-info button").removeClass("btn-success").addClass("btn-danger").html("交 &nbsp; &nbsp;卷").attr("onclick","commitExam()");
-					allTime = data["resultObj"].finishedTime;
-					examType = data["resultObj"].type;
-					topicNum = data["resultObj"].topicNum;
-					
-					$(".exam-time #time-all").text(timeStr(allTime));
-					$("#progress-bar").addClass("active");
-					
-					beginTime(allTime);//时间控件开始倒计时
-					loadTopics(topicNum);//显示答题按钮
-					
-				}
-			});
+			videoListen(); 
+			initExamPaper();
 			
 		});
-		
-		
-		
-		
-		
-		
+	}
 	
+	/* 初始化测验页面  */
+	function initExamPaper(){
+		$("#begin-btn").removeAttr("disabled");
+		init = true; 
 		
-		
+		$.ajax({
+			url:"${ctxPath}/common/ajax/beginExamByPersonal",
+			data:{
+					examPid:examPid
+					},
+			type:"post",
+			success:function(data){
+			
+				data = eval("("+data+")");
+				
+				$("#exam-personal-info button").removeClass("btn-success").addClass("btn-danger").html("交 &nbsp; &nbsp;卷").attr("onclick","commitExam()");
+				allTime = data["resultObj"].finishedTime;
+				examType = data["resultObj"].type;
+				topicNum = data["resultObj"].topicNum;
+				
+				$(".exam-time #time-all").text(timeStr(allTime));
+				$("#progress-bar").addClass("active");
+				
+				beginTime(allTime);//时间控件开始倒计时
+				loadTopics(topicNum);//显示答题按钮
+				
+			}
+		});
 	}
 	/** 加载题目数，显示题目按钮 **/
 	function loadTopics(num){

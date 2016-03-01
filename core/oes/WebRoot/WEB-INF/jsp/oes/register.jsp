@@ -77,6 +77,9 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				errorInfo.removeClass("hidden");
 				errorInfo.addClass("show");
 			}else{
+				
+				registering();
+				
 				$.post("${ctxPath}/common/ajax/memberRegister",
 						{userEmail:userEmail,userPwd:userPwd},
 						function(data){
@@ -90,6 +93,8 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 								errorInfo.removeClass("hidden");
 								errorInfo.addClass("show");	
 							}
+							
+							registered();
 						}
 					);
 				
@@ -184,18 +189,38 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 		}
 		return true;
 	}
-	
+	//登录中 特效
+	function registering(){
+		$('#register-btn').removeClass("btn-success").addClass("btn-registering").html("注&nbsp册&nbsp中&nbsp...").attr("disabled","disabled");
+	}
+	//移除登录特效
+	function registered(){
+		$('#register-btn').removeClass("btn-registering").addClass("btn-info").html("加&nbsp; 入").attr("disabled",false);
+	}
+	//返回首页
+	function backHome(){
+		location.href = "${ctxPath}/common/index";
+	}
 	</script>
 	<style type="text/css">
 	body{
 		padding-top:100px;
 	}
 	
-
+	.panel-default{
+		border:none;
+		background-color: #ffffff;
+		/*IE 7 AND 8 DO NOT SUPPORT BORDER RADIUS*/
+		-moz-box-shadow: 0px 0px 17px #000000;
+		-webkit-box-shadow: 0px 0px 17px #000000;
+		box-shadow: 0px 0px 17px #000000;
+		/*IE 7 AND 8 DO NOT SUPPORT BLUR PROPERTY OF SHADOWS*/
+		
+	}
 	</style>
   </head>
   
-  <body >
+  <body style="background-color: #716A80;">
 	 	<!-- 导航栏 -->
 	<%-- <jsp:include page="/WEB-INF/jsp/oes/subUnit/navBar.jsp"></jsp:include> --%>
 
@@ -205,7 +230,8 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 		</div>
 		<div class="col-md-4 ">
 		<div class="panel panel-default">
-			<div class="login-head panel-heading "><h4>欢迎加入 OES</h4></div>
+			<div class="login-head panel-heading " style="background-color:#2C382D">
+					<h4>欢迎加入 OES <span class="glyphicon glyphicon-home" style="float:right;margin-right:10px;cursor: pointer;" onclick="backHome()"></span> </h4></div>
 			
 			 <div class="panel-body">
 			 <form class="form-horizontal" id="memberRgisterForm">
@@ -255,7 +281,7 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				  <div class="form-group">
 				 
 				  	<div class=" col-sm-1"></div>
-				    <div class=" col-sm-10"><button type="button" class="btn btn-success btn-block" onclick="submitForm()">加&nbsp; 入</button></div>
+				    <div class=" col-sm-10"><button id="register-btn" type="button" class="btn btn-success btn-block" onclick="submitForm()">加&nbsp; 入</button></div>
 				 	<div class=" col-sm-1"></div>
 				  </div>
 			</form>

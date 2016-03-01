@@ -115,10 +115,16 @@ public class CommonService implements IService{
 					cookie.setMaxAge(1000*60*60*24*7);
 					requestDataForm.getResponse().addCookie(cookie);
 				}else if(autoLogin ==null || "".equals(autoLogin)){//销毁cookie
-					Cookie cookie = new Cookie("oes-cookie","");
-					cookie.setPath(requestDataForm.getRequest().getContextPath( ));
-					cookie.setMaxAge(0);
-					requestDataForm.getResponse().addCookie(cookie);
+					//注销cookie
+					Cookie[] cookies = requestDataForm.getRequest().getCookies();
+					for(Cookie  cookie: cookies){
+						if(cookie.getName().equals("oes-cookie")){
+							
+							cookie.setPath(requestDataForm.getRequest().getContextPath( ));
+							cookie.setMaxAge(0);
+							requestDataForm.getResponse().addCookie(cookie);
+						}
+					}
 				}
 			
 			}else{
@@ -219,7 +225,9 @@ public class CommonService implements IService{
 		SqlSession session = DaoHelper.getSession();
 		try{
 			String verifyCode = requestDataForm.getString("verifyCode");
+			System.out.println(URLDecoder.decode(verifyCode, "UTF-8"));
 			String email = CookiesUtil.dencryption(URLDecoder.decode(verifyCode, "UTF-8"));
+			System.out.println(email);
 			MemberMapper memberMapper = session.getMapper(MemberMapper.class);
 			
 			Member member =  memberMapper.selectByEmail(email);
@@ -621,51 +629,56 @@ public class CommonService implements IService{
 	public ResponseDataForm getPersonalExamRecordList(RequestDataForm requestDataForm)
 			throws Exception {
 		ResponseDataForm rdf = new ResponseDataForm();
-		List<Map<String,Object>> resultList =  new ArrayList<Map<String,Object>>();
+		SqlSession session = null;
 		
-		Integer pageNum = requestDataForm.getInteger("pageNum");
-		Integer pageSize = requestDataForm.getInteger("pageSize");
-		if(pageNum==null){
-			pageNum=0;
+		
+		try{
+			List<Map<String,Object>> resultList =  new ArrayList<Map<String,Object>>();
 			
-		}
-		if(pageSize==null){
-			pageSize=5;
-		}
-		
-		
-		SqlSession session = DaoHelper.getSession();
-		Member member = requestDataForm.getUserSession().getMember();
-		
-		MemberExamLinkMapper memberExamMapper = session.getMapper(MemberExamLinkMapper.class);
-		ExaminationMapper examMapper = session.getMapper(ExaminationMapper.class);
-		Map<String,Object> pramMap = new HashMap<String, Object>();
-		
-		Integer begin = pageNum*pageSize;
-		Integer end   = pageSize;
-		
-		pramMap.put("uuid", member.getUuid());
-		pramMap.put("begin", begin);
-		pramMap.put("end",end);
-		List<MemberExamLinkKey> memberExamList =  memberExamMapper.personalExamRecords(pramMap);
-		
-		if(memberExamList.size()>0){
-			for(MemberExamLinkKey temp : memberExamList){
-				Map<String,Object> record = new HashMap<String,Object>();
-				Examination exam = examMapper.selectByPrimaryKey(temp.getExamPid());
+			Integer pageNum = requestDataForm.getInteger("pageNum");
+			Integer pageSize = requestDataForm.getInteger("pageSize");
+			if(pageNum==null){
+				pageNum=0;
 				
-				record.put("examPid", temp.getExamPid());
-				record.put("createTime", temp.getCreateTime());
-				record.put("examName", exam.getExamName());
-				resultList.add(record);
 			}
-			rdf.setResult(ResponseDataForm.SESSFUL);
-			rdf.setResultObj(resultList);
+			if(pageSize==null){
+				pageSize=5;
+			}
+			session = DaoHelper.getSession();
+			Member member = requestDataForm.getUserSession().getMember();
 			
-		}else{
+			MemberExamLinkMapper memberExamMapper = session.getMapper(MemberExamLinkMapper.class);
+			ExaminationMapper examMapper = session.getMapper(ExaminationMapper.class);
+			Map<String,Object> pramMap = new HashMap<String, Object>();
 			
-			rdf.setResult(ResponseDataForm.FAULAIE);
-			rdf.setResultInfo("记录为空！");
+			Integer begin = pageNum*pageSize;
+			Integer end   = pageSize;
+			
+			pramMap.put("uuid", member.getUuid());
+			pramMap.put("begin", begin);
+			pramMap.put("end",end);
+			List<MemberExamLinkKey> memberExamList =  memberExamMapper.personalExamRecords(pramMap);
+			
+			if(memberExamList.size()>0){
+				for(MemberExamLinkKey temp : memberExamList){
+					Map<String,Object> record = new HashMap<String,Object>();
+					Examination exam = examMapper.selectByPrimaryKey(temp.getExamPid());
+					
+					record.put("examPid", temp.getExamPid());
+					record.put("createTime", temp.getCreateTime());
+					record.put("examName", exam.getExamName());
+					resultList.add(record);
+				}
+				rdf.setResult(ResponseDataForm.SESSFUL);
+				rdf.setResultObj(resultList);
+				
+			}else{
+				
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				rdf.setResultInfo("记录为空！");
+			}
+		}finally{
+			session.close();
 		}
 		return rdf;
 		

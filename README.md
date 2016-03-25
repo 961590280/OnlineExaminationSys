@@ -1,6 +1,7 @@
 # OnlineExaminationSys
-²¿Êğ£º
-	1.µ¼ÈëdesignÎÄ¼ş¼ĞÏÂoes_new.sql´´½¨Êı¾İ¿â£¨½á¹¹£©
-	2.µ¼ÈëdesignÎÄ¼ş¼ĞÏÂsys_url_service_map.sqlµ¼Èëoes_newÊı¾İ¿â¡££¨urlºÍserviceÓ³ÉäµÄÊı¾İ£©
-×Ô¶¯Éú³ÉmybatisµÄmapperÎÄ¼ş¡¢xmlÎÄ¼ş¡¢modelÀà ²ÎÕÕ£ºoes\myCode\core\oes\WebRoot\WEB-INF\lib\mybatis_generator\mybatis×Ô¶¯Éú³ÉÎÄ¼ş.txt
-	3.tomcat 7+£¬java ee 7+£¨ÓÃÒÔÖ§³Öwebsocket£©
+éƒ¨ç½²ï¼š
+	1.å¯¼å…¥designæ–‡ä»¶å¤¹ä¸‹oes_new.sqlåˆ›å»ºæ•°æ®åº“ï¼ˆç»“æ„ï¼‰
+	2.å¯¼å…¥designæ–‡ä»¶å¤¹ä¸‹sys_url_service_map.sqlå¯¼å…¥oes_newæ•°æ®åº“ã€‚ï¼ˆurlå’Œserviceæ˜ å°„çš„æ•°æ®ï¼‰
+è‡ªåŠ¨ç”Ÿæˆmybatisçš„mapperæ–‡ä»¶ã€xmlæ–‡ä»¶ã€modelç±» å‚ç…§ï¼šoes\myCode\core\oes\WebRoot\WEB-INF\lib\mybatis_generator\mybatisè‡ªåŠ¨ç”Ÿæˆæ–‡ä»¶.txt
+	3.tomcat 7+ï¼Œjava ee 7+ï¼ˆç”¨ä»¥æ”¯æŒwebsocketï¼‰
+	4.æ›´æ–°

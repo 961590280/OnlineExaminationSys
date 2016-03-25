@@ -22,247 +22,95 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
-	<script type="text/javascript">
-	$(function () {
-	  $('[data-toggle="tooltip"]').tooltip();
-	})
-	function refreshUrlCahce(){
-		$.ajax({
-		url:"${ctxPath}/common/ajax/refreshCache",
-		data:{cacheName:"com.cw.oes.cache.impl.UrlMappingCache"},
-		success:function(data){
-			data =eval ("(" + data + ")");//将json 转为js对象
-			if(data.result=='1'){
-				alert("刷新成功");
-			}else{
-				alert(data.resultInfo);
-				
-			}
-			/* console.log(data.result); */
-		},
-		error:function(){
-			alert("刷新失败");
-		}
-		});
-	}
-	/** 读取用户数据 用户名，头像，标签**/
-	function getUserInfo(){
-		
-		var arr=["primary","success","info","warning","danger"];
-		$.ajax({
-		
-			url:"${ctxPath}/common/ajax/getPersonalInfo",
-			success:function(data){
-				data = eval("("+data+")");
-				//console.log(data);
-				
-				$("#head_img").attr("src","res/personal-img/"+data["resultObj"].userHead);
-			}
-		
-		});
-		
-		$.ajax({
-			
-			url:"${ctxPath}/common/ajax/getPersonalTag",
-			success:function(data){
-				data = eval("("+data+")");
-				data = data["resultObj"];
-				var html ="";
-				/* console.log(data); */
-				
-				if(data.length==0){
-					html="<span >暂无标签</span>";
-					
-				}
-				for(var key in data){
-					html+="<span class='label label-"+arr[key%5]+"'>"+data[key].name+"</span>";
-				}
-				$("#tags").html(html);
-			}
-		
-		});
-	}
-	
-
-//加载【猜你喜欢】 中的测验数据
-function loadLikeExams(){
- 	var id = "examList";
- 	$("#"+id).html("");//清空数据
- 	
-	$.ajax({
-		
-			url:"${ctxPath}/common/ajax/getExams",
-			success:function(data){
-				data = eval("("+data+")");
-				var html = "";
-				for(var temp in data["resultObj"]){
-					html +="<tr id = \"examPid_"+data["resultObj"][temp]["uuid"]+"\" ><td class=\"col-md-6 col-xs-12\">"+"<a href='${ctxPath}/common/toExamPage?examPid="+data["resultObj"][temp]["uuid"]+"'>"+data["resultObj"][temp]["examName"]+"</a></td><td class=\"col-md-5 col-xd-10\">";
-					html +="</td><td class=\"col-md-1 col-xs-2 personal-star-td\"><a href='javascript:void(0)' onclick='collectionExam("+data["resultObj"][temp]["uuid"]+")'><span class=\"glyphicon glyphicon-star-empty\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"点击收藏\" ></span></a></td></tr>";
-				}
-				$("#"+id).html(html);
-				$('[data-toggle="tooltip"]').tooltip();//在文档充新加载完后执行
-			}
-		
-		});
-	
-}
-/** 收藏测验 **/
-function collectionExam(examPid){
-	
-	$.ajax({
-		url:"${ctxPath}/common/ajax/collectionExam",
-		data:{examPid:examPid},
-		success:function(data){
-			data = eval("("+data+")");
-			/* console.log(data) */
-			if(data["result"] == 2){
-				
-				alert(data["resultInfo"]);
-				
-			}else{
-				$("tr#examPid_"+examPid+" td.personal-star-td span").removeClass("glyphicon-star-empty").addClass("glyphicon-star").attr("data-original-title","取消收藏");
-				$("tr#examPid_"+examPid+" td.personal-star-td a").attr("onclick","unCollectionExam("+examPid+")");
-			}
-		}
-		
-	});
-	
-	
-}
-/** 取消收藏 **/
-function unCollectionExam(examPid){
-
-	$.ajax({
-		url:"${ctxPath}/common/ajax/unCollectionExam",
-		data:{examPid:examPid},
-		success:function(data){
-			data = eval("("+data+")");
-			/* console.log(data) */
-			if(data["result"] == 2){
-				
-				alert(data["resultInfo"]);
-				
-			}else{
-			
-				$("tr#examPid_"+examPid+" td.personal-star-td span").removeClass("glyphicon-star").addClass("glyphicon-star-empty").attr("data-original-title","点击收藏");
-				$("tr#examPid_"+examPid+" td.personal-star-td a").attr("onclick","collectionExam("+examPid+")");
-			}
-		}
-		
-	});
-
-	
-}
-/** 加载个人测验记录  分页**/
-var pageNum = 0;
-var pageSize = 5;
-function getPersonalExamRecords(){
-	
-	$.ajax({
-		
-			url:"${ctxPath}/common/ajax/getPersonalExamRecordList",
-			data:{pageNum:pageNum},
-			success:function(data){
-				
-				
-				
-				data = eval("("+data+")");
-				/* console.log(data); */
-				var html = "";
-				for(var temp in data["resultObj"]){
-					
-					
-					html +="<tr ><td class=\"col-md-1 \"><a href=\"javascript:void(0)\" onclick=\"alert();\" class=\"remove-record-btn\" style=\"display:none;\"><span class=\"glyphicon glyphicon-minus-sign\"></span></a> </td><td style=\"text-align:center;\"  class=\"col-md-7\">  <a href=\"${ctxPath}/common/toExamRecordInfoPage?createTime="+data["resultObj"][temp]["createTime"]+"&examPid="+data["resultObj"][temp]["examPid"]+"\">"+data["resultObj"][temp]["examName"]+"</a></td><td class=\"col-md-4\">"+data["resultObj"][temp]["createTime"]+"</td></tr>";
-					
-				}
-				if(pageNum == 0){
-					
-					$("#examRecordList").html(html);
-				}else{
-					$("#more-records").remove();
-					$("#examRecordList").append(html);
-				}
-				if(data["resultObj"] == null||data["resultObj"].length<5){
-					$("#examRecordList").append("<tr style=\"background-color: white;\"  id=\"more-records\"><td  class=\"col-md-12 no-more-record\" colspan=\"3\"> 没有更多 </td></tr>")
-				}else{
-					$("#examRecordList").append("<tr style=\"background-color: white;\" id=\"more-records\"><td  class=\"col-md-12 \" colspan=\"3\"> <button  type=\"button\" class=\"btn btn-default  btn-sm btn-block\" onclick=\"getPersonalExamRecords()\">更多 <span class=\"glyphicon glyphicon-menu-down\"></span></button></td></tr>")
-					
-				}
-				
-				pageNum ++;
-				
-			}
-		
-		});
-}
-
-/* 刷新测验记录列表  */
-function refleshRecords(){
-	pageNum = 0;
-	$("#examRecordList").html("");
-	getPersonalExamRecords();
-}
-/* 编辑测验记录 */
-function editRecords(){
-	/* $(".remove-record-btn").each(function(){
-		$(this).css("display","block");
-	}); */
-}
-/* 刷新猜你喜欢列表  */
-function refleshLike(){
-	pageNum = 0;
-	loadLikeExams();
-}
-
-function setTag(){
-	$('#tags-modal').modal({});
-}
-
-//个人测验标签页
-function personalExamTab(){
-	$("#examRecordList").html("");//清空数据
-	pageNum = 0;
-	selectTab(1);
-	loadLikeExams();
-	getPersonalExamRecords();
-	
-}
-//考试信息标签页
-function examInfoTab(){
-	selectTab(2);
-	
-	
-}
-//订阅资料标签页
-function subscriptionMaterialTab(){
-	selectTab(3);
-}
-//我的圈子标签页
-function myCircleTab(){
-	selectTab(4);
-}
-//标签页选中
-function selectTab(index){
-	$("ul.personal-tab li.active").removeClass("active");
-	$("div.tab-container").hide();
-	var active = $("ul.personal-tab li.tab"+index);
-	if(active!=null){
-		active.addClass("active");
-	}
-	
-	$("div.tab-container.tab"+index).show();
-	
-}
-//文档加载完后
-$(document).ready(function (){
-	
-	getUserInfo();
-	personalExamTab(); //加载个人测验
-});
-	</script>
+	<script src="res/plug-in/ace-admin/assets/js/ace-extra.min.js"></script>
 	<style type="text/css">
 
 	#tags span{ margin-left:5px;line-height: 2;}
+	
+	.exam-info-panel{
+		
+	}
+	.exam-info-panel .panel {
+		border-radius: 0px;
+	}
+	.exam-info-panel .panel-heading{
+		text-align: center;
+		height: 55px;
+		line-height: 55px;
+		padding: 0px;
+		font-size: 16px;
+		border-radius: 0px;
+	}
+	.exam-info-panel .panel-footer{
+		padding:5px;
+		border-radius: 0px;
+	}
+	.exam-info-panel .panel-footer button{
+		border-radius: 0px;
+	}
+	.panel-info{
+	}
+	.bg-info{
+		background-color: #d9edf7;
+	}
+	/* success */
+	.panel-success .panel-footer{
+		background-color: #5cb85c;
+		border-color: #5cb85c;
+	}
+	.panel-success > .panel-heading {
+	    color: #fff;
+	    background-color: #5cb85c;
+		border-color: #5cb85c;
+	}
+	/* primary */
+	.panel-primary .panel-footer{
+		background-color: #337ab7;
+		border-color: #337ab7;
+	}
+	.panel-primary > .panel-heading {
+	    color: #fff;
+	    background-color: #337ab7;
+		border-color: #337ab7;
+	}
+	/* info */
+	.panel-info .panel-footer{
+		background-color: #5bc0de;
+		border-color: #5bc0de;
+	}
+	.panel-info > .panel-heading {
+	    color: #fff;
+	    background-color: #5bc0de;
+		border-color: #5bc0de;
+	}
+	/* warning */
+	.panel-warning .panel-footer{
+		background-color: #f0ad4e;
+		border-color: #f0ad4e;
+	}
+	.panel-warning > .panel-heading {
+	    color: #fff;
+	    background-color: #f0ad4e;
+		border-color: #f0ad4e;
+	}
+	/* danger */
+	.panel-danger .panel-footer{
+		background-color: #d9534f;
+		border-color: #d9534f;
+	}
+	.panel-danger > .panel-heading {
+	    color: #fff;
+	    background-color: #d9534f;
+		border-color: #d9534f;
+	}
+	
+	.price{
+		height: 20px;
+		line-height: 20px;
+		font-size: 20px;
+		text-align: center;
+		font-family: 'Open Sans';
+	}
 	</style>
   </head>
   
@@ -370,11 +218,30 @@ $(document).ready(function (){
 				
 				<!-- 标签页  考试信息-->
 				<div class="row-fluid tab-container tab2">
-					
+					<div class="col-md-12" >
+						<div class="form-group col-md-12" style="margin: 20px 0 20px 0;">
+					      <input id="searchExam" type="text" class="form-control" autocomplete="off" onfocus="searchAutoComplete(this)" onblur="removeAutoComplete()" placeholder="请输入一个关键字，让我们帮你查找" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
+					      <ul id="autocomplete-ul" class="dropdown-menu" style="margin-left: 15px;width: 300px;">
+					      	 <li class="dropdown-header"><i>无搜索结果</i></li>
+					      </ul>
+					    </div>
+					</div>
+					<div class="col-md-12" id="exams-list">
+						<div id="search-error">
+							<p style="min-height: 300px;line-height: 300px;font-size: 40px;text-align: center;"> 还不知道客官您的喜好，请手动搜索一下吧  </p>
+							<p style="font-size: 40px;text-align: right;">≥﹏≤</p>
+						</div>
+						<div class="col-md-6 exam-info-panel " id="exam-list-1">
+						</div>
+						
+						<div class="col-md-6 exam-info-panel " id="exam-list-2">
+						</div>
+						
+					</div>
 				</div>
 				<!-- 标签页  订阅资料-->
 				<div class="row-fluid tab-container tab3">
-					<h1>敬请期待...</h1>
+					
 				</div>
 				<!-- 标签页  我的圈子-->
 				<div class="row-fluid tab-container tab4">
@@ -405,8 +272,7 @@ $(document).ready(function (){
 				<div class="row">
 					<div class="form-group">
 				      <input type="text" class="form-control" placeholder="搜索标签">
-				     
-			    	</div>
+				    </div>
 						
 				</div>
 				
@@ -428,8 +294,10 @@ $(document).ready(function (){
 	    </div>
 	  </div>
 	</div>
-
+<script type="text/javascript" src="res/js/personal.js"></script>
 <jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include>
+<script type="text/javascript">
+</script>
 
   </body>
 </html>

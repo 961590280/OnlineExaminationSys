@@ -18,4 +18,11 @@ public interface ExaminationMapper {
     int updateByPrimaryKey(Examination record);
     
     List<Examination> selectExams();
+    
+    List<Examination> selectExamsPernal();
+    
+    List<String> selectExamsNameByKey(String key);
+    
+    List<Examination> selectExamsInfoByKey(String key);
+    
 }

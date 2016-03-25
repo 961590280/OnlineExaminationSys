@@ -1,0 +1,22 @@
+
+@font-face {font-family: "custom-ali";
+  src: url('../font/fontawesome-custom-ali.eot?t=1458271896'); /* IE9*/
+  src: url('../font/fontawesome-custom-ali.eot?t=1458271896#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../font/fontawesome-custom-ali.woff?t=1458271896') format('woff'), /* chrome, firefox */
+  url('../font/fontawesome-custom-ali.ttf?t=1458271896') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('../font/fontawesome-custom-ali.svg?t=1458271896#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont-custom-ali {
+  font-family:"custom-ali" !important;
+  /* 
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale; 
+  */
+} 
+.icon-terminal:before { content: "\e68d"; }
+.icon-service:before { content: "\e729"; }
+.icon-vmachine:before { content: "\e613"; }

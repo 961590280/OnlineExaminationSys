@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cw.oes.mybatis.dao.ExamNoteMapper" >
+  <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.ExamNote" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="member_pid" property="memberPid" jdbcType="VARCHAR" />
+    <result column="topic_pid" property="topicPid" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="is_import" property="isImport" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, member_pid, topic_pid, content, create_time, update_time,is_import
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from exam_note
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <!-- 读取笔记记录  -->
+   <select id="getNoteByPid" resultMap="BaseResultMap" parameterType="com.cw.oes.mybatis.model.ExamNote" >
+    select  
+    <include refid="Base_Column_List" />
+     from exam_note where member_pid = #{memberPid,jdbcType=VARCHAR} and topic_pid = #{topicPid,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from exam_note
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cw.oes.mybatis.model.ExamNote" >
+    insert into exam_note (uuid, member_pid, topic_pid, 
+      content, create_time, update_time
+      )
+    values (uuid(), #{memberPid,jdbcType=VARCHAR}, #{topicPid,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, now(), #{updateTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.ExamNote" >
+    insert into exam_note
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="memberPid != null" >
+        member_pid,
+      </if>
+      <if test="topicPid != null" >
+        topic_pid,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPid != null" >
+        #{memberPid,jdbcType=VARCHAR},
+      </if>
+      <if test="topicPid != null" >
+        #{topicPid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cw.oes.mybatis.model.ExamNote" >
+    update exam_note
+    <set >
+      <if test="memberPid != null" >
+        member_pid = #{memberPid,jdbcType=VARCHAR},
+      </if>
+      <if test="topicPid != null" >
+        topic_pid = #{topicPid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="isImport != null" >
+        is_import = #{isImport,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where 
+    <if test="uuid != null" >
+    	uuid = #{uuid,jdbcType=VARCHAR}
+    </if>
+    
+     <if test="uuid == null" >
+        member_pid = #{memberPid,jdbcType=VARCHAR} and topic_pid = #{topicPid,jdbcType=VARCHAR}
+   	 </if>
+  </update>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.cw.oes.mybatis.model.ExamNote" >
+    update exam_note
+    set member_pid = #{memberPid,jdbcType=VARCHAR},
+      topic_pid = #{topicPid,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

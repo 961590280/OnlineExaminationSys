@@ -333,7 +333,7 @@ public class CommonService implements IService{
 		SqlSession session = DaoHelper.getSession();
 		try{
 			ExaminationMapper examMapper = session.getMapper(ExaminationMapper.class);
-			List<Examination> exams = examMapper.selectExams();
+			List<Examination> exams = examMapper.selectExamsPernal();
 			
 			if(exams.size()>0){
 				
@@ -1010,6 +1010,60 @@ public class CommonService implements IService{
 		
 	}
 	
+	/**
+	 * 搜索考试信息自动补全考试名称
+	 * @param requestDataForm
+	 * @return ResponseDataForm
+	 * @throws Exception    
+	 * @throws
+	 */
+	public ResponseDataForm searchExamAutoComplete(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		String key = requestDataForm.getString("key");
+		try{
+			ExaminationMapper examMapper = session.getMapper(ExaminationMapper.class);
+			
+			key = "%"+key+"%";
+			List<String> names = examMapper.selectExamsNameByKey(key);
+			rdf.setResultObj(names);
+			rdf.setResult(ResponseDataForm.SESSFUL);
+			
+		}finally{
+			session.close();
+		}
+		
+		return rdf;
+		
+		
+	}
+	/**
+	 * 搜索考试信息
+	 * @param requestDataForm
+	 * @return  ResponseDataForm 
+	 * @throws Exception  
+	 * @throws
+	 */
+	public ResponseDataForm searchExamInfoByKey(RequestDataForm requestDataForm)
+			throws Exception {
+		ResponseDataForm rdf = new ResponseDataForm();
+		SqlSession session = DaoHelper.getSession();
+		String key = "%"+requestDataForm.getString("key")+"%";
+		try{
+			ExaminationMapper examMapper = session.getMapper(ExaminationMapper.class);
+			List<Examination> exams = examMapper.selectExamsInfoByKey(key);
+			rdf.setResultObj(exams);
+			rdf.setResult(ResponseDataForm.SESSFUL);
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return rdf;
+	}
 
 	@Override
 	public ResponseDataForm service(RequestDataForm requestDataForm)

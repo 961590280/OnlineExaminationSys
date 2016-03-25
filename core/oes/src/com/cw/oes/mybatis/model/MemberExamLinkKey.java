@@ -14,6 +14,8 @@ public class MemberExamLinkKey extends Model{
 
     private String createTime;
     
+    private int status;
+    
     
     public String getAnswer() {
 		return answer;
@@ -45,6 +47,14 @@ public class MemberExamLinkKey extends Model{
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime == null ? null : createTime.trim();
+	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status ;
 	}
     
 }

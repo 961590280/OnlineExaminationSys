@@ -15,6 +15,19 @@ public class Examination {
     private String examEndTime;
 
     private String examName;
+    
+    private String applyBeginTime;
+
+    private String applyEndTime;
+    
+    private String description;
+    
+    private String location;
+    
+    private String price;
+    
+    private String organization;
+    
     public String getUuid() {
         return uuid;
     }
@@ -61,6 +74,55 @@ public class Examination {
 
 	public void setExamName(String examName) {
 		this.examName = examName;
+	}
+
+	public String getApplyBeginTime() {
+		return applyBeginTime;
+	}
+
+	public void setApplyBeginTime(String applyBeginTime) {
+		this.applyBeginTime = applyBeginTime;
+	}
+
+	public String getApplyEndTime() {
+		return applyEndTime;
+	}
+
+	public void setApplyEndTime(String applyEndTime) {
+		this.applyEndTime = applyEndTime;
+	}
+
+	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
 	}
     
     

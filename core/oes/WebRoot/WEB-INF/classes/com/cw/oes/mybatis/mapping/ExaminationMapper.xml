@@ -8,22 +8,50 @@
     <result column="exam_begin_time" property="examBeginTime" jdbcType="VARCHAR" />
     <result column="exam_end_time" property="examEndTime" jdbcType="VARCHAR" />
     <result column="exam_name" property="examName" jdbcType="VARCHAR" />
+    <result column="apply_begin_time" property="applyBeginTime" jdbcType="VARCHAR" />
+    <result column="apply_end_time" property="applyEndTime" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+     <result column="organization" property="organization" jdbcType="VARCHAR" />
+    
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, exam_type, exam_paper_pid, exam_begin_time, exam_end_time,exam_name
+    uuid, exam_type, exam_paper_pid, exam_begin_time, exam_end_time,exam_name,apply_begin_time,apply_end_time,description,location,price,organization
   </sql>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from examination
-    where uuid = #{uuid,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR} 
+  </select>
+  <!-- 根据关键字查询考试名 -->
+  <select id="selectExamsNameByKey" resultType="String"  parameterType="java.lang.String" >
+    select 
+    exam_name 
+    from examination
+    where exam_type = '2' and exam_name like #{key,jdbcType=VARCHAR}
+  </select>
+   <!-- 根据关键字查询考试详细信息 -->
+  <select id="selectExamsInfoByKey" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from examination
+    where exam_type = '2' and exam_name like #{key,jdbcType=VARCHAR} 
   </select>
   <!-- 获取所有测验**以后必须废除 -->
    <select id="selectExams" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
     from examination
+   </select>
+    <!-- 获取所有测验**以后必须废除 -->
+   <select id="selectExamsPernal" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from examination 
+    where exam_type = '1'
    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from examination

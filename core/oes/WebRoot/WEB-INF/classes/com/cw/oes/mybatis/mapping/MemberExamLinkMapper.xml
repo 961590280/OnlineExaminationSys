@@ -6,9 +6,10 @@
     <id column="exam_pid" property="examPid" jdbcType="VARCHAR" />
     <id column="answer" property="answer" jdbcType="VARCHAR" />
     <id column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <id column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-   member_pid,exam_pid,answer,create_time
+   member_pid,exam_pid,answer,create_time,status
   </sql>
   <delete id="deleteByPrimaryKey" parameterType="com.cw.oes.mybatis.model.MemberExamLinkKey" >
     delete from member_exam_link

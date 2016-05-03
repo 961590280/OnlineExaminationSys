@@ -193,7 +193,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						  <div class="panel-heading">
 						  	<span class="glyphicon glyphicon-heart"></span> &nbsp; 猜你喜欢
 						  	
-						  	<a style="float:right;color:#A94442;" href="javascript:refleshLike();" ><span class="glyphicon glyphicon-refresh"></span></a>
+						  	<a style="float:right;color: white;" href="javascript:refleshLike();" ><span class="glyphicon glyphicon-refresh"></span></a>
 						  </div>
 						  <div class="panel-body">
 						  	 <h4>通过您给自己添加的标签与平时的收藏，我们会为您推荐您感兴趣的测验</h4>
@@ -291,13 +291,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				
 				<div class="row" style="margin-top: 10px;">
 					<div class="col-md-12 well center-block" id="search-tags-resualt">
+						<div class="col-sm-5 alert alert-danger hidden" role="alert" id="serach-tag-error-info" >
+							<!-- 登录失败提示信息 -->
+						</div>
 					</div>	 
 				</div>
-				
-				<!-- 编辑标签  -->
-				<div>
-							
-				</div>       
+					
 	        </div>
 	      </div>
 	    </div>
@@ -307,6 +306,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include>
 <script type="text/javascript">
 function searchTags(){
+	$("#serach-tag-error-info").addClass("hidden");
 	var key = $("#search-tag-key").val();
 	if(key!= null && key != ""){
 		$.ajax({
@@ -318,25 +318,39 @@ function searchTags(){
 				if(json.result == 1){
 					var html = "";
 					if(json.resultObj.length >0 ){
-						
 						var tags =  json.resultObj;
 						for(var i in tags){
-							html +="<button type=\"button\" class=\"btn btn-default btn-xs\" onclick=\"addTags('"+tags[i].uuid+"')\">"+tags[i].name+"</button>";
+							html +="<button type=\"button\" class=\"btn btn-default btn-xs\" onclick=\"addTag('"+tags[i].uuid+"')\">"+tags[i].name+"</button> \n";
 						}
 					}else{
 						html = "搜索\""+key+"\"关键字结果为空";
 					}
 					$("#search-tags-resualt").html(html);
 				}else{
-					
+					$("#serach-tag-error-info").removeClass("hidden").text(json.resultInfo);
 				}
 			}
 		});
 	}
 	return;
 }
-function addTag(){
-	
+function addTag(tagId){
+	$.ajax({
+		url:"${ctxPath}/common/ajax/addTag",
+		data:{
+			tagId:tagId
+		},
+		success:function(json){
+			json = eval("("+json+")");
+			console.log(json);
+			if(json.result == 1){
+				
+				alert("添加成功");
+			}else{
+				alert(json.resultInfo);
+			}
+		}
+	})
 }
 </script>
 

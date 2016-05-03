@@ -1,8 +1,7 @@
 
-	/** 读取用户数据 用户名，头像，标签**/
+	/** 读取用户数据 用户名，头像**/
 	function getUserInfo(){
 		
-		var arr=["primary","success","info","warning","danger"];
 		$.ajax({
 		
 			url:ctxPath+"/common/ajax/getPersonalInfo",
@@ -12,29 +11,30 @@
 			}
 		
 		});
+		getUserTags();
 		
-		$.ajax({
-			url:ctxPath+"/common/ajax/getPersonalTag",
-			success:function(data){
-				data = eval("("+data+")");
-				data = data["resultObj"];
-				var html ="";
-				/* console.log(data); */
-				
-				if(data.length==0){
-					html="<span >暂无标签</span>";
-					
-				}
-				for(var key in data){
-					html+="<span class='label label-"+arr[key%5]+"'>"+data[key].name+"</span>";
-				}
-				$("#tags").html(html);
-			}
-		
-		});
 	}
 	
-
+function getUserTags(){
+	var arr=["primary","success","info","warning","danger"];
+	$.ajax({
+		url:ctxPath+"/common/ajax/getPersonalTag",
+		success:function(data){
+			data = eval("("+data+")");
+			data = data["resultObj"];
+			var html ="";
+			if(data.length==0){
+				html="<span >暂无标签</span>";
+				
+			}
+			for(var key in data){
+				html+="<span class='label label-"+arr[key%5]+"'>"+data[key].name+"</span>";
+			}
+			$("#tags").html(html);
+		}
+	
+	});
+}
 //加载【猜你喜欢】 中的测验数据
 function loadLikeExams(){
  	var id = "examList";
@@ -383,14 +383,8 @@ $(function () {
 	//考试信息搜索框绑定enter事件
 	$("#searchExam").keydown(function(event){
 		if(event.which == "13"&&$("#searchExam").val()!=""){
-			
 			loadExamsInfoList($("#searchExam").val())
 		}    
 	});
 });
 
-//文档加载完后
-$(document).ready(function (){
-	
-	
-});

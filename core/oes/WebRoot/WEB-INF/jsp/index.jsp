@@ -129,13 +129,15 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
   
   function scrollListen(){
 	  var w = window;
+	  $('.dropdown-toggle').each(function(){
+		  $(this).css("background","rgba(8, 8, 8, 0)");
+	  });
 	  
 	  w.onscroll = function(){
 		  var t = document.documentElement.scrollTop || document.body.scrollTop; 
 		  var h = window.document.getElementById('nav-bar').offsetHeight;//导航栏高度
 		  var jumbotron = document.getElementById('top-jumbotron');
 		  if(t > 0){
-			  console.log("超出");
 			  $("#nav-bar").css("position","fixed");
 			  jumbotron.style.marginTop = h ;
 			  $('#nav-bar').removeClass("nav-bar-unfixed");
@@ -148,7 +150,6 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				  $(this).css("background","rgba(8, 8, 8, 0)");
 			  });
 			  $('#nav-bar').addClass("nav-bar-unfixed");
-			  console.log("未超出");
 			  $("#nav-bar").css("position","relative");
 			  jumbotron.style.marginTop = 0;
 		  }

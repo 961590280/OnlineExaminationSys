@@ -3,17 +3,23 @@
 <mapper namespace="com.cw.oes.mybatis.dao.TagOtherLinkMapper" >
   <resultMap id="BaseResultMap" type="com.cw.oes.mybatis.model.TagOtherLinkKey" >
     <id column="tag_pid" property="tagPid" jdbcType="VARCHAR" />
-    <id column="other" property="other" jdbcType="VARCHAR" />
+    <id column="other_pid" property="other" jdbcType="VARCHAR" />
   </resultMap>
   
   
   <delete id="deleteByPrimaryKey" parameterType="com.cw.oes.mybatis.model.TagOtherLinkKey" >
     delete from tag_other_link
     where tag_pid = #{tagPid,jdbcType=VARCHAR}
-      and other = #{other,jdbcType=VARCHAR}
+      and other_pid = #{other,jdbcType=VARCHAR}
   </delete>
+  
+   <select id="selectByPrimaryKey" resultType="java.lang.Integer" parameterType="com.cw.oes.mybatis.model.TagOtherLinkKey" >
+    select count(*) from tag_other_link
+    where tag_pid = #{tagPid,jdbcType=VARCHAR}
+      and other_pid = #{other,jdbcType=VARCHAR}
+  </select>
   <insert id="insert" parameterType="com.cw.oes.mybatis.model.TagOtherLinkKey" >
-    insert into tag_other_link (tag_pid, other)
+    insert into tag_other_link (tag_pid, other_pid)
     values (#{tagPid,jdbcType=VARCHAR}, #{other,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cw.oes.mybatis.model.TagOtherLinkKey" >
@@ -22,15 +28,15 @@
       <if test="tagPid != null" >
         tag_pid,
       </if>
-      <if test="other != null" >
-        other,
+      <if test="other_pid != null" >
+        other_pid,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tagPid != null" >
         #{tagPid,jdbcType=VARCHAR},
       </if>
-      <if test="other != null" >
+      <if test="other_pid != null" >
         #{other,jdbcType=VARCHAR},
       </if>
     </trim>
@@ -38,10 +44,12 @@
   
   <select id="getPersonalTags" resultMap="com.cw.oes.mybatis.dao.TagMapper.BaseResultMap" parameterType="java.lang.String" >
     select 
-    a.uuid,a.type,a.name,a.describe 
+    a.uuid,a.type,a.name,a.description 
     from tag a 
     where a.uuid in (select b.tag_pid  from tag_other_link b  where b.other_pid = #{tagId,jdbcType=VARCHAR}) and a.is_del ='N'
   
   	
   </select>
+  
+  
 </mapper>

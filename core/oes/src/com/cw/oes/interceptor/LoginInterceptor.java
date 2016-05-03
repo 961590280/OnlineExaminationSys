@@ -66,7 +66,8 @@ public class LoginInterceptor implements HandlerInterceptor{
 			if("/common/toLoginPage".equals(reqUrl)||"/common/autoLogin".equals(reqUrl) || "/common/memberLogin".equals(reqUrl)||"/common/index".equals(reqUrl)
 					||"/common/ajax/memberLogin".equals(reqUrl)||"/common/toRegisterPage".equals(reqUrl)||"/common/ajax/memberRegister".equals(reqUrl)
 					||"/common/ajax/memberIsUsed".equals(reqUrl)||"/common/verifyEmail".equals(reqUrl)||"/common/varifySuccess".equals(reqUrl)
-					||"/common/ajax/sendFindBackPasswordEmail".equals(reqUrl)||"/common/findBackPasswordPage".equals(reqUrl)||"/common/ajax/resetPassword".equals(reqUrl)) {
+					||"/common/ajax/sendFindBackPasswordEmail".equals(reqUrl)||"/common/findBackPasswordPage".equals(reqUrl)||"/common/ajax/resetPassword".equals(reqUrl)
+					||"/common/comingSoon".equals(reqUrl)) {
 				
 				
 				return true;

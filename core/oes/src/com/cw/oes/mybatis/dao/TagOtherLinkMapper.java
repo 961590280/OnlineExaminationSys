@@ -13,4 +13,6 @@ public interface TagOtherLinkMapper {
     int insertSelective(TagOtherLinkKey record);
     
     List<Tag> getPersonalTags(String userId);
+    
+    int selectByPrimaryKey(TagOtherLinkKey key);
 }

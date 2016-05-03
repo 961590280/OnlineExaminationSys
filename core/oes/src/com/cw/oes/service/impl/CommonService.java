@@ -46,6 +46,7 @@ import com.cw.oes.mybatis.model.Member;
 import com.cw.oes.mybatis.model.MemberExamLinkKey;
 import com.cw.oes.mybatis.model.Paper;
 import com.cw.oes.mybatis.model.Tag;
+import com.cw.oes.mybatis.model.TagOtherLinkKey;
 import com.cw.oes.mybatis.model.Topic;
 import com.cw.oes.security.CookiesUtil;
 import com.cw.oes.security.PasswordMD5;
@@ -1153,6 +1154,41 @@ public class CommonService implements IService{
 		}else{
 			rdf.setResult(ResponseDataForm.FAULAIE);
 			rdf.setResultInfo("关键字不能为空");
+		}
+		return rdf;
+	}
+	public ResponseDataForm addTag(RequestDataForm requestDataForm){
+		ResponseDataForm rdf = new ResponseDataForm();
+		String tagId = requestDataForm.getString("tagId");
+		if(StringUtils.isNotBlank(tagId)){
+			SqlSession session = DaoHelper.getSession();
+			TagMapper tagMapper = session.getMapper(TagMapper.class);
+			Tag tag = tagMapper.selectByPrimaryKey(tagId);
+			if(tag!=null){
+				TagOtherLinkMapper tagOtherMapper = session.getMapper(TagOtherLinkMapper.class);
+				TagOtherLinkKey tagOther = new TagOtherLinkKey();
+				tagOther.setTagPid(tagId);
+				Member member = requestDataForm.getUserSession().getMember();
+				tagOther.setOther(member.getUuid());
+				int count = tagOtherMapper.selectByPrimaryKey(tagOther);
+				if(count == 0){
+					tagOtherMapper.insert(tagOther);
+					rdf.setResult(ResponseDataForm.SESSFUL);
+					session.commit();
+				}else{
+					rdf.setResult(ResponseDataForm.FAULAIE);
+					rdf.setResultInfo("已拥有此标签");
+				}
+			}else{
+				rdf.setResult(ResponseDataForm.FAULAIE);
+				rdf.setResultInfo("标签不存在");
+			}
+			
+		
+		}else{
+			
+			rdf.setResult(ResponseDataForm.SESSFUL);
+			rdf.setResultObj("添加标签失败");
 		}
 		return rdf;
 	}

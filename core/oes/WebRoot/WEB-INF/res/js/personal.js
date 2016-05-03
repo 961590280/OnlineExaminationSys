@@ -166,6 +166,9 @@ function refleshLike(){
 
 function setTag(){
 	$('#tags-modal').modal({});
+	$('#tags-modal').on('hidden.bs.modal', function (e) {
+		getUserTags();
+	})
 	$("#search-tag-key").val("");
 	$("#search-tags-resualt").html("");
 }

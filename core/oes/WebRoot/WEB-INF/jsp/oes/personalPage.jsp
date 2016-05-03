@@ -270,17 +270,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        <div class="container-fluid">
 				<!-- 搜索div -->
 				<div class="row">
-					<div class="form-group">
-				      <input type="text" class="form-control" placeholder="搜索标签">
+					<div class="input-group">
+				     <input type="text" id="search-tag-key" class="form-control" placeholder="请输入关键字">
+				      <span class="input-group-btn">
+				        <button class="btn btn-default" type="button" onclick="searchTags();">
+				        	&nbsp;
+							<span class="glyphicon glyphicon-search"></span>
+							&nbsp;
+						</button>
+				      </span>
 				    </div>
-						
 				</div>
-				
+				<!-- <div class="row" style="margin-top: 10px;" id="my-tags">
+					<div >
+					
+						<h4>我的标签:</h4> <button type="button" class="btn btn-default btn-xs">java</button>
+					</div>
+				</div> -->
 				<!-- 搜索结果 -->
-				<div id="search-tags-resualt">
-					 <span class="label label-default tag-search-result">java</span>
-					 <span class="label label-default">c++</span>
-				</div>	 
+				
+				<div class="row" style="margin-top: 10px;">
+					<div class="col-md-12 well center-block" id="search-tags-resualt">
+					</div>	 
+				</div>
 				
 				<!-- 编辑标签  -->
 				<div>
@@ -288,15 +300,44 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</div>       
 	        </div>
 	      </div>
-	     <!--  <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-		</div> -->
 	    </div>
 	  </div>
 	</div>
 <script type="text/javascript" src="res/js/personal.js"></script>
 <jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include>
 <script type="text/javascript">
+function searchTags(){
+	var key = $("#search-tag-key").val();
+	if(key!= null && key != ""){
+		$.ajax({
+			url:"${ctxPath}/common/ajax/searchTags",
+			data:{key:key},
+			success:function(json){
+				json =eval("("+json+")");
+				console.log(json);
+				if(json.result == 1){
+					var html = "";
+					if(json.resultObj.length >0 ){
+						
+						var tags =  json.resultObj;
+						for(var i in tags){
+							html +="<button type=\"button\" class=\"btn btn-default btn-xs\" onclick=\"addTags('"+tags[i].uuid+"')\">"+tags[i].name+"</button>";
+						}
+					}else{
+						html = "搜索\""+key+"\"关键字结果为空";
+					}
+					$("#search-tags-resualt").html(html);
+				}else{
+					
+				}
+			}
+		});
+	}
+	return;
+}
+function addTag(){
+	
+}
 </script>
 
   </body>

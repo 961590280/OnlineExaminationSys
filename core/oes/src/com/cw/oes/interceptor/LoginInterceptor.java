@@ -63,8 +63,10 @@ public class LoginInterceptor implements HandlerInterceptor{
 			}
 			
 			//登录页面和登录请求不进行过滤
-			if("/common/toLoginPage".equals(reqUrl)||"/common/autoLogin".equals(reqUrl) || "/common/memberLogin".equals(reqUrl)||"/common/index".equals(reqUrl)||"/common/ajax/memberLogin".equals(reqUrl)||"/common/toRegisterPage".equals(reqUrl)||"/common/ajax/memberRegister".equals(reqUrl)
-					||"/common/ajax/memberIsUsed".equals(reqUrl)||"/common/verifyEmail".equals(reqUrl)||"/common/varifySuccess".equals(reqUrl)) {
+			if("/common/toLoginPage".equals(reqUrl)||"/common/autoLogin".equals(reqUrl) || "/common/memberLogin".equals(reqUrl)||"/common/index".equals(reqUrl)
+					||"/common/ajax/memberLogin".equals(reqUrl)||"/common/toRegisterPage".equals(reqUrl)||"/common/ajax/memberRegister".equals(reqUrl)
+					||"/common/ajax/memberIsUsed".equals(reqUrl)||"/common/verifyEmail".equals(reqUrl)||"/common/varifySuccess".equals(reqUrl)
+					||"/common/ajax/sendFindBackPasswordEmail".equals(reqUrl)||"/common/findBackPasswordPage".equals(reqUrl)||"/common/ajax/resetPassword".equals(reqUrl)) {
 				
 				
 				return true;

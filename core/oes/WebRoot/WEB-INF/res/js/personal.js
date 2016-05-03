@@ -166,6 +166,8 @@ function refleshLike(){
 
 function setTag(){
 	$('#tags-modal').modal({});
+	$("#search-tag-key").val("");
+	$("#search-tags-resualt").html("");
 }
 
 //个人测验标签页

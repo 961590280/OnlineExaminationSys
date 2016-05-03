@@ -1,5 +1,7 @@
 package com.cw.oes.mybatis.dao;
 
+import java.util.List;
+
 import com.cw.oes.mybatis.model.Tag;
 
 public interface TagMapper {
@@ -10,6 +12,8 @@ public interface TagMapper {
     int insertSelective(Tag record);
 
     Tag selectByPrimaryKey(String uuid);
+    
+    List<Tag> selectByKeyword(String key);
 
     int updateByPrimaryKeySelective(Tag record);
 

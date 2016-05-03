@@ -10,13 +10,20 @@
     <result column="describe" property="describe" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, type, name, create_time, is_del, describe
+    uuid, type, name, create_time, is_del, description 
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from tag
     where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByKeyword" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tag
+    where name like #{key,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tag

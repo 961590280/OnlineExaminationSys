@@ -1,5 +1,6 @@
 package com.cw.oes.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cw.oes.cache.GlobalCache;
 import com.cw.oes.dao.IDao;
 import com.cw.oes.dao.impl.DaoHelper;
+import com.cw.oes.email.EmailFindPassword;
 import com.cw.oes.email.EmailVerify;
 import com.cw.oes.form.RequestDataForm;
 import com.cw.oes.form.ResponseData;
@@ -33,6 +36,7 @@ import com.cw.oes.mybatis.dao.MemberExamLinkMapper;
 import com.cw.oes.mybatis.dao.MemberMapper;
 import com.cw.oes.mybatis.dao.PaperMapper;
 import com.cw.oes.mybatis.dao.PaperTopicLinkMapper;
+import com.cw.oes.mybatis.dao.TagMapper;
 import com.cw.oes.mybatis.dao.TagOtherLinkMapper;
 import com.cw.oes.mybatis.dao.TopicMapper;
 import com.cw.oes.mybatis.model.Collection;
@@ -227,7 +231,6 @@ public class CommonService implements IService{
 			String verifyCode = requestDataForm.getString("verifyCode");
 			System.out.println(URLDecoder.decode(verifyCode, "UTF-8"));
 			String email = CookiesUtil.dencryption(URLDecoder.decode(verifyCode, "UTF-8"));
-			System.out.println(email);
 			MemberMapper memberMapper = session.getMapper(MemberMapper.class);
 			
 			Member member =  memberMapper.selectByEmail(email);
@@ -1065,6 +1068,94 @@ public class CommonService implements IService{
 		return rdf;
 	}
 
+	public ResponseDataForm sendFindBackPasswordEmail(RequestDataForm requestDataForm) throws UnsupportedEncodingException{
+		ResponseDataForm rdf = new ResponseDataForm();
+		String email = requestDataForm.getString("myEmail");
+		if(StringUtils.isNotBlank(email)){
+			SqlSession session = DaoHelper.getSession();
+			try{
+				MemberMapper memberMapper = session.getMapper(MemberMapper.class);
+				Member member = memberMapper.selectByEmail(email);
+				if(member == null){
+					rdf.setResult(ResponseDataForm.FAULAIE);
+					rdf.setResultInfo("邮箱不存在");
+				}else{
+					HttpServletRequest  request = requestDataForm.getRequest();
+					String code = URLEncoder.encode(CookiesUtil.encryption(email), "utf-8");
+					String url = request.getScheme()
+							+"://"+request.getServerName()
+							+":"+request.getServerPort()+request.getContextPath()
+							+"/common/findBackPasswordPage?verifyCode="+code+"&email="+email;
+					
+					EmailFindPassword.sendVarifyEmail(email, url);
+					rdf.setResult(ResponseDataForm.SESSFUL);
+				}
+				
+			}finally{
+				if(session != null){
+					session.close();
+				}
+			}
+		}else{
+			rdf.setResult(ResponseDataForm.FAULAIE);
+			rdf.setResultInfo("邮箱不能为空");
+		}
+		
+		
+		return rdf;
+	}
+	@Transactional
+	public ResponseDataForm resetPassword(RequestDataForm requestDataForm) throws UnsupportedEncodingException{
+		ResponseDataForm rdf = new ResponseDataForm();
+		String verifyCode = requestDataForm.getString("verifyCode");
+		String password =  requestDataForm.getString("password");
+		if(StringUtils.isBlank(password)){
+			rdf.setResult(ResponseDataForm.FAULAIE);
+			rdf.setResultInfo("密码不能为空");
+		}
+		
+		
+		if(StringUtils.isNotBlank(verifyCode)){
+			SqlSession session = DaoHelper.getSession();
+			try{
+				String email = CookiesUtil.dencryption(URLDecoder.decode(verifyCode, "UTF-8"));
+				MemberMapper memberMapper = session.getMapper(MemberMapper.class);
+				Member member = memberMapper.selectByEmail(email);
+				password = PasswordMD5.passwordEncrypt(password);
+				member.setUserPwd(password);
+				memberMapper.updateByPrimaryKey(member);
+				rdf.setResult(ResponseDataForm.SESSFUL);
+				
+				
+				session.commit();
+			}finally{
+				if(session != null){
+					session.close();
+				}
+			}
+		}else{
+			rdf.setResult(ResponseDataForm.FAULAIE);
+			rdf.setResultInfo("非法操作");
+		}
+		return rdf;
+	}
+	
+	public ResponseDataForm searchTags(RequestDataForm requestDataForm){
+		ResponseDataForm rdf = new ResponseDataForm();
+		String key = requestDataForm.getString("key");
+		if(StringUtils.isNotBlank(key)){
+			SqlSession session = DaoHelper.getSession();
+			TagMapper tagMapper = session.getMapper(TagMapper.class);
+			List<Tag> tags =  tagMapper.selectByKeyword("%"+key+"%");
+			
+			rdf.setResult(ResponseDataForm.SESSFUL);
+			rdf.setResultObj(tags);
+		}else{
+			rdf.setResult(ResponseDataForm.FAULAIE);
+			rdf.setResultInfo("关键字不能为空");
+		}
+		return rdf;
+	}
 	@Override
 	public ResponseDataForm service(RequestDataForm requestDataForm)
 			throws Exception {

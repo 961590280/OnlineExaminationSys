@@ -11,7 +11,7 @@ public class Tag {
 
     private String isDel;
 
-    private String describe;
+    private String description;
 
     public String getUuid() {
         return uuid;
@@ -53,11 +53,11 @@ public class Tag {
         this.isDel = isDel == null ? null : isDel.trim();
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe == null ? null : describe.trim();
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
     }
 }

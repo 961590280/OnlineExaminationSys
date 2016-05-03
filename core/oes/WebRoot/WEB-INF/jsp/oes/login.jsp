@@ -44,7 +44,6 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 			var userPwd = $('#userPwd').val();
 			var autoLogin = $("input[name='autoLogin']:checked").val();
 			
-			
 			if (userEmail=="" || userPwd == "") {
 				
 				  isInputNull("div_input_username");
@@ -58,17 +57,17 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 				$.post("${ctxPath}/common/ajax/memberLogin",
 						{userEmail:userEmail,userPwd:userPwd,autoLogin:autoLogin},
 						function(data){
-							var errorInfo = $("#loginErrorInfo");//错误提示框
+							
 							data = eval("("+data+")");
 							if(data["result"] == 1){
 								location.href = "${ctxPath}/common/toPersonalPage";
 							}else{
+								var errorInfo = $("#loginErrorInfo");//错误提示框
 								errorInfo.html(data["resultInfo"]);
 								errorInfo.removeClass("hidden");
 								errorInfo.addClass("show");	
 								
 							}
-							
 							logined();
 						}
 					); 
@@ -96,13 +95,35 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 	}
 	//移除登录特效
 	function logined(){
-		$('#login-btn').removeClass("btn-logining").addClass("btn-info").html("确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认").attr("disabled",false);
+		$('#login-btn').removeClass("btn-logining").addClass("btn-primary").html("确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认").attr("disabled",false);
 	}
 	//返回首页
 	function backHome(){
 		location.href = "${ctxPath}/common/index";
 	}
-	
+	//打开找回密码模态窗
+	function findBackPassword(){
+		$('#find-password-modal').modal({});
+	}
+	//发送找回密码邮件
+	function sendEmail(){
+		var email = $("#myEmail").val();
+		
+		if(email == null ||email == ""){
+			alert("邮箱不能为空");
+			return;
+		}
+		$.ajax({
+			url:"${ctxPath}/common/ajax/sendFindBackPasswordEmail",
+			data:{
+				myEmail:email
+			},
+			success:function(json){
+				console.log(json);
+				
+			}
+		});
+	}
 	</script>
 	<style type="text/css">
 	.panel-default{
@@ -160,14 +181,17 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
 						</div>
 				    </div>
 				  </div>	
-			  		
 				  <div class="form-group">
-				 
 				  	<div class=" col-sm-1"></div>
-				    <div class="col-sm-10" >
-				    	<button id="login-btn" type="button" class="btn btn-info btn-block" onclick="submitForm()">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认</button>
-				    </div>
-				 	
+				  	<div class="col-sm-10">
+					  	<div class="btn-group col-sm-12" role="group" aria-label="...">
+						 	<button id="login-btn" type="button" class="btn btn-primary col-md-9 col-sm-9" onclick="submitForm()">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+							<button  type="button" class="btn btn-info" onclick="findBackPassword()"
+					    		data-toggle="tooltip" data-placement="top" title="找回密码">
+					    		<span class="glyphicon glyphicon-ice-lolly-tasted" style="line-height: inherit;"></span>
+					    	</button>
+						</div>
+					</div>
 				 	<div class=" col-sm-1"></div>
 				  </div>
 			</form>
@@ -191,13 +215,38 @@ ResponseDataForm rdf = (ResponseDataForm) request.getAttribute("responseDataForm
  	<!-- footer -->
 	<%-- <jsp:include page="/WEB-INF/jsp/oes/subUnit/footer.jsp"></jsp:include> --%>
 	
+	<!-- Modal -->
+	<div class="modal fade" id="find-password-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog  " role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">找回钥匙 </h4>
+	      </div>
+	      <div class="modal-body">
+	        <div class="container-fluid">
+				 <div class="input-group">
+				      <input type="text" id="myEmail" class="form-control" placeholder="接下来的取得钥匙的传送门将发送到你邮箱">
+				      <span class="input-group-btn">
+				        <button class="btn btn-default" type="button" onclick="sendEmail();">
+				        	&nbsp;
+							<span class="glyphicon glyphicon-share-alt"></span>
+							&nbsp;
+						</button>
+				      </span>
+				 </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
   </body>
 </html>
 <jsp:include page="/WEB-INF/jsp/oes/subUnit/bottom.jsp"></jsp:include>
 <script src="res/plug-in/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <script type="text/javascript">
 	$(function(){
-		
+		$('[data-toggle="tooltip"]').tooltip()
 		logined();
 		$('[type="checkbox"]').bootstrapSwitch();
 	});
